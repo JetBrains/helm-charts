@@ -1,0 +1,16 @@
+.idea/
+.vscode/
+.env
+**/.helm_output
+**/*.tgz
+*/*/charts
+**/*.bkp
+**/*.bak
+**/*.dtmp
+**/.DS_Store
+**/Chart.lock
+**/*/__snapshot__
+
+**/.envrc
+**/.direnv
+**/local.nix
