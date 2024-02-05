@@ -1,0 +1,634 @@
+##
+## This is a YAML-formatted file.
+##
+
+## @section Global parameters
+##
+## @param global.imageRegistry Specify the registry that stores the images
+## @param global.imagePullSecrets Specify the credentials as secret names for pulling the images
+global:
+  imageRegistry: ""
+  ## Example:
+  ## imagePullSecrets:
+  ##  - dockerRegistryKeySecretName
+  imagePullSecrets: []
+
+## @section Common parameters
+##
+## @param nameOverride Provide a prefix to partially override the lib.name in the templates
+##
+nameOverride: ""
+## @param fullnameOverride Provide a name to override completely the lib.name in the templates
+##
+fullnameOverride: ""
+## @param commonLabels Provide a map of key/value pairs of labels to be applied to all resources in the templates
+##
+commonLabels: {}
+## @param commonAnnotations Provide a map of key/value pairs of annotations to be applied to all resources in the templates
+##
+commonAnnotations: {}
+## @param namespaceOverride Provide a name to fully override lib.namespace in the templates
+##
+namespaceOverride: ""
+
+## @section Application parameters
+##
+## @param include Includes/Excludes the configurations for this application
+##
+include: true
+## @param name Application name
+##
+name: ""
+## Image parameters
+## Ref: https://kubernetes.io/docs/concepts/containers/images
+## @param image.registry URL of the container registry
+## @param image.repository URL of the container repository
+## @param image.tag Image version
+## @param image.pullPolicy Pull policy of the container image
+## @param image.pullSecrets Registry credentials. Specify not the credentials but the corresponding secrets
+##
+image:
+  registry: "docker.io"
+  repository: "portainer/portainer-ce"
+  tag: "2.18.4-alpine"
+  ## imagePullPolicy policy
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: Always
+  ## Array of imagePullSecrets secrets. You must manually create it in the namespace of application.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## e.g:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+## @param entrypoint Provide arguments to the entrypoint of the application.
+##
+## Not executed within a shell. The container image's ENTRYPOINT is used if this is
+## not provided. Variable references $(VAR_NAME) are expanded using the container's
+## environment. If a variable cannot be resolved, the reference in the input string
+## will be unchanged. Double $$ are reduced to a single $, which allows for escaping
+## the $(VAR_NAME) syntax: i.e. \"$$(VAR_NAME)\" will produce the string literal
+## \"$(VAR_NAME)\". Escaped references will never be expanded, regardless of whether
+## the variable exists or not. Cannot be updated.
+##
+## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+##
+entrypoint: []
+## @param customEntrypoint Overwrite in full the parameter application.entrypoint.
+##
+customEntrypoint: []
+## @param args Provide arguments to the entrypoint of the application.
+##
+## The container image's CMD is used if this is not provided. Variable references
+## $(VAR_NAME) are expanded using the container's environment. If a variable cannot
+## be resolved, the reference in the input string will be unchanged. Double $$ are
+## reduced to a single $, which allows for escaping the $(VAR_NAME) syntax:
+## i.e. \"$$(VAR_NAME)\" will produce the string literal \"$(VAR_NAME)\".
+## Escaped references will never be expanded, regardless of whether the variable
+## exists or not. Cannot be updated.
+##
+## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+##
+args:
+  - --admin-password='$$2y$$05$$aO9DEethtRMRpmyc4p0Dn.4MUvoJ274844ej9IdUS16kpiu43d6R6'
+## @param customArgs Overwrite in full the parameter application.args.
+##
+customArgs: []
+## Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+## @param serviceAccount.create Specify whether to create a service account
+## @param serviceAccount.name Service account name
+## @param serviceAccount.automountServiceAccountToken Specify if the account can mount the access token from the Kubernetes API
+## @param serviceAccount.labels Key/value map of labels
+## @param serviceAccount.additionalLabels Additional key/value map of labels
+## @param serviceAccount.annotations Key/value map of annotations
+## @param serviceAccount.additionalAnnotations Additional key/value map of annotations
+## @param serviceAccount.namespacePermissions List of permissions to attach to the ServiceAccount within the in use namespace
+## @param serviceAccount.additionalNamespacePermissions Additional list of permissions to attach to the ServiceAccount within the in use namespace
+## @param serviceAccount.clusterPermissions List of permissions to attach to the ServiceAccount within the in use Kubernetes cluster
+## @param serviceAccount.additionalClusterPermissions Additional list of permissions to attach to the ServiceAccount within the in use Kubernetes cluster
+##
+serviceAccount:
+  create: false
+  name: ""
+  automountServiceAccountToken: true
+  labels: {}
+  additionalLabels: {}
+  annotations: {}
+  additionalAnnotations: {}
+  ## The below 4 lines allows to specify what permissions to enable for this ServiceAccount
+  ## at namespace or cluster level. The settings below accept valid Kubernetes rules list objects.
+  ##
+  ## Example:
+  ## namespacePermissions:
+  ## - apiGroups: [""] # "" indicates the core API group
+  ##   resources: ["pods"]
+  ##   verbs: ["get", "watch", "list"]
+  namespacePermissions: []
+  additionalNamespacePermissions: []
+  ## Example:
+  ## namespacePermissions:
+  ##  # at the HTTP level, the name of the resource for accessing Secret objects is "secrets"
+  ##  - apiGroups: [""]
+  ##    resources: ["secrets"]
+  ##    verbs: ["get", "watch", "list"]
+  clusterPermissions: []
+  additionalClusterPermissions: []
+## Horizontal Pod Autoscaling
+## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+## @param autoscaling.enabled Enables/disables autoscaling
+## @param autoscaling.minReplicas Minimum number of pods
+## @param autoscaling.maxReplicas Maximum number of pods
+## @param autoscaling.metrics.targetCPU CPU utilization threshold
+## @param autoscaling.metrics.targetMemory Memory utilization threshold
+##
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    targetCPU: ""
+    targetMemory: ""
+## @param replicaCount Initial number of pods for the application
+##
+replicaCount: 1
+## @param minReadySeconds Specify the minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available
+##
+minReadySeconds: 0
+## @param progressDeadlineSeconds Specify the maximum time in seconds for a deployment to make progress before it is considered to be failed. The deployment controller will continue to process failed deployments and a condition with a ProgressDeadlineExceeded reason will be surfaced in the deployment status. Note that progress will not be estimated during the time a deployment is paused
+##
+progressDeadlineSeconds: 600
+## @param revisionHistoryLimit Specify the number of old ReplicaSets to retain to allow rollback. This is a pointer to distinguish between explicit zero and not specified
+##
+revisionHistoryLimit: 10
+## @param deploymentStrategyType Specify the strategy of how to replace existing pods with new ones. Supports: Recreate or RollingUpdate
+##
+deploymentStrategyType: RollingUpdate
+## @param rollingUpdateStrategyConfig.maxSurge Specify the maximum number of pods that can be scheduled above the desired number of pods
+## @param rollingUpdateStrategyConfig.maxUnavailable Specify the maximum number of pods that can be unavailable during the update
+##
+rollingUpdateStrategyConfig:
+  maxSurge: 25%
+  maxUnavailable: 25%
+## @param podLabels Specify labels to apply at PodSpec level
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+##
+podLabels: {}
+## @param additionalPodLabels Additional labels to apply at PodSpec level
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+##
+additionalPodLabels: {}
+## @param podAnnotations Specify annotations to apply at PodSpec level
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations
+##
+
+podAnnotations: {}
+## @param additionalPodAnnotations Additional annotations to apply at PodSpec level
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations
+##
+additionalPodAnnotations: {}
+
+## Hardware Resources
+## Ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers
+## @param resources.requests.cpu Max CPU available for a pod (resource request)
+## @param resources.requests.memory  Max memory available for a pod (resource request)
+## @param resources.limits.cpu Min CPU available for a pod (resource limit)
+## @param resources.limits.memory Min memory available for a pod (resource limit)
+##
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+## Service Configuration
+## Ref: https://kubernetes.io/docs/concepts/services-networking/service
+## @param service.name Service name
+## @skip service.ports
+## @param service.ports Service ports
+## @param service.additionalPorts Additional service ports
+## @param service.type Service type. Valid values are: ClusterIP, NodePort, LoadBalancer
+## @param service.annotations Service annotations
+## @param service.additionalAnnotations Additional service annotations
+## @param service.labels Service labels
+## @param service.additionalLabels Additional service labels
+##
+## Example:
+## service:
+##    name: "my_new_service"
+##    ports:
+##      - port: 8080
+##        targetPort: 9090
+##        name: api
+##      - port: 7979
+##        targetPort: 8181
+##        name: metrics
+service:
+  name: ""
+  type: ""
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  additionalPorts: []
+  annotations: {}
+  additionalAnnotations: {}
+  labels: {}
+  additionalLabels: {}
+## Pods Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param podSecurityContext.fsGroup Group ID that has access to the filesystem at run-time
+##
+podSecurityContext:
+  fsGroup: 10001
+## Container Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param containerSecurityContext.runAsUser ID of the user who runs the process
+## @param containerSecurityContext.runAsNonRoot Specify if the process can run under the root user
+## @param containerSecurityContext.allowPrivilegeEscalation Specify if the process can get more permissions at run-time
+## @param containerSecurityContext.readOnlyRootFilesystem Specify if the root filesystem of the process is read-only
+##
+containerSecurityContext:
+  runAsUser: 10001
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+
+## @param customContainerSecurityContext Overwrite partially the application.containerSecurityContext property
+##
+customContainerSecurityContext: {}
+## Liveness and Readiness Probes
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+## @extra application.livenessProbe Specify the default liveness probe
+## @param livenessProbe.httpGet.path Application side HTTP URI that outlines how it performs
+## @param livenessProbe.httpGet.port Application port that is open for probing type of requests
+## @param livenessProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
+## @param livenessProbe.periodSeconds Specify the time interval kubelet can launch the probe
+## @param livenessProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
+## @param livenessProbe.successThreshold Specify how many requests kubelet needs to probe to mark the livenessProbe as success
+## @param livenessProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the livenessProbe as failure
+##
+## Example:
+##  livenessProbe:
+##    httpGet:
+##      path: "/healthcheck"
+##      port: "http-ext"
+##    initialDelaySeconds: 60
+##    periodSeconds: 30
+##    timeoutSeconds: 30
+##    successThreshold: 1
+##    failureThreshold: 5
+livenessProbe:
+  httpGet:
+    path: "/"
+    port: "http"
+  initialDelaySeconds: 30
+  periodSeconds: 15
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+## @param customLivenessProbe Overwrite partially the application.livenessProbe property
+##
+customLivenessProbe: {}
+## @extra application.readinessProbe Specify the default readiness probe
+## @param readinessProbe.httpGet.path Application side HTTP URI that outlines if it is ready
+## @param readinessProbe.httpGet.port Application port that is open for probing type of requests
+## @param readinessProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
+## @param readinessProbe.periodSeconds Specify the time interval kubelet can launch the probe
+## @param readinessProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
+## @param readinessProbe.successThreshold Specify how many requests kubelet needs to probe to mark the readinessProbe as success
+## @param readinessProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the readinessProbe as failure
+##
+## Example:
+##  readinessProbe:
+##    httpGet:
+##      path: "/healthcheck"
+##      port: "http-ext"
+##    initialDelaySeconds: 60
+##    periodSeconds: 10
+##    timeoutSeconds: 30
+##    successThreshold: 1
+##    failureThreshold: 5
+readinessProbe:
+  httpGet:
+    path: "/"
+    port: "http"
+  initialDelaySeconds: 30
+  periodSeconds: 15
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+## @param customReadinessProbe Overwrite partially the application.readinessProbe property
+##
+customReadinessProbe: {}
+## Startup Probe
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
+## @extra application.startupProbe Specify the default startup probe
+## @param startupProbe.httpGet.path Application side HTTP URI that outlines if it is started
+## @param startupProbe.httpGet.port Application port that is open for probing type of requests
+## @param startupProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
+## @param startupProbe.periodSeconds Specify the time interval kubelet can launch the probe
+## @param startupProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
+## @param startupProbe.successThreshold Specify how many requests kubelet needs to probe to mark the startupProbe as success
+## @param startupProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the startupProbe as failure
+##
+## Example:
+##  startupProbe:
+##    httpGet:
+##      path: "/healthcheck"
+##      port: "http-ext"
+##      initialDelaySeconds: 60
+##      periodSeconds: 30
+##      timeoutSeconds: 30
+##      successThreshold: 1
+##      failureThreshold: 5
+startupProbe:
+  httpGet:
+    path: "/"
+    port: "http"
+  initialDelaySeconds: 30
+  periodSeconds: 15
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+## @param customStartupProbe Overwrite partially the application.startupProbe property
+##
+customStartupProbe: {}
+## @param customAffinity Overwrite in full the default affinity rules
+##
+customAffinity: {}
+## @param nodeName Specify the NodeName where to schedule a pod. Leave empty for auto scheduling decision
+##
+nodeName: ""
+## @param nodeSelector Specify the selector which must be true for the pod to fit on a node
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+##
+## Example:
+## nodeSelector:
+##  diskType: ssd
+##
+nodeSelector: {}
+
+## Ingress
+## Ref: https://kubernetes.io/docs/user-guide/ingress
+## @param ingress.enabled Enables/disables Ingress for routing inbound traffic
+## @param ingress.name Ingress name
+## @param ingress.pathType Ingress path type
+## @param ingress.hostname Ingress hostname
+## @param ingress.tls Enables/disables TLS for the hostname
+## @param ingress.alternateDnsNames Specify whether to add a list of alternative DNS names to the self-signed certificate
+## @param ingress.certValidityDuration Specify how many days the self-signed certificate should remain valid
+## @param ingress.path Ingress path array
+## @param ingress.additionalPaths Ingress extra paths
+## @param ingress.additionalTLS Additional TLS configuration
+## @param ingress.secret Name of the external secret for $parent.hostname
+## @param ingress.ingressClassName IngressClass name
+## @param ingress.additionalRules Additional Ingress rules
+##
+ingress:
+  enabled: true
+  name: ""
+  alternateDnsNames: []
+  certValidityDuration: ""
+  pathType: ImplementationSpecific
+  hostname: "containers.app"
+  ## You might need to set the '/*' value in order to use it
+  ## with ALB Ingress controllers.
+  ##
+  path: /
+  ## @param ingress.backendService.portName Specify the application port name of the backend service
+  ##
+  backendService:
+    portName: "http"
+  ## For a full list of possible Ingress annotations, see
+  ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
+  ## Use this parameter to set the required annotations for cert-manager. For details, see
+  ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+  ##
+  ## e.g:
+  ## annotations:
+  ##   kubernetes.io/ingress.class: nginx
+  ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+  ##
+  ## @param ingress.annotations Key/value map with annotations
+  ## @param ingress.additionalAnnotations Additional key/value map with annotations
+  annotations: {}
+  additionalAnnotations: {}
+  ## @param ingress.labels Key/value map with labels
+  ## @param ingress.additionalLabels Additional key/value map with labels
+  labels: {}
+  additionalLabels: {}
+  ## TLS certificates will be retrieved from a TLS secret with the following name: {{- printf "%s-tls" .Values.ingress.hostname }}
+  ## You can use the ingress.secrets parameter to create this TLS secret or rely on cert-manager to create it.
+  ##
+  tls: false
+  ## Any additional arbitrary paths that may need to be added to Ingress under the main host.
+  ## For example: The ALB Ingress controller requires a special rule for handling SSL redirection.
+  additionalPaths: []
+  ## - path: /*
+  ##   backend:
+  ##     service:
+  ##        name: ssl-redirect
+  ##        port:
+  ##          number: use-annotation
+  ##
+  ## The TLS configuration for additional hostnames is covered with this Ingress record.
+  ## Use this configuration block also in case the certificates are managed outside this Helm chart.
+  ## see: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  additionalTLS: []
+  ## - hosts:
+  ##     - jetbrains.net
+  ##   secretName: tls-jetbrains.net
+  ##
+  ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster.
+  ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  ##
+  ingressClassName: ""
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+  ## e.g:
+  ## additionalRules:
+  ## - host: example.local
+  ##     http:
+  ##       path: /
+  ##       backend:
+  ##         service:
+  ##           name: example-svc
+  ##           port:
+  ##             name: http
+  ##
+  additionalRules: []
+  ## Name of the external secret related to the main hostname in the Ingress definition
+  ## Example:
+  ## secret: "tls-jetbrains.application"
+  ##
+  secret: ""
+
+## @skip ports
+## @param ports Specify a list of application ports
+
+## Example:
+## ports:
+## - name: "http-ext"
+##   containerPort: 8084
+## - name: "http-int"
+##   containerPort: 9084
+ports:
+  - name: http
+    containerPort: 9000
+## @skip volumes
+## @param volumes Specify named volumes to be attached to the pod
+##
+## Example:
+## volumes:
+## - name: metrics-conf
+##   type: configMap
+##   properties:
+##      name: external-metrics-conf
+##   volumeMountProperties:
+##      mountPath: "/app/conf/metrics.conf"
+##      subPath: "metrics.conf"
+##
+volumes:
+  - name: data
+    type: emptyDir
+    volumeMountProperties:
+      mountPath: /data
+## @param additionalVolumes Specify additional mutual exclusive with application.volumes value named volumes to be attached to the main container and pod
+##
+## application.additionalVolumes has the same structure as application.volumes. For an example, reference application.volumes.
+##
+additionalVolumes: []
+## @param sidecars Specify containers to run alongside the main container
+##
+## A sidecar allows enhancing an application with additional functionality.
+## In this context, an additional functional can be a sidecar to export the metrics in a custom format.
+## Consider performance stability when considering the use of sidecars. The hardware resource limits and requests
+## for a sidecar cannot exceed the resource and limits of the main application container.
+##
+## Example:
+##     - name: sidecar-container
+##       image: busybox
+##       command: ["sh","-c","while true; do cat /var/log/nginx/access.log; sleep 30; done"]
+##       volumeMounts:
+##       - name: shared-logs
+##         mountPath: /var/log/nginx
+##
+sidecars: []
+## @param additionalSidecars Specify additional containers to run alongside the main container
+##
+## Note:  additionalSidecars list supports only the schema outlined in the sidecars object.
+additionalSidecars: []
+## @param initContainers Specify a list of initialization containers belonging to the pod
+##
+## Example:
+## - command:
+##   - sh
+##   - -c
+##   - until redis-cli -h "${REDIS_HOSTNAME}" -p "${REDIS_PORT}" ping; do echo waiting
+##     for redis; sleep 2; done;
+##   envFrom:
+##   - secretRef:
+##       name: 'app-secrets'
+##   image: docker.io/bitnami/redis:6.2.7
+##   imagePullPolicy: Always
+##   name: check-redis
+##   resources:
+##     limits:
+##       cpu: 500m
+##       memory: 512Mi
+##     requests:
+##       cpu: 500m
+##       memory: 512Mi
+##   securityContext:
+##     allowPrivilegeEscalation: false
+##     capabilities:
+##       drop:
+##       - NET_RAW
+##       - ALL
+##     readOnlyRootFilesystem: true
+##     runAsNonRoot: true
+##     runAsUser: 10001
+##
+initContainers: []
+## @param additionalInitContainers Specify a list of additional initialization containers belonging to the pod
+##
+additionalInitContainers: []
+
+## @section Application configuration file
+##
+## @param config Overwrites the configuration in application.defaultConfig.config
+## @param defaultConfig.name Specify the default application configuration file name
+## @param defaultConfig.mountPath Specify the default application configuration file system path where the file is located
+## @param defaultConfig.config Specify the default application configuration
+## @param defaultConfig.customValues Specify a map of custom values to be referenced by the application.defaultConfig.config parameter
+config: ""
+defaultConfig:
+  name: ""
+  mountPath: ""
+  config: ""
+  customValues: {}
+## @section Application environment variables
+##
+## @param envs Environment variables
+## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container
+## Example:
+## APP_OPTS: "CustomEnvironmentVariable"
+## ENV_CONF_1: "ValueOne"
+##
+envs: {}
+## @param additionalEnvs Additional environment variables
+## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container
+## Example:
+## APP_OPTS_2: "CustomEnvironmentVariable2"
+##
+additionalEnvs: {}
+## @param internalEnvSecret Specify the internal secret name that contains system environment variables
+##
+## This secret contains a valid set of environment variables that are compatible with the main application.
+## This internal secret is useful in case of an umbrella chart because it allows to group together application
+## specific settings that for example require input validation.
+## Note: envs, additionalEnvs will be ignored when internalEnvSecret is set. Last but not least
+## the internalEnvSecret will be ignored in case the externalEnvSecret is set.
+internalEnvSecret: ""
+## @param externalEnvSecret Specify the external secret name that contains system environment variables
+##
+## Reference to an external secret manifest with required by the application environment variables.
+## This object allows externalizing the main application configuration and avoiding any information
+## leaked in the deployment version of the values.yaml file.
+## Note: envs, additionalEnvs will be ignored when externalEnvSecret is set
+externalEnvSecret: ""
+## @section Application Kubernetes resources
+##
+## @param kubernetesYamlResources Kubernetes objects to add to the application package
+##
+## Example:
+## - apiVersion: v1
+##   kind: ServiceAccount
+##   metadata:
+##     namespace: '{{ .Release.namespace }}'
+##     name: '{{ include "lib.appName" . }}'-newsa
+##     labels:
+##       app.kubernetes.io/component: '{{ include "lib.componentName" . }}'
+##       '{{- include "lib.labels" . | nindent 4 }}'
+##
+kubernetesYamlResources: []
+## @param additionalKubernetesYamlResources Add additional Kubernetes objects to add to the application package
+##
+## Example:
+## - apiVersion: v1
+##   kind: ResourceQuota
+##   metadata:
+##     name: '{{ include "lib.appName" $ }}'
+##     namespace: '{{ include "lib.namespace" $ }}'
+##     labels:
+##       app.kubernetes.io/component: '{{ include "lib.componentName" $ }}'
+##   spec:
+##     hard:
+##       requests.cpu: "4"
+##       requests.memory: 4Gi
+##       limits.cpu: "4"
+##       limits.memory: 4Gi
+##
+additionalKubernetesYamlResources: []

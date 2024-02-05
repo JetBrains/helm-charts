@@ -1,0 +1,72 @@
+{{/*
+An API object that manages external access to the services in a cluster, typically HTTP.
+Ingress may provide load balancing, SSL termination and name-based virtual hosting.
+
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.
+Traffic routing is controlled by rules defined on the Ingress resource.
+
+Pre-requisites:
+An Ingress controller to satisfy an Ingress. Only creating an Ingress resource has no effect.
+All Ingress controllers should fit the reference specification. In reality, the various Ingress
+controllers operate slightly differently.
+
+Note: Make sure you review your Ingress controller's documentation to understand the caveats of choosing it.
+
+Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+*/}}
+{{- if .Values.include }}
+{{- $hostname := tpl .Values.ingress.hostname $ }}
+{{- if and .Values.ingress.enabled $hostname .Values.ingress.backendService.portName -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "app.ingressName" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+    {{- include "app.ingressLabels" . | nindent 4 }}
+    {{- include "app.additionalIngressLabels" . | nindent 4 }}
+  annotations:
+    {{- include "lib.annotations" . | indent 4 }}
+    {{- include "app.ingressAnnotations" . | indent 4 }}
+    {{- include "app.additionalIngressAnnotations" . | indent 4 }}
+spec:
+{{- if .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
+{{- end }}
+  rules:
+  {{- if .Values.ingress.additionalRules }}
+  {{ .Values.ingress.additionalRules | toYaml | nindent 4 }}
+  {{- end }}
+    - host: {{ $hostname }}
+      http:
+        paths:
+        {{- if .Values.ingress.additionalPaths }}
+        {{- toYaml .Values.ingress.additionalPaths | nindent 10 }}
+        {{- end }}
+          - path: {{ .Values.ingress.path }}
+            pathType: {{ .Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "app.serviceName" . }}
+                port:
+                  name: {{ .Values.ingress.backendService.portName }}
+{{- if or .Values.ingress.tls .Values.ingress.additionalTLS }}
+  tls:
+  {{- if .Values.ingress.tls }}
+    - hosts:
+        - {{ $hostname }}
+      {{- if not .Values.ingress.secret  }}
+      secretName: {{ printf "tls-%s" $hostname }}
+      {{- end }}
+      {{- if .Values.ingress.secret }}
+      secretName: {{ .Values.ingress.secret }}
+      {{- end }}
+  {{- end }}
+  {{- if .Values.ingress.additionalTLS }}
+  {{- .Values.ingress.additionalTLS | toYaml | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

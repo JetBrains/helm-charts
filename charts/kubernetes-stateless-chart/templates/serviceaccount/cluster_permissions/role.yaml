@@ -1,0 +1,40 @@
+{{/*
+Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of
+individual users within your organization.
+
+RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to
+dynamically configure policies through the Kubernetes API.
+
+ClusterRole, by contrast, is a non-namespaced resource. The resources have different names (Role and ClusterRole) because
+a Kubernetes object always has to be either namespaced or not namespaced; it can't be both.
+
+ClusterRoles have several uses. You can use a ClusterRole to:
+
+1. define permissions on namespaced resources and be granted access within individual namespace(s);
+2. define permissions on namespaced resources and be granted access across all namespaces;
+3. define permissions on cluster-scoped resources.
+
+Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+*/}}
+{{- if .Values.include -}}
+{{- if .Values.serviceAccount.create -}}
+{{- if or .Values.serviceAccount.clusterPermissions .Values.serviceAccount.additionalClusterPermissions }}
+{{- $rules := list -}}
+{{- $uniqueRules := concat $rules .Values.serviceAccount.clusterPermissions .Values.serviceAccount.additionalClusterPermissions | uniq -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "app.serviceAccount.name" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+    {{- include "app.serviceAccount.additionalLabels" . | nindent 4 }}
+  annotations:
+    {{- include "lib.annotations" . | nindent 4 }}
+    {{- include "app.serviceAccount.additionalAnnotations" . | nindent 4 }}
+rules:
+  {{- $uniqueRules | toYaml | nindent 2 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

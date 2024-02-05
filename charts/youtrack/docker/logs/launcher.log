@@ -1,0 +1,62 @@
+[2024-01-31 10:47:05,928]  TRACE -                                - [stop] ================================================================ (start)
+[2024-01-31 10:47:06,040]  DEBUG - ains.launcher.ep.commands.Stop - [stop] JetLauncher process ID: 270
+[2024-01-31 10:47:06,056]  DEBUG - ains.launcher.ep.commands.Stop - [stop] JetLauncher Java: <Hub Home>/internal/java/linux-x64 (version "17.0.6", build "17.0.6+10-LTS")
+[2024-01-31 10:47:06,057]  DEBUG - ains.launcher.ep.commands.Stop - [stop] Hub home directory: /opt/hub
+[2024-01-31 10:47:06,058]  DEBUG - ains.launcher.ep.commands.Stop - [stop] Command line: [stop]
+[2024-01-31 10:47:06,059]  DEBUG - ains.launcher.ep.commands.Stop - [stop] JetLauncher logs directory: <Hub Home>/logs
+[2024-01-31 10:47:06,065]  DEBUG - ains.launcher.ep.commands.Stop - [stop] JetLauncher version: 1.0.206
+[2024-01-31 10:47:06,066]  DEBUG - ains.launcher.ep.commands.Stop - [stop] Loaded launcher plugins: [BundleJvmOptionsPlugin, mac-daemon-commands, win-service-commands, ConfPathProvider]
+[2024-01-31 10:47:06,066]  DEBUG - ains.launcher.ep.commands.Stop - [stop] Hub config folder: <Hub Home>/conf
+[2024-01-31 10:47:06,069]  DEBUG - .BaseLauncherConfig.BaseParser - [stop] Using launcher configuration file: jar:file:<Hub Home>/launcher/lib/hub-launcher.jar!/launcher.java.config
+[2024-01-31 10:47:06,106]  ERROR - ains.launcher.ep.commands.Stop - [stop] Hub is not running
+[2024-01-31 10:47:06,113]  TRACE -                                - [stop] ================================================================ (finish)
+[2024-01-31 10:47:25,328]  TRACE -                                - ================================================================ (start)
+[2024-01-31 10:47:25,494]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher process ID: 253
+[2024-01-31 10:47:25,503]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher Java: <Hub Home>/internal/java/linux-x64 (version "17.0.6", build "17.0.6+10-LTS")
+[2024-01-31 10:47:25,504]  DEBUG - rains.launcher.ep.commands.Run - Hub home directory: /opt/hub
+[2024-01-31 10:47:25,505]  DEBUG - rains.launcher.ep.commands.Run - Command line: [run]
+[2024-01-31 10:47:25,505]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher logs directory: <Hub Home>/logs
+[2024-01-31 10:47:25,510]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher version: 1.0.206
+[2024-01-31 10:47:25,511]  DEBUG - rains.launcher.ep.commands.Run - Loaded launcher plugins: [BundleJvmOptionsPlugin, mac-daemon-commands, win-service-commands, ConfPathProvider]
+[2024-01-31 10:47:25,512]  DEBUG - rains.launcher.ep.commands.Run - Hub config folder: <Hub Home>/conf
+[2024-01-31 10:47:25,515]  DEBUG - .BaseLauncherConfig.BaseParser - Using launcher configuration file: jar:file:<Hub Home>/launcher/lib/hub-launcher.jar!/launcher.java.config
+[2024-01-31 10:47:25,621]   INFO - rains.launcher.ep.commands.Run - Starting Hub...
+[2024-01-31 10:47:25,674]  DEBUG - ains.launcher.run.AgentProcess - Wed Jan 31 10:47:25 UTC 2024 ==> Start launch
+[2024-01-31 10:47:25,679]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.pid
+[2024-01-31 10:47:25,679]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.port
+[2024-01-31 10:47:25,680]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.exit.flag
+[2024-01-31 10:47:25,683]  DEBUG - tbrains.launcher.run.JavaAgent - Reusing launcher Java for Hub
+[2024-01-31 10:47:25,742]  DEBUG - tbrains.launcher.run.JavaAgent - Launching Hub process with command: [/opt/hub/internal/java/linux-x64/bin/java, -Djl.service=Hub, -Djl.home=/opt/hub, -ea, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=logs, -XX:ErrorFile=logs/hs_err_pid%p.log, -Dfile.encoding=UTF-8, -XX:MaxMetaspaceSize=300m, -Xmx600m, -Djetbrains.youtrack.singleTierApp=true, -Djetbrains.http.request.header.buffer.size=102400, -Djetbrains.http.response.header.buffer.size=102400, -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContextSelector, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, -Dlauncher.app.extra.lib.dirs=/alpn/1.9/, -jar, launcher/lib/app-wrapper/hub-wrapper.jar, AppStarter, com.jetbrains.bundle.bootstrap.Bundle] (at path: "/opt/hub", system properties: {launcher.app.home=/opt/hub, launcher.app.conf.dir=/opt/hub/conf, java.awt.headless=true, launcher.app.name=Hub})
+[2024-01-31 10:47:56,136]   INFO - ains.launcher.run.AgentProcess - Hub process finished
+[2024-01-31 10:47:56,144]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.pid
+[2024-01-31 10:47:56,150]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.port
+[2024-01-31 10:47:56,151]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.exit.flag
+[2024-01-31 10:47:56,152]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.start.flag
+[2024-01-31 10:47:56,156]  DEBUG - rains.launcher.run.AgentRunner - Hub has exited with code: 29 (EXIT)
+[2024-01-31 10:47:56,159]   INFO - rains.launcher.run.AgentRunner - Launcher is exiting
+[2024-01-31 10:47:56,181]  TRACE -                                - ================================================================ (finish)
+[2024-01-31 11:03:22,713]  TRACE -                                - ================================================================ (start)
+[2024-01-31 11:03:22,874]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher process ID: 253
+[2024-01-31 11:03:22,881]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher Java: <Hub Home>/internal/java/linux-x64 (version "17.0.6", build "17.0.6+10-LTS")
+[2024-01-31 11:03:22,882]  DEBUG - rains.launcher.ep.commands.Run - Hub home directory: /opt/hub
+[2024-01-31 11:03:22,882]  DEBUG - rains.launcher.ep.commands.Run - Command line: [run]
+[2024-01-31 11:03:22,882]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher logs directory: <Hub Home>/logs
+[2024-01-31 11:03:22,886]  DEBUG - rains.launcher.ep.commands.Run - JetLauncher version: 1.0.206
+[2024-01-31 11:03:22,887]  DEBUG - rains.launcher.ep.commands.Run - Loaded launcher plugins: [BundleJvmOptionsPlugin, mac-daemon-commands, win-service-commands, ConfPathProvider]
+[2024-01-31 11:03:22,888]  DEBUG - rains.launcher.ep.commands.Run - Hub config folder: <Hub Home>/conf
+[2024-01-31 11:03:22,891]  DEBUG - .BaseLauncherConfig.BaseParser - Using launcher configuration file: jar:file:<Hub Home>/launcher/lib/hub-launcher.jar!/launcher.java.config
+[2024-01-31 11:03:23,006]   INFO - rains.launcher.ep.commands.Run - Starting Hub...
+[2024-01-31 11:03:23,055]  DEBUG - ains.launcher.run.AgentProcess - Wed Jan 31 11:03:23 UTC 2024 ==> Start launch
+[2024-01-31 11:03:23,069]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.pid
+[2024-01-31 11:03:23,071]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.port
+[2024-01-31 11:03:23,071]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.exit.flag
+[2024-01-31 11:03:23,075]  DEBUG - tbrains.launcher.run.JavaAgent - Reusing launcher Java for Hub
+[2024-01-31 11:03:23,126]  DEBUG - tbrains.launcher.run.JavaAgent - Launching Hub process with command: [/opt/hub/internal/java/linux-x64/bin/java, -Djl.service=Hub, -Djl.home=/opt/hub, -ea, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=logs, -XX:ErrorFile=logs/hs_err_pid%p.log, -Dfile.encoding=UTF-8, -XX:MaxMetaspaceSize=300m, -Xmx600m, -Djetbrains.youtrack.singleTierApp=true, -Djetbrains.http.request.header.buffer.size=102400, -Djetbrains.http.response.header.buffer.size=102400, -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContextSelector, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, -Dlauncher.app.extra.lib.dirs=/alpn/1.9/, -jar, launcher/lib/app-wrapper/hub-wrapper.jar, AppStarter, com.jetbrains.bundle.bootstrap.Bundle] (at path: "/opt/hub", system properties: {launcher.app.home=/opt/hub, launcher.app.conf.dir=/opt/hub/conf, java.awt.headless=true, launcher.app.name=Hub})
+[2024-01-31 11:03:54,620]   INFO - ains.launcher.run.AgentProcess - Hub process finished
+[2024-01-31 11:03:54,631]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.pid
+[2024-01-31 11:03:54,636]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.port
+[2024-01-31 11:03:54,637]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.exit.flag
+[2024-01-31 11:03:54,637]  DEBUG - ins.launcher.util.LauncherUtil - Deleting <Hub Home>/logs/hub.start.flag
+[2024-01-31 11:03:54,641]  DEBUG - rains.launcher.run.AgentRunner - Hub has exited with code: 29 (EXIT)
+[2024-01-31 11:03:54,643]   INFO - rains.launcher.run.AgentRunner - Launcher is exiting
+[2024-01-31 11:03:54,658]  TRACE -                                - ================================================================ (finish)

@@ -1,0 +1,33 @@
+[2024-01-31 10:47:25,812] ================================================================ (start)
+[2024-01-31 10:47:31,028] * Configuring JetBrains Hub 2023.3 
+[2024-01-31 10:47:31,050] * Made default base-url 'http://localhost:8080/' from hostname 'localhost' and listen port '8080' 
+[2024-01-31 10:47:31,093] * JetBrains Hub 2023.3 runtime environment is successfully configured 
+[2024-01-31 10:47:31,377] * Loading logging configuration from /opt/hub/lib/ext/log4j.xml 
+[2024-01-31 10:47:31,378] * Redirecting JetBrains Hub 2023.3 logging to /opt/hub/logs/internal/services/bundleProcess 
+[2024-01-31 10:47:32,771] * Configuring Service-Container[bundleProcess] 
+[2024-01-31 10:47:32,794] * Configuring Bundle Backend Service 
+[2024-01-31 10:47:32,795] * Configuring Configuration Wizard 
+[2024-01-31 10:47:32,879] * Starting Service-Container[bundleProcess] 
+[2024-01-31 10:47:33,523] * Starting Bundle Backend Service 
+[2024-01-31 10:47:41,386] * Starting Configuration Wizard 
+[2024-01-31 10:47:41,387] * JetBrains Hub 2023.3 Configuration Wizard will listen inside container on {0.0.0.0:8080}/ after start and can be accessed by URL [http://<put-your-docker-HOST-name-here>:<put-host-port-mapped-to-container-port-8080-here>//?wizard_token=7Tp1rCkHUwwn2DGIVDUD] 
+[2024-01-31 10:47:55,590] * Stopping Configuration Wizard 
+[2024-01-31 10:47:55,634] * Stopping Bundle Backend Service 
+[2024-01-31 10:47:55,645] * Stopping Service-Container[bundleProcess] 
+[2024-01-31 10:47:56,153] ================================================================ (finish)
+[2024-01-31 11:03:23,205] ================================================================ (start)
+[2024-01-31 11:03:28,529] * Configuring JetBrains Hub 2023.3 
+[2024-01-31 11:03:28,542] * JetBrains Hub 2023.3 runtime environment is successfully configured 
+[2024-01-31 11:03:28,829] * Loading logging configuration from /opt/hub/lib/ext/log4j.xml 
+[2024-01-31 11:03:28,830] * Redirecting JetBrains Hub 2023.3 logging to /opt/hub/logs/internal/services/bundleProcess 
+[2024-01-31 11:03:29,966] * Configuring Service-Container[bundleProcess] 
+[2024-01-31 11:03:29,999] * Configuring Bundle Backend Service 
+[2024-01-31 11:03:30,021] * Configuring Configuration Wizard 
+[2024-01-31 11:03:30,176] * Starting Service-Container[bundleProcess] 
+[2024-01-31 11:03:30,857] * Starting Bundle Backend Service 
+[2024-01-31 11:03:38,807] * Starting Configuration Wizard 
+[2024-01-31 11:03:38,820] * JetBrains Hub 2023.3 Configuration Wizard will listen inside container on {0.0.0.0:8080}/ after start and can be accessed by URL [http://<put-your-docker-HOST-name-here>:<put-host-port-mapped-to-container-port-8080-here>//?wizard_token=qPg1XqtJKo2pxqmrNiv4] 
+[2024-01-31 11:03:54,071] * Stopping Configuration Wizard 
+[2024-01-31 11:03:54,103] * Stopping Bundle Backend Service 
+[2024-01-31 11:03:54,125] * Stopping Service-Container[bundleProcess] 
+[2024-01-31 11:03:54,638] ================================================================ (finish)

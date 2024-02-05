@@ -1,0 +1,23 @@
+{{/*
+This template defines the default application configuration.
+
+It relies on the HOCON notation.
+
+Ref: https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation.
+*/}}
+{{- if .Values.include }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lib.appName" . }}-conf
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+  annotations: {{- include "lib.annotations" . | nindent 4 }}
+data:
+  {{- if .Values.defaultConfig.name }}
+  {{ .Values.defaultConfig.name }}: |-
+    {{- tpl (include "app.configurationFile" $) $ | nindent 4 }}
+  {{- end }}
+{{- end }}

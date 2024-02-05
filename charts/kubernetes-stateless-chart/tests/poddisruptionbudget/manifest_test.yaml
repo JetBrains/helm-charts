@@ -1,0 +1,38 @@
+suite: app pod disruption budget
+templates:
+  - poddisruptionbudget/manifest.yaml
+tests:
+  - it: should not be created by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created when the application is included and when the replica count is greater than 1
+    set:
+      include: true
+      replicaCount: 2
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodDisruptionBudget
+  - it: should not be created if the current application is not included
+    set:
+      include: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should not be created if the replicaCount is less than 2
+    set:
+      replicaCount: 1
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created in the desired namespace
+    set:
+      namespaceOverride: kube-custom
+      replicaCount: 2
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            namespace: kube-custom

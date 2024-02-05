@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "name": "kubernetes-stateless-chart",
+    "description": "Find more details about this chart in its Chart.yaml file."
+  },
+  "spec": {
+    "repositories": [
+      {
+        "name": "helm-library",
+        "description": "Repository for Kubernetes charts",
+        "url": "public.registry.jetbrains.space/p/helm/library",
+        "type": "oci",
+        "env": {
+          "nameSelector": "HELM_CHARTS_REGISTRY"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+---
+maintainers:
+  groups:
+    core:
+    - name: "Andrei Petrov"
+      email: "andrei.petrov@jetbrains.com"
+    - name: "Yunir Salimzyanov"
+      email: "yunir.salimzyanov@jetbrains.com"

@@ -1,0 +1,333 @@
+{{/*
+A Deployment provides declarative updates for Pods and ReplicaSets and it is a Worklaod Resource.
+
+It is constructured on top of the Pod concept.
+
+Describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at
+a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all
+their resources with new Deployments.
+
+Note: Do not manage ReplicaSets owned by a Deployment.
+
+Deployment Use Cases:
+
+1. To rollout a ReplicaSet.
+2. To declare the new state fo the Pods by updating the PodTemplateSpec. A new ReplicaSet is created and the Deployment
+   manages moving the Pods from the old ReplicaSet to the new one at a controlled rate. Each new ReplicaSet updates the
+   revision of the Deployment.
+3. To rollback to a previous Deployment revision if the current state of the Deployment is not stable. Each rollback
+   updates the revision of the Deployment.
+4. To scale up the Deployment to facilitate more load.
+5. To pause the rollout of a Deployment to apply multiple fixes to its PodTemplateSpec and then resume it to start a
+   new rollout.
+6. To use the status of the Deployment as an indicator that a rollout has stuck.
+7. To clean up older ReplicaSets that are not needed anymore.
+
+References:
+0. [Open API][Spec][V3]: https://github.com/kubernetes/kubernetes/tree/master/api/openapi-spec/v3
+1. [Open API][Deployment]: https://github.com/kubernetes/kubernetes/blob/master/api/openapi-spec/v3/apis__apps__v1_openapi.json
+2. [Kubernetes Documentation][Deployment]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+3. [Kubernetes Documentation][Pod]: https://kubernetes.io/docs/concepts/workloads/pods/
+4. [Kubernetes SIG][Pod Spec and Status]: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+5. [Kubernetes Documentation][Pod Probes]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+*/}}
+{{- if .Values.include -}}
+{{/*
+Internal variables for normalizing the external user input.
+- Use *mergeOverwrite* function to join together maps.
+- Use *concat* function to join together array lists.
+*/}}
+{{- $sidecars := concat .Values.sidecars .Values.additionalSidecars  -}}
+{{- $initContainers := concat list .Values.initContainers .Values.additionalInitContainers | uniq -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lib.appName" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+  annotations:
+    {{- include "lib.annotations" . | nindent 4 }}
+{{/*
+  Required spec fields are:
+  - selector
+  - template
+*/}}
+spec:
+  {{/* DeploymentSpec is the specification of the desired behavior of the Deployment. Ref: https://github.com/kubernetes/kubernetes/blob/6e0cb243d57592c917fe449dde20b0e246bc66be/api/openapi-spec/v3/apis__apps__v1_openapi.json#L505 */}}
+  progressDeadlineSeconds: {{ default 600 .Values.progressDeadlineSeconds  }}
+  minReadySeconds: {{ default 0 .Values.minReadySeconds }}
+  {{/*
+     Label Selector For Pods:
+       Existing ReplicaSets whose pods are selected
+       by this will be the ones affected by this deployment.
+
+     It must match the pod template's labels.
+  */}}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: {{ include "lib.componentName" . }}
+      {{- include "lib.matchLabels" . | nindent 6 }}
+  {{/*
+    The deployment strategy describes how to replace existing pods with new ones.
+    The strategy can be Recreate or RollingUpdate. Default is RollingUpdate.
+
+    Behaviour of Recreate Strategy
+
+    Scale down the existing application version before scaling up the new
+    application version. This strategy involves downtime.
+
+    Behaviour of RollingUpdate Strategy
+
+    Replace pods, one by one, of the previous version of the application with
+    pods of the new version without any cluster downtime. A rolling deployment
+    slowly replaces instances of the previous version of an application with
+    instances of the new version of the application.
+
+    In case of RollingUpdate the parameters below have the following default values in Kubernetes code:
+    1. maxSurge: 25%
+       The maximum number of pods that can be scheduled above the desired number of pods.
+       Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+       This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from
+       percentage by rounding up. Defaults to 25%. Example: when this is set to 30%,
+       the new ReplicaSet can be scaled up immediately when the rolling update starts,
+       such that the total number of old and new pods do not exceed 130% of desired
+       pods. Once old pods have been killed, new ReplicaSet can be scaled up further,
+       ensuring that total number of pods running at any time during the update is at
+       most 130% of desired pods.
+    2. maxUnavailable: 25%
+       The maximum number of pods that can be unavailable during the update.
+       Value can be an absolute number (ex: 5) or a percentage of desired pods
+       (ex: 10%). Absolute number is calculated from percentage by rounding down.
+       This can not be 0 if MaxSurge is 0. Defaults to 25%. Example: when this
+       is set to 30%, the old ReplicaSet can be scaled down to 70% of desired
+       pods immediately when the rolling update starts. Once new pods are ready,
+       old ReplicaSet can be scaled down further, followed by scaling up the
+       new ReplicaSet, ensuring that the total number of pods available at all
+       times during the update is at least 70% of desired pods.
+  */}}
+  strategy: {{- include "app.deploymentStrategy" .  | nindent 4 }}
+  replicas: {{ .Values.replicaCount }}
+  {{/*
+    PodTemplateSpec describes the data a pod should have when created from a template.
+    In short this is a wrapper for the PodSpec object. The PodSpec represents the actual
+    specification of the desired behaviour of the pod.
+  */}}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: {{ include "lib.componentName" . }}
+        {{- include "lib.matchLabels" . | nindent 8 }}
+        {{- include "app.podLabels" . | nindent 8 }}
+        {{- include "app.additionalPodLabels" . | nindent 8 }}
+      annotations:
+        {{- include "lib.annotations" . | nindent 8 }}
+        {{- include "app.podAnnotations" . | nindent 8 }}
+        {{- include "app.additionalPodAnnotations" . | nindent 8 }}
+        {{- include "app.configChecksum" . | nindent 8 }}
+        {{- include "app.envsChecksum" . | nindent 8 }}
+    spec:
+      {{- if .Values.nodeName }}
+      {{/* NOTE: nodeName takes precedence over the nodeSelector.
+          - If only nodeName is specified, the Pod will schedule only on that specific node.
+          - If only nodeSelector is specified, the Pod will schedule on any node matching the labels.
+          - If both are specified, nodeName takes precedence and the Pod will schedule only on the node with that name, ignoring nodeSelector.
+      */}}
+      nodeName: {{ .Values.nodeName }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- .Values.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
+      {{/*
+        A group of scheduling rules.
+        - nodeAffinity describes node affinity scheduling rules for the pod.
+        - podAffinity describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
+        - podAntiAffinity Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
+      */}}
+      affinity:
+        {{- if .Values.customAffinity }}
+        {{- .Values.customAffinity | toYaml | nindent 8 }}
+        {{- else }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - {{ include "lib.componentName" . }}
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
+        {{- end }}
+      {{/*
+      Prefer to use the ServiceAccount for the specification of the registry credentials.
+      */}}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "app.serviceAccount.name" . }}
+      {{- else }}
+      imagePullSecrets: {{- include "app.serviceAccount.imagePullSecrets" . | nindent 8 }}
+      {{- end }}
+      {{/*
+        PodSecurityContext holds pod-level security attributes and common container settings.
+        Some fields are also present in container.securityContext.
+        Field values of container.securityContext take precedence over field values of PodSecurityContext.
+      */}}
+      {{- if .Values.podSecurityContext -}}
+      securityContext:
+        {{- .Values.podSecurityContext | toYaml | nindent 8 }}
+      {{- end -}}
+      {{- if $initContainers }}
+      {{/*
+          List of initialization containers belonging to the pod.
+          Init containers are executed in order prior to containers being started.
+          If any init container fails, the pod is considered to have failed and is
+          handled according to its restartPolicy. The name for an init container or
+          normal container must be unique among all containers.
+
+          Init containers may not have Lifecycle actions, Readiness probes, Liveness probes,
+          or Startup probes.
+
+          The resourceRequirements of an init container are taken into account during
+          scheduling by finding the highest request/limit for each resource type, and
+          then using the max of of that value or the sum of the normal containers.
+
+          Limits are applied to init containers in a similar fashion.
+
+          Init containers cannot currently be added or removed. Cannot be updated.
+
+          More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/"
+
+          API Ref: "#/components/schemas/io.k8s.api.core.v1.Container"
+
+          NOTE: in case of complex objects like $initContainer always specify the type in front of the variable.
+            Then you can pipe it to toYaml function.
+      */}}
+      initContainers:
+      {{- tpl ($initContainers | toYaml) $ | nindent 10 }}
+      {{- end }}
+      containers:
+        - name: app
+          image: {{ include "lib.image" (dict "registry" .Values.image.registry "repository" .Values.image.repository "tag" .Values.image.tag ) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: {{ default .Values.entrypoint .Values.customEntrypoint | toYaml | nindent 12 }}
+          args: {{ default .Values.args .Values.customArgs | toYaml | nindent 12 }}
+          securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: {{ include "app.secretRef" . }}
+          ports:
+          {{- .Values.ports | toYaml | nindent 12 }}
+          {{/*
+            One-off blocking probe until the container is initialised in full.
+            Container will be restarted if the probe fails.
+            Cannot be updated.
+          */}}
+          {{- $appStartupProbe := mergeOverwrite .Values.startupProbe .Values.customStartupProbe  -}}
+          {{- if $appStartupProbe }}
+          startupProbe:
+          {{- $appStartupProbe | toYaml | nindent 12 }}
+          {{- end }}
+          {{/*
+            Periodic probe of container liveness.
+            Container will be restarted if the probe fails.
+            Cannot be updated.
+          */}}
+          {{- $appLivenessProbe := mergeOverwrite .Values.livenessProbe .Values.customLivenessProbe -}}
+          {{- if $appLivenessProbe  }}
+          livenessProbe:
+          {{- $appLivenessProbe | toYaml | nindent 12 }}
+          {{- end }}
+          {{/*
+            Periodic probe of container service readiness.
+            Container will be removed from service endpoints if the probe fails.
+            Cannot be updated.
+          */}}
+          {{- $appReadinessProbe := mergeOverwrite .Values.readinessProbe .Values.customReadinessProbe -}}
+          {{- if $appReadinessProbe }}
+          readinessProbe:
+          {{- $appReadinessProbe | toYaml | nindent 12 }}
+          {{- end }}
+          resources:
+          {{- .Values.resources | toYaml  | nindent 12 }}
+          {{/*
+          Pod volumes to mount into the container's filesystem. Cannot be updated.
+          VolumeMount: describes a mounting of a Volume within a container.
+          Properties:
+          - mountPath: Path within the container at which the volume should be mounted.  Must not contain ':'.
+          - mountPropagation: determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
+          - name: This must match the Name of a Volume.
+          - readOnly: Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
+          - subPath: Path within the volume from which the container's volume should be mounted. Defaults to \"\" (volume's root).
+          - subPathExpr: Expanded path within the volume from which the container's volume should be mounted. Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment. Defaults to \"\" (volume's root). SubPathExpr and SubPath are mutually exclusive.
+          Required:
+          - mountPath
+          - name
+          */}}
+          volumeMounts:
+            {{- if and .Values.defaultConfig.mountPath .Values.defaultConfig.name }}
+            - mountPath: {{ .Values.defaultConfig.mountPath | quote }}
+              name: conf
+              subPath: {{ .Values.defaultConfig.name | quote }}
+            {{- end }}
+            {{- $volumeMounts := concat .Values.volumes .Values.additionalVolumes }}
+            {{- if $volumeMounts }}
+            {{- range $volumeMount := $volumeMounts }}
+            - name: {{ $volumeMount.name | quote }}
+              {{- $volumeMount.volumeMountProperties | toYaml | nindent 14 }}
+            {{- end }}
+            {{- end }}
+        {{- if $sidecars }}
+        {{/*
+            List of containers belonging to the pod.
+            Containers cannot currently be added or removed.
+            There must be at least one container in a Pod.
+            Cannot be updated.
+            API Ref: "#/components/schemas/io.k8s.api.core.v1.Container"
+        */}}
+        {{- tpl ( $sidecars | toYaml) $ | nindent 8 }}
+        {{- end }}
+      {{/*
+        A Volume represents a named volume in a pod
+        that may be accessed by any container in the pod.
+        Properties:
+        - awsElasticBlockStore: an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod.
+        - azureDisk: an Azure Data Disk mount on the host and bind mount to the pod.
+        - azureFile: an Azure File Service mount on the host and bind mount to the pod.
+        - cephfs: a Ceph FS mount on the host that shares a pod's lifetime.
+        - cinder: a cinder volume attached and mounted on kubelets host machine.
+        - configMap: a configMap that should populate this volume.
+        - csi: csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).
+        - downwardAPI: the pod that should populate this volume.
+        - emptyDir: a temporary directory that shares a pod's lifetime.
+        - ephemeral: a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed.\n\nUse this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity\n   tracking are needed,\nc) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through\n   a PersistentVolumeClaim (see EphemeralVolumeSource for more\n   information on the connection between this volume type\n   and PersistentVolumeClaim).\n\nUse PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod.\n\nUse CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.\n\nA pod can use both types of ephemeral volumes and persistent volumes at the same time.
+        - fc: a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
+        - flexVolume: a generic volume resource that is provisioned/attached using an exec based plugin.
+        - flocker: a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running.
+        - gcePersistentDisk: a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod.
+        - glusterfs: a Glusterfs mount on the host that shares a pod's lifetime.
+        - hostPath: a pre-existing file or directory on the host machine that is directly exposed to the container.
+        - iscsi: an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod.
+        - name: name of the volume. Must be a DNS_LABEL and unique within the pod.
+        - nfs: an NFS mount on the host that shares a pod's lifetime;
+      */}}
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ include "lib.appName" . }}-conf
+        {{- $volumes := concat .Values.volumes .Values.additionalVolumes }}
+        {{- if $volumes }}
+        {{- range $volume := $volumes }}
+        - name: {{ $volume.name  | quote }}
+          {{- dict $volume.type (default dict $volume.properties) | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
+{{- end -}}

@@ -8,9 +8,15 @@
 **/*.bak
 **/*.dtmp
 **/.DS_Store
+**/100
 **/Chart.lock
 **/*/__snapshot__
+lib/nodejs/node_modules/
+lib/nodejs/dist/
 
 **/.envrc
 **/.direnv
 **/local.nix
+
+**/values
+**/examples

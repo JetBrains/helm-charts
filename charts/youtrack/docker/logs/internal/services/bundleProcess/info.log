@@ -1,0 +1,142 @@
+[2024-01-31 10:47:32,768]   INFO -                 bundle.startup - Configuring Service-Container[bundleProcess] 
+[2024-01-31 10:47:32,784]   INFO -                 bundle.startup - Configuring Bundle Backend Service 
+[2024-01-31 10:47:32,793]   INFO -                 bundle.startup - Configuring Configuration Wizard 
+[2024-01-31 10:47:32,876]   INFO -                 bundle.startup - Starting Service-Container[bundleProcess] 
+[2024-01-31 10:47:32,924]   INFO -     org.eclipse.jetty.util.log - Logging initialized @7104ms to org.eclipse.jetty.util.log.Slf4jLog 
+[2024-01-31 10:47:33,250]   INFO - rg.eclipse.jetty.server.Server - jetty-9.4.49.v20220914; built: 2022-09-14T01:07:36.601Z; git: 4231a3b2e4cb8548a412a789936d640a97b1aa0a; jvm 17.0.6+10-LTS 
+[2024-01-31 10:47:33,443]   INFO - .server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@4d828044{/bundle/starting,null,AVAILABLE} 
+[2024-01-31 10:47:33,450]   INFO - .server.handler.ContextHandler - Started c.j.b.p.j.@73799078{/,file:///opt/hub/internal/error_pages/,AVAILABLE} 
+[2024-01-31 10:47:33,503]   INFO - jetty.server.AbstractConnector - Started ServerConnector@50e0d666{HTTP/1.1, (http/1.1)}{0.0.0.0:8080} 
+[2024-01-31 10:47:33,505]   INFO - rg.eclipse.jetty.server.Server - Started @7687ms 
+[2024-01-31 10:47:33,520]   INFO -                 bundle.startup - Starting Bundle Backend Service 
+[2024-01-31 10:47:35,366]   INFO - ations.AnnotationConfiguration - Scanning elapsed time=1327ms 
+[2024-01-31 10:47:35,816]   INFO - .ContextHandler.bundle_backend - 1 Spring WebApplicationInitializers detected on classpath 
+[2024-01-31 10:47:35,934]   INFO - g.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0 
+[2024-01-31 10:47:35,942]   INFO - g.eclipse.jetty.server.session - No SessionScavenger set, using defaults 
+[2024-01-31 10:47:35,949]   INFO - g.eclipse.jetty.server.session - node0 Scavenging every 600000ms 
+[2024-01-31 10:47:36,043]   INFO - .ContextHandler.bundle_backend - Initializing Spring DispatcherServlet 'BundleBackendServletDispatcher' 
+[2024-01-31 10:47:36,044]   INFO - .web.servlet.DispatcherServlet - Initializing Servlet 'BundleBackendServletDispatcher' 
+[2024-01-31 10:47:41,357]   INFO - .web.servlet.DispatcherServlet - Completed initialization in 5312 ms 
+[2024-01-31 10:47:41,362]   INFO - .server.handler.ContextHandler - Started o.e.j.w.WebAppContext@7788d27c{/bundle/backend,file:///opt/hub/internal/bundle_common/,AVAILABLE} 
+[2024-01-31 10:47:41,378]   INFO -                 bundle.startup - Starting Configuration Wizard 
+[2024-01-31 10:47:41,383]   INFO -                 bundle.startup - JetBrains Hub 2023.3 Configuration Wizard will listen inside container on {0.0.0.0:8080}/ after start and can be accessed by URL [http://<put-your-docker-HOST-name-here>:<put-host-port-mapped-to-container-port-8080-here>//?wizard_token=7Tp1rCkHUwwn2DGIVDUD] 
+[2024-01-31 10:47:45,836]   INFO - ations.AnnotationConfiguration - Scanning elapsed time=4000ms 
+[2024-01-31 10:47:46,041]   INFO - er.handler.ContextHandler.ROOT - 1 Spring WebApplicationInitializers detected on classpath 
+[2024-01-31 10:47:46,106]   INFO - er.handler.ContextHandler.ROOT - Initializing Spring DispatcherServlet 'InstallerServletDispatcher' 
+[2024-01-31 10:47:46,107]   INFO - .web.servlet.DispatcherServlet - Initializing Servlet 'InstallerServletDispatcher' 
+[2024-01-31 10:47:52,453]   INFO - .web.servlet.DispatcherServlet - Completed initialization in 6345 ms 
+[2024-01-31 10:47:52,460]   INFO - .server.handler.ContextHandler - Started o.e.j.w.WebAppContext@6935280e{/,file:///opt/hub/internal/wizard_web/,AVAILABLE} 
+[2024-01-31 10:47:55,587]   INFO -                 bundle.startup - Stopping Configuration Wizard 
+[2024-01-31 10:47:55,599]   INFO - er.handler.ContextHandler.ROOT - Destroying Spring FrameworkServlet 'InstallerServletDispatcher' 
+[2024-01-31 10:47:55,620]   INFO - .server.handler.ContextHandler - Stopped o.e.j.w.WebAppContext@6935280e{/,file:///opt/hub/internal/wizard_web/,STOPPED} 
+[2024-01-31 10:47:55,623]   INFO -                 bundle.startup - Stopping Bundle Backend Service 
+[2024-01-31 10:47:55,626]   INFO - .ContextHandler.bundle_backend - Destroying Spring FrameworkServlet 'BundleBackendServletDispatcher' 
+[2024-01-31 10:47:55,639]   INFO - .server.handler.ContextHandler - Stopped o.e.j.w.WebAppContext@7788d27c{/bundle/backend,file:///opt/hub/internal/bundle_common/,STOPPED} 
+[2024-01-31 10:47:55,641]   INFO -                 bundle.startup - Stopping Service-Container[bundleProcess] 
+[2024-01-31 10:47:55,647]   INFO - bundle.proxy.jetty.BundleProxy - Stopping Service-Container[bundleProcess] 
+[2024-01-31 10:47:55,649]   WARN - jetty.server.AbstractConnector -  
+java.io.IOException: Is a directory
+	at sun.nio.ch.NativeThread.signal(Native Method) ~[?:?]
+	at sun.nio.ch.ServerSocketChannelImpl.implCloseBlockingMode(ServerSocketChannelImpl.java:587) ~[?:?]
+	at sun.nio.ch.ServerSocketChannelImpl.implCloseSelectableChannel(ServerSocketChannelImpl.java:621) ~[?:?]
+	at java.nio.channels.spi.AbstractSelectableChannel.implCloseChannel(AbstractSelectableChannel.java:258) ~[?:?]
+	at java.nio.channels.spi.AbstractInterruptibleChannel.close(AbstractInterruptibleChannel.java:112) ~[?:?]
+	at org.eclipse.jetty.server.ServerConnector.close(ServerConnector.java:371) [jetty-server-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at org.eclipse.jetty.server.AbstractNetworkConnector.shutdown(AbstractNetworkConnector.java:104) [jetty-server-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at org.eclipse.jetty.server.Server.doStop(Server.java:444) [jetty-server-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.stop(AbstractLifeCycle.java:94) [jetty-util-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at com.jetbrains.service.jetty.JettyServiceBase.shutdown(JettyServiceBase.java:142) [jetty-based-service-2.0.45.jar:?]
+	at com.jetbrains.bundle.proxy.jetty.BundleProxy.shutdown(BundleProxy.java:536) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.services.impl.InProcessJettyService.stop(InProcessJettyService.java:48) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.Services.stopService(Services.java:678) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.Services.stopAllServices(Services.java:706) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.Services.stop(Services.java:689) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.BundleMain.shutdown(BundleMain.java:330) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.BundleMain.shutdown(BundleMain.java:307) [bundle-2.0.45.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at com.jetbrains.bundle.bootstrap.Bundle$EntryPointProvider$1.invoke(Bundle.java:100) [bundle-bootstrap-2.0.45.jar:?]
+	at jdk.proxy4.$Proxy30.shutdown(Unknown Source) [?:?]
+	at com.jetbrains.launcher.AppProxy$6$3.call(AppProxy.java:118) [hub-wrapper.jar:1.0.206]
+	at com.jetbrains.launcher.AppProxy$6$3.call(AppProxy.java:116) [hub-wrapper.jar:1.0.206]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) [?:?]
+	at java.lang.Thread.run(Thread.java:833) [?:?]
+[2024-01-31 10:47:55,671]   INFO - jetty.server.AbstractConnector - Stopped ServerConnector@50e0d666{HTTP/1.1, (http/1.1)}{0.0.0.0:8080} 
+[2024-01-31 10:47:55,673]   INFO - g.eclipse.jetty.server.session - node0 Stopped scavenging 
+[2024-01-31 10:47:55,675]   INFO - .server.handler.ContextHandler - Stopped c.j.b.p.j.@73799078{/,file:///opt/hub/internal/error_pages/,STOPPED} 
+[2024-01-31 10:47:55,677]   INFO - .server.handler.ContextHandler - Stopped o.e.j.s.ServletContextHandler@4d828044{/bundle/starting,null,STOPPED} 
+[2024-01-31 11:03:29,963]   INFO -                 bundle.startup - Configuring Service-Container[bundleProcess] 
+[2024-01-31 11:03:29,995]   INFO -                 bundle.startup - Configuring Bundle Backend Service 
+[2024-01-31 11:03:30,015]   INFO -                 bundle.startup - Configuring Configuration Wizard 
+[2024-01-31 11:03:30,170]   INFO -                 bundle.startup - Starting Service-Container[bundleProcess] 
+[2024-01-31 11:03:30,235]   INFO -     org.eclipse.jetty.util.log - Logging initialized @7027ms to org.eclipse.jetty.util.log.Slf4jLog 
+[2024-01-31 11:03:30,574]   INFO - rg.eclipse.jetty.server.Server - jetty-9.4.49.v20220914; built: 2022-09-14T01:07:36.601Z; git: 4231a3b2e4cb8548a412a789936d640a97b1aa0a; jvm 17.0.6+10-LTS 
+[2024-01-31 11:03:30,775]   INFO - .server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@100fdc84{/bundle/starting,null,AVAILABLE} 
+[2024-01-31 11:03:30,785]   INFO - .server.handler.ContextHandler - Started c.j.b.p.j.@408e82a1{/,file:///opt/hub/internal/error_pages/,AVAILABLE} 
+[2024-01-31 11:03:30,833]   INFO - jetty.server.AbstractConnector - Started ServerConnector@7a4c1dce{HTTP/1.1, (http/1.1)}{0.0.0.0:8080} 
+[2024-01-31 11:03:30,834]   INFO - rg.eclipse.jetty.server.Server - Started @7631ms 
+[2024-01-31 11:03:30,852]   INFO -                 bundle.startup - Starting Bundle Backend Service 
+[2024-01-31 11:03:32,670]   INFO - ations.AnnotationConfiguration - Scanning elapsed time=1294ms 
+[2024-01-31 11:03:33,122]   INFO - .ContextHandler.bundle_backend - 1 Spring WebApplicationInitializers detected on classpath 
+[2024-01-31 11:03:33,222]   INFO - g.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0 
+[2024-01-31 11:03:33,223]   INFO - g.eclipse.jetty.server.session - No SessionScavenger set, using defaults 
+[2024-01-31 11:03:33,228]   INFO - g.eclipse.jetty.server.session - node0 Scavenging every 660000ms 
+[2024-01-31 11:03:33,323]   INFO - .ContextHandler.bundle_backend - Initializing Spring DispatcherServlet 'BundleBackendServletDispatcher' 
+[2024-01-31 11:03:33,324]   INFO - .web.servlet.DispatcherServlet - Initializing Servlet 'BundleBackendServletDispatcher' 
+[2024-01-31 11:03:38,781]   INFO - .web.servlet.DispatcherServlet - Completed initialization in 5456 ms 
+[2024-01-31 11:03:38,783]   INFO - .server.handler.ContextHandler - Started o.e.j.w.WebAppContext@7788d27c{/bundle/backend,file:///opt/hub/internal/bundle_common/,AVAILABLE} 
+[2024-01-31 11:03:38,802]   INFO -                 bundle.startup - Starting Configuration Wizard 
+[2024-01-31 11:03:38,808]   INFO -                 bundle.startup - JetBrains Hub 2023.3 Configuration Wizard will listen inside container on {0.0.0.0:8080}/ after start and can be accessed by URL [http://<put-your-docker-HOST-name-here>:<put-host-port-mapped-to-container-port-8080-here>//?wizard_token=qPg1XqtJKo2pxqmrNiv4] 
+[2024-01-31 11:03:43,524]   INFO - ations.AnnotationConfiguration - Scanning elapsed time=4244ms 
+[2024-01-31 11:03:43,746]   INFO - er.handler.ContextHandler.ROOT - 1 Spring WebApplicationInitializers detected on classpath 
+[2024-01-31 11:03:43,817]   INFO - er.handler.ContextHandler.ROOT - Initializing Spring DispatcherServlet 'InstallerServletDispatcher' 
+[2024-01-31 11:03:43,819]   INFO - .web.servlet.DispatcherServlet - Initializing Servlet 'InstallerServletDispatcher' 
+[2024-01-31 11:03:50,961]   INFO - .web.servlet.DispatcherServlet - Completed initialization in 7141 ms 
+[2024-01-31 11:03:50,963]   INFO - .server.handler.ContextHandler - Started o.e.j.w.WebAppContext@70a87fc3{/,file:///opt/hub/internal/wizard_web/,AVAILABLE} 
+[2024-01-31 11:03:54,060]   INFO -                 bundle.startup - Stopping Configuration Wizard 
+[2024-01-31 11:03:54,071]   INFO - er.handler.ContextHandler.ROOT - Destroying Spring FrameworkServlet 'InstallerServletDispatcher' 
+[2024-01-31 11:03:54,093]   INFO - .server.handler.ContextHandler - Stopped o.e.j.w.WebAppContext@70a87fc3{/,file:///opt/hub/internal/wizard_web/,STOPPED} 
+[2024-01-31 11:03:54,096]   INFO -                 bundle.startup - Stopping Bundle Backend Service 
+[2024-01-31 11:03:54,098]   INFO - .ContextHandler.bundle_backend - Destroying Spring FrameworkServlet 'BundleBackendServletDispatcher' 
+[2024-01-31 11:03:54,114]   INFO - .server.handler.ContextHandler - Stopped o.e.j.w.WebAppContext@7788d27c{/bundle/backend,file:///opt/hub/internal/bundle_common/,STOPPED} 
+[2024-01-31 11:03:54,116]   INFO -                 bundle.startup - Stopping Service-Container[bundleProcess] 
+[2024-01-31 11:03:54,121]   INFO - bundle.proxy.jetty.BundleProxy - Stopping Service-Container[bundleProcess] 
+[2024-01-31 11:03:54,124]   WARN - jetty.server.AbstractConnector -  
+java.io.IOException: Is a directory
+	at sun.nio.ch.NativeThread.signal(Native Method) ~[?:?]
+	at sun.nio.ch.ServerSocketChannelImpl.implCloseBlockingMode(ServerSocketChannelImpl.java:587) ~[?:?]
+	at sun.nio.ch.ServerSocketChannelImpl.implCloseSelectableChannel(ServerSocketChannelImpl.java:621) ~[?:?]
+	at java.nio.channels.spi.AbstractSelectableChannel.implCloseChannel(AbstractSelectableChannel.java:258) ~[?:?]
+	at java.nio.channels.spi.AbstractInterruptibleChannel.close(AbstractInterruptibleChannel.java:112) ~[?:?]
+	at org.eclipse.jetty.server.ServerConnector.close(ServerConnector.java:371) [jetty-server-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at org.eclipse.jetty.server.AbstractNetworkConnector.shutdown(AbstractNetworkConnector.java:104) [jetty-server-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at org.eclipse.jetty.server.Server.doStop(Server.java:444) [jetty-server-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.stop(AbstractLifeCycle.java:94) [jetty-util-9.4.49.v20220914.jar:9.4.49.v20220914]
+	at com.jetbrains.service.jetty.JettyServiceBase.shutdown(JettyServiceBase.java:142) [jetty-based-service-2.0.45.jar:?]
+	at com.jetbrains.bundle.proxy.jetty.BundleProxy.shutdown(BundleProxy.java:536) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.services.impl.InProcessJettyService.stop(InProcessJettyService.java:48) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.Services.stopService(Services.java:678) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.Services.stopAllServices(Services.java:706) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.Services.stop(Services.java:689) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.BundleMain.shutdown(BundleMain.java:330) [bundle-2.0.45.jar:?]
+	at com.jetbrains.bundle.BundleMain.shutdown(BundleMain.java:307) [bundle-2.0.45.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at com.jetbrains.bundle.bootstrap.Bundle$EntryPointProvider$1.invoke(Bundle.java:100) [bundle-bootstrap-2.0.45.jar:?]
+	at jdk.proxy4.$Proxy30.shutdown(Unknown Source) [?:?]
+	at com.jetbrains.launcher.AppProxy$6$3.call(AppProxy.java:118) [hub-wrapper.jar:1.0.206]
+	at com.jetbrains.launcher.AppProxy$6$3.call(AppProxy.java:116) [hub-wrapper.jar:1.0.206]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) [?:?]
+	at java.lang.Thread.run(Thread.java:833) [?:?]
+[2024-01-31 11:03:54,160]   INFO - jetty.server.AbstractConnector - Stopped ServerConnector@7a4c1dce{HTTP/1.1, (http/1.1)}{0.0.0.0:8080} 
+[2024-01-31 11:03:54,161]   INFO - g.eclipse.jetty.server.session - node0 Stopped scavenging 
+[2024-01-31 11:03:54,163]   INFO - .server.handler.ContextHandler - Stopped c.j.b.p.j.@408e82a1{/,file:///opt/hub/internal/error_pages/,STOPPED} 
+[2024-01-31 11:03:54,164]   INFO - .server.handler.ContextHandler - Stopped o.e.j.s.ServletContextHandler@100fdc84{/bundle/starting,null,STOPPED} 

@@ -1,0 +1,853 @@
+suite: app statefulset
+release:
+  name: unittest
+  namespace: kube-app
+templates:
+  - statefulset/manifest.yaml
+  - configuration/manifest.yaml
+  - configuration/secret.envs.yaml
+tests:
+  - it: should be created by default with very minimal configuration
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: StatefulSet
+      - isSubset:
+          path: spec.updateStrategy
+          content:
+            rollingUpdate:
+              maxUnavailable: 1
+              partition: 0
+      - isSubset:
+          path: spec.selector.matchLabels
+          content:
+              app.kubernetes.io/component: app
+              app.kubernetes.io/instance: unittest
+              app.kubernetes.io/managed-by: Helm
+              app.kubernetes.io/name: kubernetes-stateful-chart
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.minReadySeconds
+          value: 0
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 10
+      - equal:
+          path: spec.serviceName
+          value: unittest-kubernetes-stateful-chart-app
+      - equal:
+          path: spec.volumeClaimTemplates
+          value: []
+      - equal:
+          path: spec.podManagementPolicy
+          value: OrderedReady
+    template: statefulset/manifest.yaml
+  - it: should be created with the full configuration
+    set:
+      namespaceOverride: kube-app
+      commonAnnotations:
+        page.infra.team: true
+        url.pager.infra.team: opsgenie.com
+      global.registry: quay.io
+      name: packages
+      image.repository: packages
+      image.tag: 2022.1.1
+      image.pullPolicy: IfNotPresent
+      image.pullSecrets:
+        - quay.io-secret
+      replicaCount: 2
+      deploymentStrategyType: Recreate
+      podLabels:
+        owner: infra.team
+      podAnnotations:
+        monitoring.prometheus.metrics: true
+        monitoring.prometheus.metrics.port: 9090
+      livenessProbe:
+        httpGet:
+          path: "/healthcheck"
+          port: "http-ext"
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 30
+          successThreshold: 1
+          failureThreshold: 5
+      readinessProbe:
+        httpGet:
+          path: "/healthcheck"
+          port: "http-ext"
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 30
+          successThreshold: 1
+          failureThreshold: 5
+      nodeName: "eu-west-1-eks-ssd-node"
+      nodeSelector:
+        disk: fiber-channel
+      ports:
+        - name: http-ext
+          containerPort: 8084
+        - name: http-int
+          containerPort: 9084
+      initContainers:
+        - name: check-db
+          image: docker.io/postgresql:14.01
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 500m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          envFrom:
+            - secretRef:
+                name: external-db-secret
+          command:
+            - "sh"
+            - "-c"
+            - "until PGPASSWORD=\"${DB_PASSWORD}\" psql -h \"${DB_HOSTNAME}\" -p \"${DB_PORT}\" -d \"${DB_NAME}\" -U \"${DB_USERNAME}\" -c 'SELECT 1' ; do echo waiting for database; sleep 2; done;"
+        - name: check-cache
+          image: docker.io/redis:6.4.2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 500m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          envFrom:
+            - secretRef:
+                name: external-cache-secret
+          command:
+            - "sh"
+            - "-c"
+            - "until redis-cli -h \"${REDIS_HOSTNAME}\" -p \"${REDIS_PORT}\" ping; do echo waiting for redis; sleep 2; done;"
+      envs:
+        INTERNAL_URL: "http://unittest-kubernetes-stateful-chart-packages:9084"
+        EXTERNAL_URL: "https://packages.app.local"
+      additionalEnvs:
+        http_proxy: "http://prx.networkcompany.net"
+        https_proxy: "https://prx.networkcompany.net"
+      defaultConfig:
+        name: "app.conf"
+        mountPath: "/home/app/packages-server/app.conf"
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["monitoring.prometheus.metrics"]
+          value: true
+      - equal:
+          path: spec.template.metadata.annotations["monitoring.prometheus.metrics.port"]
+          value: 9090
+      - equal:
+          path: spec.template.metadata.annotations["page.infra.team"]
+          value: true
+      - equal:
+          path: spec.template.metadata.annotations["url.pager.infra.team"]
+          value: opsgenie.com
+      - isNotNullOrEmpty:
+          path: spec.template.metadata.annotations["checksum/envs"]
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              page.infra.team: true
+              url.pager.infra.team: opsgenie.com
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: packages
+      - equal:
+          path: metadata["namespace"]
+          value: kube-app
+      - equal:
+          path: metadata["name"]
+          value: unittest-kubernetes-stateful-chart-packages
+      - equal:
+          path: spec["replicas"]
+          value: 2
+      - isNotNull:
+          path: spec.template.spec.containers
+    template: statefulset/manifest.yaml
+  - it: should accept init containers expressed with golang templates
+    set:
+      initContainers:
+        - name: check-postgresql
+          image: "docker.io/bitnami/postgresql:11.12.0"
+          imagePullPolicy: "Always"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsUser: 10001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - NET_RAW
+                - ALL
+          envFrom:
+            - secretRef:
+              name: '{{ default ( tpl "{{ include \"lib.appName\" . }}-envs" . ) .Values.externalEnvSecret }}'
+          command:
+            - 'sh'
+            - '-c'
+            - "until PGPASSWORD=\"${DB_PASSWORD}\" psql -h \"${DB_HOSTNAME}\" -p \"${DB_PORT}\" -d \"${DB_NAME}\" -U \"${DB_USERNAME}\" -c 'SELECT 1' ; do echo waiting for database; sleep 2; done;"
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.initContainers
+    template: statefulset/manifest.yaml
+  - it: should accept init containers expressed with golang templates as default and additional group
+    set:
+      initContainers:
+        - name: check-postgresql
+          image: "docker.io/bitnami/postgresql:11.12.0"
+          imagePullPolicy: "Always"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsUser: 10001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - NET_RAW
+                - ALL
+          envFrom:
+            - secretRef:
+              name: '{{ default ( tpl "{{ include \"lib.appName\" . }}-envs" . ) .Values.externalEnvSecret }}'
+          command:
+            - 'sh'
+            - '-c'
+            - "until PGPASSWORD=\"${DB_PASSWORD}\" psql -h \"${DB_HOSTNAME}\" -p \"${DB_PORT}\" -d \"${DB_NAME}\" -U \"${DB_USERNAME}\" -c 'SELECT 1' ; do echo waiting for database; sleep 2; done;"
+      additionalInitContainers:
+        - name: check-es
+          image: "docker.io/bitnami/postgresql:11.12.0"
+          imagePullPolicy: "Always"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsUser: 10001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - NET_RAW
+                - ALL
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.initContainers
+    template: statefulset/manifest.yaml
+  - it: should construct final initContainers list correctly
+    set:
+      initContainers:
+        - name: check-postgresql
+          image: "docker.io/bitnami/postgresql:11.12.0"
+          imagePullPolicy: "Always"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          command:
+            - 'echo'
+            - 'hello'
+      additionalInitContainers:
+        - name: check-es
+          image: "docker.io/bitnami/postgresql:11.12.0"
+          imagePullPolicy: "Always"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.initContainers
+      - lengthEqual:
+          path: spec.template.spec.initContainers
+          count: 2
+      - contains:
+          path: spec.template.spec.initContainers
+          content:
+            name: check-es
+          count: 1
+          any: true
+      - contains:
+          path: spec.template.spec.initContainers
+          content:
+            name: check-postgresql
+          count: 1
+          any: true
+    template: statefulset/manifest.yaml
+  - it: should use internalEnvSecret instead of the environment variables
+    set:
+      include: true
+      internalEnvSecret: 'packages-internal-secret'
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
+          value: 'packages-internal-secret'
+    template: statefulset/manifest.yaml
+  - it: should correctly render args
+    set:
+      args: [ "--arg1", "--arg2" ]
+    asserts:
+      - isNotNullOrEmpty:
+          path: spec.template.spec.containers[0].args
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value: [ "--arg1", "--arg2" ]
+    template: statefulset/manifest.yaml
+  - it: should correctly render entrypoint
+    set:
+      entrypoint: [ "command1", "--arg1" ]
+    asserts:
+      - isNotNullOrEmpty:
+          path: spec.template.spec.containers[0].command
+      - equal:
+          path: spec.template.spec.containers[0].command
+          value: [ "command1", "--arg1" ]
+    template: statefulset/manifest.yaml
+  - it: should overwrite args with values from customArgs
+    set:
+      args: [ "--arg1", "--arg2" ]
+      customArgs: [ "--im-new-here" ]
+    asserts:
+      - isNotNullOrEmpty:
+          path: spec.template.spec.containers[0].args
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value: [ "--im-new-here" ]
+    template: statefulset/manifest.yaml
+  - it: customEntrypoint should overwrite entrypoint
+    set:
+      entrypoint: [ "bash", "-c" ]
+      customEntrypoint: [ "im-new-here", "let-me-run-something" ]
+    asserts:
+      - isNotNullOrEmpty:
+          path: spec.template.spec.containers[0].command
+      - equal:
+          path: spec.template.spec.containers[0].command
+          value: [ "im-new-here", "let-me-run-something" ]
+    template: statefulset/manifest.yaml
+  - it: should use externalEnvSecret instead of the environment variables and internalEnvSecret
+    set:
+      include: true
+      internalEnvSecret: 'packages-internal-secret'
+      externalEnvSecret: 'packages-external-secret'
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
+          value: 'packages-external-secret'
+    template: statefulset/manifest.yaml
+  - it: should use built secret resource by its reference name
+    set:
+      include: true
+      fullnameOverride: app
+      name: packages
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
+          value: 'app-packages-envs'
+    template: statefulset/manifest.yaml
+  - it: should add volumes and volumeMounts to the application specification
+    set:
+      volumes:
+        - name: volume-uno
+          type: emptyDir
+          properties: { }
+          volumeMountProperties:
+            mountPath: "/app/volume/conf/file.ext"
+            subPath: "file.txt"
+        - name: volume-due
+          type: cephfs
+          properties:
+            monitors:
+              - 10.16.154.78:6789
+              - 10.16.154.82:6789
+              - 10.16.154.83:6789
+            user: admin
+            secretFile: "/etc/ceph/admin.secret"
+            readOnly: true
+          volumeMountProperties:
+            mountPath: "/app/volume/directory"
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.volumes
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            configMap:
+              name: unittest-kubernetes-stateful-chart-app-conf
+            name: conf
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            emptyDir: { }
+            name: volume-uno
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            cephfs:
+              monitors:
+                - 10.16.154.78:6789
+                - 10.16.154.82:6789
+                - 10.16.154.83:6789
+              readOnly: true
+              secretFile: /etc/ceph/admin.secret
+              user: admin
+            name: volume-due
+    template: statefulset/manifest.yaml
+  - it: should allow to inject all the settings
+    set:
+        include: true # This is default
+        name: sample # Overwrite the app name
+        image:
+          registry: quay.io
+          repository: project/sample
+          tag: v1.0.0
+          pullPolicy: IfNotPresent
+          pullSecrets: [ "docker-token" ]
+        replicaCount: 2
+        minReadySeconds: 30
+        progressDeadlineSeconds: 360
+        revisionHistoryLimit: 5
+        deploymentStrategyType: Recreate
+        rollingUpdateStrategyConfig.maxSurge: 50%
+        rollingUpdateStrategyConfig.maxUnavailable: 50%
+        podLabels:
+          custom.label: value
+        additionalPodLabels:
+          custom.additionalPodLabel: value
+        podAnnotations:
+          custom.annotation: value
+        additionalPodAnnotations:
+          custom.additionalPodAnnotation: value
+        resources:
+          requests:
+            cpu: "2"
+            memory: 4096Mi
+          limits:
+            cpu: "4"
+            memory: 8192Mi
+        podSecurityContext:
+          fsGroup: 20000
+          runAsUser: 20000
+          runAsNonRoot: true
+        customContainerSecurityContext:
+          runAsUser: 20001
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+          drop:
+            - "ALL"
+        livenessProbe:
+          httpGet:
+            path: "/health"
+            port: "8080"
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 10
+          successThreshold: 2
+          failureThreshold: 3
+        customLivenessProbe:
+          httpGet:
+            path: "/livez"
+            port: "9090"
+          initialDelaySeconds: 20
+          periodSeconds: 60
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 2
+        customReadinessProbe:
+          httpGet:
+            path: "/healthcheck"
+            port: "rest-api"
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 30
+          successThreshold: 1
+          failureThreshold: 5
+        customStartupProbe:
+          httpGet:
+            path: "/healthcheck"
+            port: "rest-api"
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 30
+          successThreshold: 1
+          failureThreshold: 20
+        customAffinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - sample
+                topologyKey: kubernetes.io/hostname
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/os
+                      operator: In
+                      values:
+                        - linux
+                        - windows
+        nodeName: kubelet-with-cross-os-support
+        nodeSelector:
+          storageType: ultrassd
+        ports:
+          - name: http
+            containerPort: 8080
+          - name: metrics
+            containerPort: 9090
+        sidecars:
+          - name: metricsexporter
+            image: docker.io/jmx_exporter:v2.0.0
+        additionalSidecars:
+          - name: trafficencryptor
+            image: envoy:v1.0.0
+        initContainers:
+          - name: check-redis
+            image: "docker.io/bitnami/redis:6.2.7"
+            imagePullPolicy: "Always"
+            resources:
+              requests:
+                cpu: 500m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsUser: 10001
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - NET_RAW
+                  - ALL
+            envFrom:
+              - secretRef:
+                  name: '{{ include "app.secretRef" . }}'
+            command: [ 'sh', '-c', "until redis-cli -h \"${REDIS_HOSTNAME}\" -p \"${REDIS_PORT}\" ping; do echo waiting for redis; sleep 2; done;" ]
+        additionalInitContainers:
+          - name: check-postgresql
+            image: "docker.io/bitnami/postgresql:11.12.0"
+            imagePullPolicy: "Always"
+            resources:
+              requests:
+                cpu: 500m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsUser: 10001
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: [ "NET_RAW", "ALL" ]
+            envFrom:
+              - secretRef:
+                  name: '{{ include "app.secretRef" . }}'
+            command: [ 'sh', '-c', "until PGPASSWORD=\"${DB_PASSWORD}\" psql -h \"${DB_HOSTNAME}\" -p \"${DB_PORT}\" -d \"${DB_NAME}\" -U \"${DB_USERNAME}\" -c 'SELECT 1' ; do echo waiting for database; sleep 2; done;" ]
+        config: |-
+          ktor {
+            deployment {
+              environment = {{ .Values.defaultConfig.customValues.APP_KTOR_DEPLOYMENT_ENVIRONMENT }}
+              port = {{ .Values.defaultConfig.customValues.APP_app_EXTERNAL_PORT }}
+              internalPort = ${APP_app_INTERNAL_PORT}
+              autoreload = false
+              callGroupSize = 8
+            }
+            application {
+              modules = [circlet.server.ServerKt.main]
+            }
+          }
+        defaultConfig:
+          name: "app.conf"
+          mountPath: "/sample-app"
+          customValues:
+            APP_KTOR_DEPLOYMENT_ENVIRONMENT: production
+            APP_app_EXTERNAL_PORT: 9090
+        envs:
+          REDIS_HOSTNAME: "redis"
+          REDIS_PORT: "4444"
+        additionalEnvs:
+          DB_PASSWORD: "password"
+          DB_HOSTNAME: "database"
+          DB_PORT: "5555"
+          DB_NAME: "bd"
+          DB_USERNAME: "app-user"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isNotNull:
+          path: metadata.labels
+      - isNotNull:
+          path: spec.selector.matchLabels
+      - isNotNull:
+          path: spec.template.metadata.labels
+      - isNotNull:
+          path: spec.template.metadata.annotations
+      - isNotNull:
+          path: spec.template.spec.affinity
+      - isNotNull:
+          path: spec.template.spec.imagePullSecrets
+      - isNotNull:
+          path: spec.template.spec.securityContext
+      - isNotNull:
+          path: spec.template.spec.initContainers
+      - isNotNull:
+          path: spec.template.spec.containers
+      - isNotNull:
+          path: spec.template.spec.containers[0].securityContext
+      - isNotNull:
+          path: spec.template.spec.containers[0].envFrom
+      - isNotNull:
+          path: spec.template.spec.containers[0].ports
+      - isNotNull:
+          path: spec.template.spec.containers[0].startupProbe
+      - isNotNull:
+          path: spec.template.spec.containers[0].livenessProbe
+      - isNotNull:
+          path: spec.template.spec.containers[0].readinessProbe
+      - isNotNull:
+          path: spec.template.spec.containers[0].resources
+      - isNotNull:
+          path: spec.template.spec.containers[0].volumeMounts
+      - equal:
+          path: metadata.name
+          value: unittest-kubernetes-stateful-chart-sample
+      - equal:
+          path: spec.replicas
+          value: 2
+    template: statefulset/manifest.yaml
+  - it: should allow to use templating in podLabels and podAnnotations
+    set:
+        podLabels:
+          release/name: "{{ .Release.Name }}"
+        additionalPodLabels:
+          release/namespace: "{{ .Release.Namespace }}"
+        podAnnotations:
+          release/name: "{{ .Release.Name }}"
+        additionalPodAnnotations:
+          release/namespace: "{{ .Release.Namespace }}"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.template.metadata.labels["release/name"]
+          value: unittest
+      - equal:
+          path: spec.template.metadata.labels["release/namespace"]
+          value: kube-app
+      - equal:
+          path: spec.template.metadata.annotations["release/name"]
+          value: unittest
+      - equal:
+          path: spec.template.metadata.annotations["release/namespace"]
+          value: kube-app
+    template: statefulset/manifest.yaml
+  - it: should not add checksum annotation on secret, when internalEnvSecret is set
+    set:
+      internalEnvSecret: "another-secret-envs"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: StatefulSet
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/envs"]
+    template: statefulset/manifest.yaml
+  - it: should not add checksum annotation on secret, when externalEnvSecret is set
+    set:
+      externalEnvSecret: "another-secret-envs"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: StatefulSet
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/envs"]
+    template: statefulset/manifest.yaml
+  - it: should not add checksum annotation on config, when it is not defined
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: StatefulSet
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/config"]
+    template: statefulset/manifest.yaml
+  - it: should add checksum annotation on config, when it is defined
+    set:
+      defaultConfig.mountPath: "/sample-app"
+      defaultConfig.name: "app.conf"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: StatefulSet
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+    template: statefulset/manifest.yaml
+  - it: should merge and overwrite values in probes
+    set:
+      startupProbe:
+        httpGet:
+          path: "/healthcheck"
+          port: "http-ext"
+      customStartupProbe:
+        httpGet:
+          path: "/overwriten"
+          port: "overwriten"
+      readinessProbe:
+        httpGet:
+          path: "/healthcheck"
+          port: "http-ext"
+        successThreshold: 1
+        failureThreshold: 5
+      customReadinessProbe:
+        httpGet:
+          path: "/overwriten"
+          port: "overwriten"
+      livenessProbe:
+        httpGet:
+          path: "/healthcheck"
+          port: "http-ext"
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        timeoutSeconds: 30
+        successThreshold: 1
+        failureThreshold: 5
+      customLivenessProbe:
+        arbitraryProperty: "arbitraryValue"
+        httpGet:
+          path: "/overwriten"
+          port: "overwriten"
+        initialDelaySeconds: 42
+        periodSeconds: 42
+        timeoutSeconds: 42
+        successThreshold: 42
+        failureThreshold: 42
+    asserts:
+      - isSubset:
+          path: spec.template.spec.containers[0].livenessProbe
+          content:
+            arbitraryProperty: "arbitraryValue"
+            httpGet:
+              path: "/overwriten"
+              port: "overwriten"
+            initialDelaySeconds: 42
+            periodSeconds: 42
+            timeoutSeconds: 42
+            successThreshold: 42
+            failureThreshold: 42
+      - isSubset:
+          path: spec.template.spec.containers[0].readinessProbe
+          content:
+            httpGet:
+              path: "/overwriten"
+              port: "overwriten"
+            successThreshold: 1
+            failureThreshold: 5
+      - isSubset:
+          path: spec.template.spec.containers[0].startupProbe
+          content:
+            httpGet:
+              path: "/overwriten"
+              port: "overwriten"
+    template: statefulset/manifest.yaml
+  - it: should allow to specify volumeClaims
+    set:
+      volumeClaims:
+        - mountDetails:
+            path: /usr/share/app/data
+          metadata:
+            name: data
+          properties:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+      additionalVolumeClaims:
+        - mountDetails:
+            path: /usr/share/app/data-2
+          metadata:
+            name: data-2
+          properties:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+
+    asserts:
+      - isNotNull:
+          path: spec.volumeClaimTemplates
+      - lengthEqual:
+          path: spec.volumeClaimTemplates
+          count: 2
+      - isSubset:
+          path: spec.volumeClaimTemplates[0]
+          content:
+              metadata:
+                name: data
+              properties:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+      - isSubset:
+          path: spec.volumeClaimTemplates[1]
+          content:
+              metadata:
+                name: data-2
+              properties:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+    template: statefulset/manifest.yaml

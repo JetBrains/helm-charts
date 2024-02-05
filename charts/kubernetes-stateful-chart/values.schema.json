@@ -1,0 +1,769 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "imageRegistry": {
+                    "type": "string",
+                    "description": "Specify the registry that stores the images",
+                    "default": ""
+                },
+                "imagePullSecrets": {
+                    "type": "array",
+                    "description": "Specify the credentials as secret names for pulling the images",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "nameOverride": {
+            "type": "string",
+            "description": "Provide a prefix to partially override the lib.name in the templates",
+            "default": ""
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "Provide a name to override completely the lib.name in the templates",
+            "default": ""
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Provide a map of key/value pairs of labels to be applied to all resources in the templates",
+            "default": {}
+        },
+        "commonAnnotations": {
+            "type": "object",
+            "description": "Provide a map of key/value pairs of annotations to be applied to all resources in the templates",
+            "default": {}
+        },
+        "namespaceOverride": {
+            "type": "string",
+            "description": "Provide a name to fully override lib.namespace in the templates",
+            "default": ""
+        },
+        "include": {
+            "type": "boolean",
+            "description": "Includes/Excludes the configurations for this application",
+            "default": true
+        },
+        "name": {
+            "type": "string",
+            "description": "Application name",
+            "default": ""
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "registry": {
+                    "type": "string",
+                    "description": "URL of the container registry",
+                    "default": "docker.io"
+                },
+                "repository": {
+                    "type": "string",
+                    "description": "URL of the container repository",
+                    "default": "portainer/portainer-ce"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Image version",
+                    "default": "2.18.4-alpine"
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "description": "Pull policy of the container image",
+                    "default": "Always"
+                },
+                "pullSecrets": {
+                    "type": "array",
+                    "description": "Registry credentials. Specify not the credentials but the corresponding secrets",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "entrypoint": {
+            "type": "array",
+            "description": "Provide arguments to the entrypoint of the application.",
+            "default": [],
+            "items": {}
+        },
+        "customEntrypoint": {
+            "type": "array",
+            "description": "Overwrite in full the parameter application.entrypoint.",
+            "default": [],
+            "items": {}
+        },
+        "args": {
+            "type": "array",
+            "description": "Provide arguments to the entrypoint of the application.",
+            "default": [
+                "--admin-password='$$2y$$05$$aO9DEethtRMRpmyc4p0Dn.4MUvoJ274844ej9IdUS16kpiu43d6R6'"
+            ],
+            "items": {
+                "type": "string"
+            }
+        },
+        "customArgs": {
+            "type": "array",
+            "description": "Overwrite in full the parameter application.args.",
+            "default": [],
+            "items": {}
+        },
+        "serviceAccount": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "description": "Specify whether to create a service account",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Service account name",
+                    "default": ""
+                },
+                "automountServiceAccountToken": {
+                    "type": "boolean",
+                    "description": "Specify if the account can mount the access token from the Kubernetes API",
+                    "default": true
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Key/value map of labels",
+                    "default": {}
+                },
+                "additionalLabels": {
+                    "type": "object",
+                    "description": "Additional key/value map of labels",
+                    "default": {}
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Key/value map of annotations",
+                    "default": {}
+                },
+                "additionalAnnotations": {
+                    "type": "object",
+                    "description": "Additional key/value map of annotations",
+                    "default": {}
+                },
+                "namespacePermissions": {
+                    "type": "array",
+                    "description": "List of permissions to attach to the ServiceAccount within the in use namespace",
+                    "default": [],
+                    "items": {}
+                },
+                "additionalNamespacePermissions": {
+                    "type": "array",
+                    "description": "Additional list of permissions to attach to the ServiceAccount within the in use namespace",
+                    "default": [],
+                    "items": {}
+                },
+                "clusterPermissions": {
+                    "type": "array",
+                    "description": "List of permissions to attach to the ServiceAccount within the in use Kubernetes cluster",
+                    "default": [],
+                    "items": {}
+                },
+                "additionalClusterPermissions": {
+                    "type": "array",
+                    "description": "Additional list of permissions to attach to the ServiceAccount within the in use Kubernetes cluster",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "autoscaling": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enables/disables autoscaling",
+                    "default": false
+                },
+                "minReplicas": {
+                    "type": "number",
+                    "description": "Minimum number of pods",
+                    "default": 1
+                },
+                "maxReplicas": {
+                    "type": "number",
+                    "description": "Maximum number of pods",
+                    "default": 5
+                },
+                "metrics": {
+                    "type": "object",
+                    "properties": {
+                        "targetCPU": {
+                            "type": "string",
+                            "description": "CPU utilization threshold",
+                            "default": ""
+                        },
+                        "targetMemory": {
+                            "type": "string",
+                            "description": "Memory utilization threshold",
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        },
+        "replicaCount": {
+            "type": "number",
+            "description": "Initial number of pods for the application",
+            "default": 1
+        },
+        "minReadySeconds": {
+            "type": "number",
+            "description": "Specify the minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available",
+            "default": 0
+        },
+        "podManagementPolicy": {
+            "type": "string",
+            "description": "Specify how pods are created during initial scale up, when replacing pods on nodes, or when scaling down. Possible values are OrderedReady or Parallel.",
+            "default": "OrderedReady"
+        },
+        "revisionHistoryLimit": {
+            "type": "number",
+            "description": "Specify the number of old ReplicaSets to retain to allow rollback. This is a pointer to distinguish between explicit zero and not specified",
+            "default": 10
+        },
+        "updateStrategy": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Specify the type of the update strategy",
+                    "default": "RollingUpdate"
+                },
+                "properties": {
+                    "type": "object",
+                    "properties": {
+                        "maxUnavailable": {
+                            "type": "number",
+                            "description": "Specify the maximum number of pods that can be unavailable during the update",
+                            "default": 1
+                        },
+                        "partition": {
+                            "type": "number",
+                            "description": "Specify the ordinal at which the StatefulSet should be partitioned for updates. During a rolling update, all pods from ordinal Replicas-1 to Partition are updated. All pods from ordinal Partition-1 to 0 remain untouched. This is helpful in being able to do a canary-based deployment",
+                            "default": 0
+                        }
+                    }
+                }
+            }
+        },
+        "podLabels": {
+            "type": "object",
+            "description": "Specify labels to apply at PodSpec level",
+            "default": {}
+        },
+        "additionalPodLabels": {
+            "type": "object",
+            "description": "Additional labels to apply at PodSpec level",
+            "default": {}
+        },
+        "podAnnotations": {
+            "type": "object",
+            "description": "Specify annotations to apply at PodSpec level",
+            "default": {}
+        },
+        "additionalPodAnnotations": {
+            "type": "object",
+            "description": "Additional annotations to apply at PodSpec level",
+            "default": {}
+        },
+        "resources": {
+            "type": "object",
+            "properties": {
+                "requests": {
+                    "type": "object",
+                    "properties": {
+                        "cpu": {
+                            "type": "string",
+                            "description": "Max CPU available for a pod (resource request)",
+                            "default": "2000m"
+                        },
+                        "memory": {
+                            "type": "string",
+                            "description": "Max memory available for a pod (resource request)",
+                            "default": "2048Mi"
+                        }
+                    }
+                },
+                "limits": {
+                    "type": "object",
+                    "properties": {
+                        "cpu": {
+                            "type": "string",
+                            "description": "Min CPU available for a pod (resource limit)",
+                            "default": "2000m"
+                        },
+                        "memory": {
+                            "type": "string",
+                            "description": "Min memory available for a pod (resource limit)",
+                            "default": "2048Mi"
+                        }
+                    }
+                }
+            }
+        },
+        "service": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Service name",
+                    "default": ""
+                },
+                "additionalPorts": {
+                    "type": "array",
+                    "description": "Additional service ports",
+                    "default": [],
+                    "items": {}
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Service type. Valid values are: ClusterIP, NodePort, LoadBalancer",
+                    "default": ""
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Service annotations",
+                    "default": {}
+                },
+                "additionalAnnotations": {
+                    "type": "object",
+                    "description": "Additional service annotations",
+                    "default": {}
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Service labels",
+                    "default": {}
+                },
+                "additionalLabels": {
+                    "type": "object",
+                    "description": "Additional service labels",
+                    "default": {}
+                }
+            }
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "properties": {
+                "fsGroup": {
+                    "type": "number",
+                    "description": "Group ID that has access to the filesystem at run-time",
+                    "default": 10001
+                }
+            }
+        },
+        "containerSecurityContext": {
+            "type": "object",
+            "properties": {
+                "runAsUser": {
+                    "type": "number",
+                    "description": "ID of the user who runs the process",
+                    "default": 10001
+                },
+                "runAsNonRoot": {
+                    "type": "boolean",
+                    "description": "Specify if the process can run under the root user",
+                    "default": true
+                },
+                "allowPrivilegeEscalation": {
+                    "type": "boolean",
+                    "description": "Specify if the process can get more permissions at run-time",
+                    "default": false
+                },
+                "readOnlyRootFilesystem": {
+                    "type": "boolean",
+                    "description": "Specify if the root filesystem of the process is read-only",
+                    "default": true
+                }
+            }
+        },
+        "customContainerSecurityContext": {
+            "type": "object",
+            "description": "Overwrite partially the application.containerSecurityContext property",
+            "default": {}
+        },
+        "livenessProbe": {
+            "type": "object",
+            "properties": {
+                "httpGet": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Application side HTTP URI that outlines how it performs",
+                            "default": "/"
+                        },
+                        "port": {
+                            "type": "string",
+                            "description": "Application port that is open for probing type of requests",
+                            "default": "http"
+                        }
+                    }
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Specify the waiting time for kubelet before it launches the first probe",
+                    "default": 30
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Specify the time interval kubelet can launch the probe",
+                    "default": 15
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
+                    "default": 10
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the livenessProbe as success",
+                    "default": 1
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the livenessProbe as failure",
+                    "default": 3
+                }
+            }
+        },
+        "customLivenessProbe": {
+            "type": "object",
+            "description": "Overwrite partially the application.livenessProbe property",
+            "default": {}
+        },
+        "readinessProbe": {
+            "type": "object",
+            "properties": {
+                "httpGet": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Application side HTTP URI that outlines if it is ready",
+                            "default": "/"
+                        },
+                        "port": {
+                            "type": "string",
+                            "description": "Application port that is open for probing type of requests",
+                            "default": "http"
+                        }
+                    }
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Specify the waiting time for kubelet before it launches the first probe",
+                    "default": 30
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Specify the time interval kubelet can launch the probe",
+                    "default": 15
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
+                    "default": 10
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the readinessProbe as success",
+                    "default": 1
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the readinessProbe as failure",
+                    "default": 3
+                }
+            }
+        },
+        "customReadinessProbe": {
+            "type": "object",
+            "description": "Overwrite partially the application.readinessProbe property",
+            "default": {}
+        },
+        "startupProbe": {
+            "type": "object",
+            "properties": {
+                "httpGet": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Application side HTTP URI that outlines if it is started",
+                            "default": "/"
+                        },
+                        "port": {
+                            "type": "string",
+                            "description": "Application port that is open for probing type of requests",
+                            "default": "http"
+                        }
+                    }
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Specify the waiting time for kubelet before it launches the first probe",
+                    "default": 30
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Specify the time interval kubelet can launch the probe",
+                    "default": 15
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
+                    "default": 10
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the startupProbe as success",
+                    "default": 1
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the startupProbe as failure",
+                    "default": 3
+                }
+            }
+        },
+        "customStartupProbe": {
+            "type": "object",
+            "description": "Overwrite partially the application.startupProbe property",
+            "default": {}
+        },
+        "customAffinity": {
+            "type": "object",
+            "description": "Overwrite in full the default affinity rules",
+            "default": {}
+        },
+        "nodeName": {
+            "type": "string",
+            "description": "Specify the NodeName where to schedule a pod. Leave empty for auto scheduling decision",
+            "default": ""
+        },
+        "nodeSelector": {
+            "type": "object",
+            "description": "Specify the selector which must be true for the pod to fit on a node",
+            "default": {}
+        },
+        "ingress": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enables/disables Ingress for routing inbound traffic",
+                    "default": true
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Ingress name",
+                    "default": ""
+                },
+                "pathType": {
+                    "type": "string",
+                    "description": "Ingress path type",
+                    "default": "ImplementationSpecific"
+                },
+                "hostname": {
+                    "type": "string",
+                    "description": "Ingress hostname",
+                    "default": "containers.app"
+                },
+                "tls": {
+                    "type": "boolean",
+                    "description": "Enables/disables TLS for the hostname",
+                    "default": false
+                },
+                "alternateDnsNames": {
+                    "type": "array",
+                    "description": "Specify whether to add a list of alternative DNS names to the self-signed certificate",
+                    "default": [],
+                    "items": {}
+                },
+                "certValidityDuration": {
+                    "type": "string",
+                    "description": "Specify how many days the self-signed certificate should remain valid",
+                    "default": ""
+                },
+                "path": {
+                    "type": "string",
+                    "description": "Ingress path array",
+                    "default": "/"
+                },
+                "additionalPaths": {
+                    "type": "array",
+                    "description": "Ingress extra paths",
+                    "default": [],
+                    "items": {}
+                },
+                "additionalTLS": {
+                    "type": "array",
+                    "description": "Additional TLS configuration",
+                    "default": [],
+                    "items": {}
+                },
+                "secret": {
+                    "type": "string",
+                    "description": "Name of the external secret for $parent.hostname",
+                    "default": ""
+                },
+                "ingressClassName": {
+                    "type": "string",
+                    "description": "IngressClass name",
+                    "default": ""
+                },
+                "additionalRules": {
+                    "type": "array",
+                    "description": "Additional Ingress rules",
+                    "default": [],
+                    "items": {}
+                },
+                "backendService": {
+                    "type": "object",
+                    "properties": {
+                        "portName": {
+                            "type": "string",
+                            "description": "Specify the application port name of the backend service",
+                            "default": "http"
+                        }
+                    }
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Key/value map with annotations",
+                    "default": {}
+                },
+                "additionalAnnotations": {
+                    "type": "object",
+                    "description": "Additional key/value map with annotations",
+                    "default": {}
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Key/value map with labels",
+                    "default": {}
+                },
+                "additionalLabels": {
+                    "type": "object",
+                    "description": "Additional key/value map with labels",
+                    "default": {}
+                }
+            }
+        },
+        "additionalVolumes": {
+            "type": "array",
+            "description": "Specify additional mutual exclusive with application.volumes value named volumes to be attached to the main container and pod",
+            "default": [],
+            "items": {}
+        },
+        "volumeClaims": {
+            "type": "array",
+            "description": "Specify a list of volume claims to be attached to the pod",
+            "default": [],
+            "items": {}
+        },
+        "additionalVolumeClaims": {
+            "type": "array",
+            "description": "",
+            "default": [],
+            "items": {}
+        },
+        "sidecars": {
+            "type": "array",
+            "description": "Specify containers to run alongside the main container",
+            "default": [],
+            "items": {}
+        },
+        "additionalSidecars": {
+            "type": "array",
+            "description": "Specify additional containers to run alongside the main container",
+            "default": [],
+            "items": {}
+        },
+        "initContainers": {
+            "type": "array",
+            "description": "Specify a list of initialization containers belonging to the pod",
+            "default": [],
+            "items": {}
+        },
+        "additionalInitContainers": {
+            "type": "array",
+            "description": "Specify a list of additional initialization containers belonging to the pod",
+            "default": [],
+            "items": {}
+        },
+        "config": {
+            "type": "string",
+            "description": "Overwrites the configuration in application.defaultConfig.config",
+            "default": ""
+        },
+        "defaultConfig": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Specify the default application configuration file name",
+                    "default": ""
+                },
+                "mountPath": {
+                    "type": "string",
+                    "description": "Specify the default application configuration file system path where the file is located",
+                    "default": ""
+                },
+                "config": {
+                    "type": "string",
+                    "description": "Specify the default application configuration",
+                    "default": ""
+                },
+                "customValues": {
+                    "type": "object",
+                    "description": "Specify a map of custom values to be referenced by the application.defaultConfig.config parameter",
+                    "default": {}
+                }
+            }
+        },
+        "envs": {
+            "type": "object",
+            "description": "Environment variables",
+            "default": {}
+        },
+        "additionalEnvs": {
+            "type": "object",
+            "description": "Additional environment variables",
+            "default": {}
+        },
+        "internalEnvSecret": {
+            "type": "string",
+            "description": "Specify the internal secret name that contains system environment variables",
+            "default": ""
+        },
+        "externalEnvSecret": {
+            "type": "string",
+            "description": "Specify the external secret name that contains system environment variables",
+            "default": ""
+        },
+        "kubernetesYamlResources": {
+            "type": "array",
+            "description": "Kubernetes objects to add to the application package",
+            "default": [],
+            "items": {}
+        },
+        "additionalKubernetesYamlResources": {
+            "type": "array",
+            "description": "Add additional Kubernetes objects to add to the application package",
+            "default": [],
+            "items": {}
+        }
+    }
+}

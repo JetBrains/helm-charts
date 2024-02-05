@@ -1,0 +1,60 @@
+# Remove release files
+release.json
+# Remove ignore files
+.gitignore
+.helmignore
+
+# Remove all shell scripts
+*.sh
+
+# Remove all resulting packages
+./*.tgz
+./.
+./..
+.cache
+# Just in case if someone forgets to remove their local.properties file
+*.properties
+
+# Internal cluster values
+values/
+
+# Rendered templates
+rendered/
+
+# Got it from the Internet
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# negation (prefixed with !). Only one pattern per line.
+.DS_Store
+# Common VCS dirs
+.git/
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*~
+# Various IDEs
+.project
+.idea/
+*.tmproj
+.vscode/
+.helm-docs
+.helm_output
+*.md
+.env
+Makefile
+*.lock
+examples/
+unittests/
+tests/
+values.schema.json
+schema.values.json
+# Docs related
+LICENSE
+
+ct.yaml

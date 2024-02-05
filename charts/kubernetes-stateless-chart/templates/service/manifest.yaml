@@ -1,0 +1,37 @@
+{{/*
+An abstract way to expose an application running on a set of Pods as a network
+service. With Kubernetes you don't need to modify your application to use an
+unfamiliar service discovery mechanism. Kubernetes gives Pods their own IP
+addresses and a single DNS name for a set of Pods, and can load-balance
+across them.
+
+For example, consider a stateless image-processing backend which is running
+with 3 replicas. Those replicas are fungible—frontends do not care which
+backend they use. While the actual Pods that compose the backend set may
+change, the frontend clients should not need to be aware of that, nor
+should they need to keep track of the set of backends themselves.
+
+Ref: https://kubernetes.io/docs/concepts/services-networking/service/
+*/}}
+{{- if .Values.include -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "app.serviceName" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+  {{- include "lib.labels" . | nindent 4 }}
+  {{- include "app.serviceLabels" . | nindent 4 }}
+  {{- include "app.additionalServiceLabels" . | nindent 4 }}
+  annotations:
+  {{- include "lib.annotations" . | nindent 4 }}
+  {{- include "app.serviceAnnotations" . | nindent 4 }}
+  {{- include "app.additionalServiceAnnotations" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.matchLabels" . | nindent 4 }}
+  type: {{ include "app.serviceType" . }}
+  ports: {{- include "app.servicePorts" . | nindent 4 }}
+{{- end -}}

@@ -1,0 +1,210 @@
+[2024-01-31 10:47:29,601]  TRACE -                                - ================================================================ (start)
+[2024-01-31 10:47:29,703]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub Java: <Hub Home>/internal/java/linux-x64 (version "17.0.6", build "17.0.6+10-LTS")
+[2024-01-31 10:47:29,724]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub process ID: 274
+[2024-01-31 10:47:29,724]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub home directory: /opt/hub
+[2024-01-31 10:47:29,725]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Command line: [com.jetbrains.bundle.bootstrap.Bundle]
+[2024-01-31 10:47:29,726]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] JetLauncher logs directory: <Hub Home>/logs
+[2024-01-31 10:47:29,746]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub class loader:
+java.net.URLClassLoader {
+    file:<Hub Home>/lib/websocket-api-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-jndi-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-analysis-7.3.1.jar
+    file:<Hub Home>/lib/jul-to-slf4j-1.8.0-beta4.jar
+    file:<Hub Home>/lib/api-ext-2.0.45.jar
+    file:<Hub Home>/lib/javax.annotation-api-1.3.2.jar
+    file:<Hub Home>/lib/jetty-plus-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-util-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-xml-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/http2-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-webapp-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-commons-7.3.1.jar
+    file:<Hub Home>/lib/annotations-13.0.jar
+    file:<Hub Home>/lib/bundle-internal-api-2.0.45.jar
+    file:<Hub Home>/lib/jetty-alpn-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/websocket-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-annotations-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.transaction-api-1.3.jar
+    file:<Hub Home>/lib/slf4j-api-1.8.0-beta4.jar
+    file:<Hub Home>/lib/javax-websocket-server-impl-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-jmx-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/bundle-api-2.0.45.jar
+    file:<Hub Home>/lib/http2-common-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax-websocket-client-impl-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-servlets-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/websocket-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-http-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-deploy-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/log4j-slf4j18-impl-2.17.1.jar
+    file:<Hub Home>/lib/jetty-alpn-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-rewrite-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-quickstart-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-tree-7.3.1.jar
+    file:<Hub Home>/lib/jetty-security-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-proxy-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.websocket-client-api-1.0.jar
+    file:<Hub Home>/lib/http2-hpack-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-io-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/websocket-common-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.servlet-api-3.1.0.jar
+    file:<Hub Home>/lib/log4j-api-2.17.1.jar
+    file:<Hub Home>/lib/bundle-bootstrap-2.0.45.jar
+    file:<Hub Home>/lib/http2-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.websocket-api-1.0.jar
+    file:<Hub Home>/lib/jcl-over-slf4j-1.8.0-beta4.jar
+    file:<Hub Home>/lib/websocket-servlet-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/log4j-core-2.17.1.jar
+    file:<Hub Home>/lib/jetty-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-servlet-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-7.3.1.jar
+    file:<Hub Home>/lib/jetty-util-ajax-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/alpn/1.9/jetty-alpn-java-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/alpn/1.9/activation-1.1.1.jar
+}
+with parent java.net.URLClassLoader {
+    file:<Hub Home>/launcher/lib/app-wrapper/app-wrapper-api.jar
+    file:<Hub Home>/launcher/lib/app-wrapper/../common/launcher-api.jar
+    file:<Hub Home>/launcher/lib/app-wrapper/../common/launcher-runtime-api.jar
+}
+with parent jdk.internal.loader.ClassLoaders$PlatformClassLoader
+[2024-01-31 10:47:29,828]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] JetLauncher version: 1.0.206
+[2024-01-31 10:47:30,757]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Starting Hub...
+[2024-01-31 10:47:30,797]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] [Server] Server started on port 39563
+[2024-01-31 10:47:55,547]  ERROR - ncher.log.AppWrapperLoggerImpl - Failed to start JetBrains Hub 2023.3 due to unexpected exception: File created by ConfigurationWizard is not accessible
+[2024-01-31 10:47:55,551]  DEBUG - ncher.log.AppWrapperLoggerImpl - Failed to start JetBrains Hub 2023.3 due to unexpected exception: File created by ConfigurationWizard is not accessible
+com.jetbrains.launcher.exceptions.StartupException: Failed to start JetBrains Hub 2023.3 due to unexpected exception: File created by ConfigurationWizard is not accessible
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:259) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at com.jetbrains.bundle.bootstrap.Bundle$EntryPointProvider$1.invoke(Bundle.java:100) ~[?:?]
+	at jdk.proxy4.$Proxy30.start(Unknown Source) ~[?:?]
+	at com.jetbrains.launcher.AppProxy$6$1.call(AppProxy.java:99) ~[hub-wrapper.jar:1.0.206]
+	at com.jetbrains.launcher.AppProxy$6$1.call(AppProxy.java:97) ~[hub-wrapper.jar:1.0.206]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+Caused by: com.jetbrains.service.util.StatusException: File created by ConfigurationWizard is not accessible
+	at com.jetbrains.bundle.BundleMain.startWizardCompletionListener(BundleMain.java:292) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:282) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:237) ~[?:?]
+	... 12 more
+Caused by: java.io.IOException: Function not implemented
+	at sun.nio.fs.LinuxWatchService.<init>(LinuxWatchService.java:62) ~[?:?]
+	at sun.nio.fs.LinuxFileSystem.newWatchService(LinuxFileSystem.java:47) ~[?:?]
+	at com.jetbrains.bundle.wizard.ConfigurationFileWatcher.awaitUntilFileIsCreated(ConfigurationFileWatcher.java:75) ~[?:?]
+	at com.jetbrains.bundle.wizard.ConfigurationFileWatcher.awaitConfigFile(ConfigurationFileWatcher.java:39) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.startWizardCompletionListener(BundleMain.java:290) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:282) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:237) ~[?:?]
+	... 12 more
+[2024-01-31 10:47:55,570]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub failed to start with exit code EXIT(29)
+[2024-01-31 10:47:55,576]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Shutdown requested (exitCode: EXIT(29), soft: false, restartState: null)
+[2024-01-31 10:47:55,706]  TRACE -                                - ================================================================ (finish)
+[2024-01-31 11:03:27,023]  TRACE -                                - ================================================================ (start)
+[2024-01-31 11:03:27,144]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub Java: <Hub Home>/internal/java/linux-x64 (version "17.0.6", build "17.0.6+10-LTS")
+[2024-01-31 11:03:27,166]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub process ID: 274
+[2024-01-31 11:03:27,167]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub home directory: /opt/hub
+[2024-01-31 11:03:27,167]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Command line: [com.jetbrains.bundle.bootstrap.Bundle]
+[2024-01-31 11:03:27,168]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] JetLauncher logs directory: <Hub Home>/logs
+[2024-01-31 11:03:27,189]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub class loader:
+java.net.URLClassLoader {
+    file:<Hub Home>/lib/websocket-api-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-jndi-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-analysis-7.3.1.jar
+    file:<Hub Home>/lib/jul-to-slf4j-1.8.0-beta4.jar
+    file:<Hub Home>/lib/api-ext-2.0.45.jar
+    file:<Hub Home>/lib/javax.annotation-api-1.3.2.jar
+    file:<Hub Home>/lib/jetty-plus-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-util-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-xml-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/http2-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-webapp-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-commons-7.3.1.jar
+    file:<Hub Home>/lib/annotations-13.0.jar
+    file:<Hub Home>/lib/bundle-internal-api-2.0.45.jar
+    file:<Hub Home>/lib/jetty-alpn-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/websocket-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-annotations-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.transaction-api-1.3.jar
+    file:<Hub Home>/lib/slf4j-api-1.8.0-beta4.jar
+    file:<Hub Home>/lib/javax-websocket-server-impl-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-jmx-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/bundle-api-2.0.45.jar
+    file:<Hub Home>/lib/http2-common-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax-websocket-client-impl-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-servlets-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/websocket-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-http-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-deploy-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/log4j-slf4j18-impl-2.17.1.jar
+    file:<Hub Home>/lib/jetty-alpn-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-rewrite-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-quickstart-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-tree-7.3.1.jar
+    file:<Hub Home>/lib/jetty-security-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-proxy-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.websocket-client-api-1.0.jar
+    file:<Hub Home>/lib/http2-hpack-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-io-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/websocket-common-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.servlet-api-3.1.0.jar
+    file:<Hub Home>/lib/log4j-api-2.17.1.jar
+    file:<Hub Home>/lib/bundle-bootstrap-2.0.45.jar
+    file:<Hub Home>/lib/http2-client-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/javax.websocket-api-1.0.jar
+    file:<Hub Home>/lib/jcl-over-slf4j-1.8.0-beta4.jar
+    file:<Hub Home>/lib/websocket-servlet-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/log4j-core-2.17.1.jar
+    file:<Hub Home>/lib/jetty-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/jetty-servlet-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/asm-7.3.1.jar
+    file:<Hub Home>/lib/jetty-util-ajax-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/alpn/1.9/jetty-alpn-java-server-9.4.49.v20220914.jar
+    file:<Hub Home>/lib/alpn/1.9/activation-1.1.1.jar
+}
+with parent java.net.URLClassLoader {
+    file:<Hub Home>/launcher/lib/app-wrapper/app-wrapper-api.jar
+    file:<Hub Home>/launcher/lib/app-wrapper/../common/launcher-api.jar
+    file:<Hub Home>/launcher/lib/app-wrapper/../common/launcher-runtime-api.jar
+}
+with parent jdk.internal.loader.ClassLoaders$PlatformClassLoader
+[2024-01-31 11:03:27,279]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] JetLauncher version: 1.0.206
+[2024-01-31 11:03:28,232]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Starting Hub...
+[2024-01-31 11:03:28,269]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] [Server] Server started on port 43497
+[2024-01-31 11:03:54,017]  ERROR - ncher.log.AppWrapperLoggerImpl - Failed to start JetBrains Hub 2023.3 due to unexpected exception: File created by ConfigurationWizard is not accessible
+[2024-01-31 11:03:54,021]  DEBUG - ncher.log.AppWrapperLoggerImpl - Failed to start JetBrains Hub 2023.3 due to unexpected exception: File created by ConfigurationWizard is not accessible
+com.jetbrains.launcher.exceptions.StartupException: Failed to start JetBrains Hub 2023.3 due to unexpected exception: File created by ConfigurationWizard is not accessible
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:259) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at com.jetbrains.bundle.bootstrap.Bundle$EntryPointProvider$1.invoke(Bundle.java:100) ~[?:?]
+	at jdk.proxy4.$Proxy30.start(Unknown Source) ~[?:?]
+	at com.jetbrains.launcher.AppProxy$6$1.call(AppProxy.java:99) ~[hub-wrapper.jar:1.0.206]
+	at com.jetbrains.launcher.AppProxy$6$1.call(AppProxy.java:97) ~[hub-wrapper.jar:1.0.206]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+Caused by: com.jetbrains.service.util.StatusException: File created by ConfigurationWizard is not accessible
+	at com.jetbrains.bundle.BundleMain.startWizardCompletionListener(BundleMain.java:292) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:282) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:237) ~[?:?]
+	... 12 more
+Caused by: java.io.IOException: Function not implemented
+	at sun.nio.fs.LinuxWatchService.<init>(LinuxWatchService.java:62) ~[?:?]
+	at sun.nio.fs.LinuxFileSystem.newWatchService(LinuxFileSystem.java:47) ~[?:?]
+	at com.jetbrains.bundle.wizard.ConfigurationFileWatcher.awaitUntilFileIsCreated(ConfigurationFileWatcher.java:75) ~[?:?]
+	at com.jetbrains.bundle.wizard.ConfigurationFileWatcher.awaitConfigFile(ConfigurationFileWatcher.java:39) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.startWizardCompletionListener(BundleMain.java:290) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:282) ~[?:?]
+	at com.jetbrains.bundle.BundleMain.start(BundleMain.java:237) ~[?:?]
+	... 12 more
+[2024-01-31 11:03:54,044]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Hub failed to start with exit code EXIT(29)
+[2024-01-31 11:03:54,050]  DEBUG - ncher.log.AppWrapperLoggerImpl - [APP-WRAPPER] Shutdown requested (exitCode: EXIT(29), soft: false, restartState: null)
+[2024-01-31 11:03:54,186]  TRACE -                                - ================================================================ (finish)

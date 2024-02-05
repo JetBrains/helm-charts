@@ -1,0 +1,31 @@
+{{/*
+Service Account configuration.
+A service account provides an identity for processes that run in a Pod.
+When you (a human) access the cluster (for example, using kubectl), you are authenticated by the apiserver as a
+particular User Account (currently this is usually admin, unless your cluster administrator has customized your cluster).
+Processes in containers inside pods can also contact the apiserver. When they do, they are authenticated as a particular
+Service Account (for example, default).
+Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+
+# imagePullSecrets:
+#  - name: myregistrykey
+#
+*/}}
+{{- if .Values.include -}}
+{{- if .Values.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "app.serviceAccount.name" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+    {{- include "app.serviceAccount.additionalLabels" . | nindent 4 }}
+  annotations:
+    {{- include "lib.annotations" . | nindent 4 }}
+    {{- include "app.serviceAccount.additionalAnnotations" . | nindent 4 }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+imagePullSecrets: {{ include "app.serviceAccount.imagePullSecrets" . | nindent 2 }}
+{{- end -}}
+{{- end -}}

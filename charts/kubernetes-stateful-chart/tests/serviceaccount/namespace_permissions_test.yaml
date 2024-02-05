@@ -1,0 +1,62 @@
+suite: app service account namespace permissions - role
+templates:
+  - serviceaccount/namespace_permissions/role.yaml
+tests:
+  - it: should not be created by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created if enabled
+    set:
+      serviceAccount.create: true
+      serviceAccount.namespacePermissions:
+        - apiGroups: [ "" ]
+          resources:
+            - "services"
+            - "endpoints"
+            - "pods"
+          verbs:
+            - "get"
+            - "list"
+            - "watch"
+      serviceAccount.additionalNamespacePermissions:
+        - apiGroups: [ "" ]
+          resources:
+            - "configmap"
+            - "secrets"
+          verbs:
+            - "get"
+            - "list"
+        - apiGroups: [ "" ]
+          resources:
+            - "configmap"
+            - "secrets"
+          verbs:
+            - "get"
+            - "list"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Role
+      - equal:
+          path: rules
+          value:
+            - apiGroups:
+                - ""
+              resources:
+                - services
+                - endpoints
+                - pods
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+              resources:
+                - configmap
+                - secrets
+              verbs:
+                - get
+                - list

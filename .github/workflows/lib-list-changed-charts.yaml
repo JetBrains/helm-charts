@@ -1,0 +1,58 @@
+name: Reusable workflows | List changed charts
+
+on:
+  workflow_call:
+    outputs:
+      charts:
+        description: "List of charts that have changed"
+        value: ${{ jobs.list-changed-charts.outputs.charts }}
+
+jobs:
+  list-changed-charts:
+    runs-on: ubuntu-latest
+    outputs:
+      charts: ${{ steps.changed-charts.outputs.charts }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.12.1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: List changed charts
+        id: changed-charts
+        run: |
+          default_branch="${{ github.event.repository.default_branch || 'main' }}"
+          current_branch=$(git branch --show-current)
+
+          charts="$(ct list-changed --chart-dirs charts --target-branch ${default_branch})"
+
+          if [[ "${default_branch}" == "${current_branch}" ]]; then
+            # Overwrite the default charts lists if the job runs on the default branch. This is needed for chart-testing tool to work properly.
+            # Without this workaround, chart-testing tool is not able to detect from the main branch if any charts changed.
+            previous_commit=$(git rev-parse HEAD^)
+            charts="$(ct list-changed --chart-dirs charts --target-branch ${default_branch} --since ${previous_commit})"
+          fi
+
+          listOfChangedCharts="["
+          for chart in $charts; do
+            listOfChangedCharts="${listOfChangedCharts}{'chart': '${chart}'},"
+          done
+          # Remove trailing comma
+          listOfChangedCharts="${listOfChangedCharts%,}"
+          listOfChangedCharts="${listOfChangedCharts}]"
+          echo "charts<<EOF" >> $GITHUB_OUTPUT
+          echo "${listOfChangedCharts}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT

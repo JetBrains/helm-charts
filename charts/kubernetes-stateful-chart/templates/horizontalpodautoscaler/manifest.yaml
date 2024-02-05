@@ -1,0 +1,61 @@
+{{/*
+In Kubernetes, a HorizontalPodAutoscaler automatically updates a workload resource (such as a Deployment or
+StatefulSet), with the aim of automatically scaling the workload to match demand.
+Horizontal scaling means that the response to increased load is to deploy more Pods.
+This is different from vertical scaling, which for Kubernetes would mean assigning
+more resources (for example: memory or CPU) to the Pods that are already running for
+the workload.
+If the load decreases, and the number of Pods is above the configured minimum,
+the HorizontalPodAutoscaler instructs the workload resource (the Deployment,
+StatefulSet, or other similar resource) to scale back down.
+
+Horizontal pod autoscaling does not apply to objects that can't be scaled (for example: a DaemonSet.)
+
+When an HPA is enabled, it is recommended that the value of spec.replicas of the Deployment and / or
+StatefulSet be removed from their manifest(s). If this isn't done, any time a change to that object
+is applied, for example via kubectl apply -f deployment.yaml, this will instruct Kubernetes to scale
+the current number of Pods to the value of the spec.replicas key. This may not be desired and could be
+troublesome when an HPA is active.
+
+Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+
+Example walkthrough ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+*/}}
+{{- if .Values.include }}
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lib.appName" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+  annotations:
+  {{- include "lib.annotations" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lib.appName" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.metrics.targetCPU }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.metrics.targetCPU }}
+    {{- end }}
+    {{- if .Values.autoscaling.metrics.targetMemory }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.metrics.targetMemory }}
+    {{- end }}
+{{- end }}
+{{- end }}
