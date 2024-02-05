@@ -1,0 +1,19 @@
+{{- if .Values.include }}
+{{- if (gt (int .Values.replicaCount) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "lib.appName" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+  annotations:
+    {{- include "lib.annotations" . | indent 4 }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels: {{- include "lib.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: {{ include "lib.componentName" . }}
+{{- end }}
+{{- end }}

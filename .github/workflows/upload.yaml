@@ -1,0 +1,50 @@
+name: Upload Charts
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+
+jobs:
+  call-changed-charts-workflow:
+    uses: ./.github/workflows/lib-list-changed-charts.yaml
+    secrets: inherit
+
+  push:
+    runs-on: ubuntu-latest
+    needs: call-changed-charts-workflow
+    if: needs.call-changed-charts-workflow.outputs.charts != '[]'
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.call-changed-charts-workflow.outputs.charts) }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Run chart (${{ matrix.chart }}) publishing"
+        run: |
+            cd ${{ matrix.chart }}
+
+            touch .env
+
+            echo "HELM_CHARTS_REGISTRY_USERNAME=${{ secrets.HELM_CHARTS_REGISTRY_USERNAME }}" >> .env
+            echo "HELM_CHARTS_REGISTRY_PASSWORD=${{ secrets.HELM_CHARTS_REGISTRY_PASSWORD }}" >> .env
+
+            docker run \
+            -v "$PWD:/app/chart:rw" \
+            --env-file .env --entrypoint bash quay.io/jetbrains/helm-packager:latest \
+            -c "helm dependency update"
+
+            docker run \
+            -v "$PWD:/app/chart:rw" \
+            --env-file .env quay.io/jetbrains/helm-packager:latest \
+            release
+
+
+
+

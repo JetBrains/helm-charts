@@ -1,0 +1,24 @@
+name: 'Find and close stale PRs'
+on:
+  schedule:
+    - cron: '* 12 * * *'
+
+jobs:
+  stale:
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 22
+          days-before-close: 3
+          stale-pr-message: |
+            Hi there!
+
+            This is an automated pull request stale bot. It seems that this pull request appears to have been stale for a while.
+            It will be closed if no further activity occurs.
+
+            Thank you for your contributions!
+          stale-pr-label: 'stale'
+          exempt-pr-labels: 'wip'

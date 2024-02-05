@@ -1,0 +1,48 @@
+suite: app service account namespace permissions - role binding
+release:
+  name: test
+templates:
+  - serviceaccount/namespace_permissions/role-binding.yaml
+tests:
+  - it: should not be created by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created if enabled
+    set:
+      namespaceOverride: kube-app
+      serviceAccount.create: true
+      serviceAccount.namespacePermissions:
+        - apiGroups: [ "" ]
+          resources:
+            - "services"
+            - "endpoints"
+            - "pods"
+          verbs:
+            - "get"
+            - "list"
+            - "watch"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: RoleBinding
+      - contains:
+          path: subjects
+          content:
+            kind: ServiceAccount
+            name: test-kubernetes-stateless-chart-app
+            namespace: kube-app
+          count: 1
+      - isSubset:
+          path: roleRef
+          content:
+            apiGroup: rbac.authorization.k8s.io
+      - isSubset:
+          path: roleRef
+          content:
+            kind: Role
+      - isSubset:
+          path: roleRef
+          content:
+            name: test-kubernetes-stateless-chart-app

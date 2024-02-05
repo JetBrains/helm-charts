@@ -1,0 +1,34 @@
+{{/*
+Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of
+individual users within your organization.
+
+RBAC authorization uses the rbac.authorization.k8s.io API group to drive authorization decisions, allowing you to
+dynamically configure policies through the Kubernetes API.
+
+A Role always sets permissions within a particular namespace; when you create a Role, you have to specify the namespace
+it belongs in.
+
+Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+*/}}
+{{- if .Values.include -}}
+{{- if .Values.serviceAccount.create -}}
+{{- if or .Values.serviceAccount.namespacePermissions .Values.serviceAccount.additionalNamespacePermissions }}
+{{- $rules := list -}}
+{{- $uniqueRules := concat $rules .Values.serviceAccount.namespacePermissions .Values.serviceAccount.additionalNamespacePermissions | uniq -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "app.serviceAccount.name" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+    {{- include "app.serviceAccount.additionalLabels" . | nindent 4 }}
+  annotations:
+    {{- include "lib.annotations" . | nindent 4 }}
+    {{- include "app.serviceAccount.additionalAnnotations" . | nindent 4 }}
+rules:
+  {{- $uniqueRules | toYaml | nindent 2 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

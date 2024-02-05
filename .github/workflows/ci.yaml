@@ -1,0 +1,80 @@
+name: CI Helm Charts
+
+on:
+  pull_request:
+    paths:
+      - 'charts/**'
+
+jobs:
+  call-changed-charts-workflow:
+    uses: ./.github/workflows/lib-list-changed-charts.yaml
+    secrets: inherit
+
+  test:
+    needs: call-changed-charts-workflow
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.call-changed-charts-workflow.outputs.charts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Run helm unit tests on ${{ matrix.chart }}"
+        uses: d3adb5/helm-unittest-action@v2
+        with:
+          install-mode: "if-not-present"
+          helm-version: v3.8.0
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          charts: "${{ matrix.chart }}"
+          flags: "--color -f './tests/*/*.yaml'"
+
+  lint:
+    needs: call-changed-charts-workflow
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.call-changed-charts-workflow.outputs.charts) }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Set up Helm"
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.12.1
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          check-latest: true
+
+      - name: "Set up chart-testing"
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: "Run chart-testing (lint: ${{ matrix.chart }} )"
+        run: |
+          cd ${{ matrix.chart }}
+          ct lint --target-branch ${{ github.event.repository.default_branch }} --charts .
+
+      - name: "Generate a cluster name from ${{ matrix.chart }}"
+        id: kind-cluster-name
+        run: |
+          name=${{ matrix.chart }}
+          echo "cluster_name=${name#charts/}" >> $GITHUB_OUTPUT
+
+      - name: "Create kind cluster for char ${{ matrix.chart }}"
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: ${{ steps.kind-cluster-name.outputs.cluster_name }}
+          config: lib/Kind/cluster.yaml
+
+      - name: "Run chart-testing (install: ${{ matrix.chart }} )"
+        run: |
+          cd ${{ matrix.chart }}
+          ct install --target-branch ${{ github.event.repository.default_branch }} --charts .
+
+
+## For more information on how to reuse workflows,
+## read here: https://docs.github.com/en/actions/using-workflows/reusing-workflows

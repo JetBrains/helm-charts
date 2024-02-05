@@ -1,0 +1,76 @@
+suite: app configuration
+templates:
+  - configuration/manifest.yaml
+tests:
+  - it: should be created by default
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+  - it: should generate a valid configuration file
+    set:
+      defaultConfig.name: app.conf
+      defaultConfig.config: |-
+        ktor {
+          environment = production
+        }
+    asserts:
+      - isSubset:
+          path: data
+          content:
+            app.conf: |-
+              ktor {
+                environment = production
+              }
+  - it: should overwrite the default configuration file
+    set:
+      defaultConfig.name: app.conf
+      defaultConfig.config: |-
+        ktor {
+          environment = production
+        }
+      config: |-
+        ktor {
+          environment = development
+        }
+    asserts:
+      - isSubset:
+          path: data
+          content:
+            app.conf: |-
+              ktor {
+                environment = development
+              }
+  - it: should allow to parametrize the default config file of the application with parameters set in defaultConfig.customValues
+    set:
+      include: true
+      defaultConfig:
+        name: app.conf
+        mountPath: /home/app/app-server/app.conf
+        customValues:
+          environment: "production"
+        config: |-
+          ktor {
+              deployment {
+                environment = {{ .Values.defaultConfig.customValues.environment }}
+                port = 8390
+                internalPort = 9390
+                autoreload = false
+                callGroupSize = 8
+              }
+          }
+    asserts:
+      - isSubset:
+          path: data
+          content:
+            app.conf: |-
+              ktor {
+                  deployment {
+                    environment = production
+                    port = 8390
+                    internalPort = 9390
+                    autoreload = false
+                    callGroupSize = 8
+                  }
+              }

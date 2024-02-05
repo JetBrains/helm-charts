@@ -1,0 +1,206 @@
+suite: app ingress
+templates:
+  - ingress/manifest.yaml
+tests:
+  - it: should be created by default
+    asserts:
+      - hasDocuments:
+          count: 1
+  - it: should be created as an http only
+    set:
+      ingress.enabled: true
+      ingress.hostname: portal.service.com
+      ingress.backendService.portName: "http"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isNull:
+          path: spec.tls
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            backend:
+              service:
+                name: RELEASE-NAME-kubernetes-stateful-chart-app
+                port:
+                  name: http
+            path: /
+            pathType: ImplementationSpecific
+  - it: should be created with https configured
+    set:
+      ingress.enabled: true
+      ingress.hostname: portal.service.com
+      ingress.backendService.portName: "http"
+      ingress.selfSigned: true
+      ingress.tls: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isNotNull:
+          path: spec.tls
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            backend:
+              service:
+                name: RELEASE-NAME-kubernetes-stateful-chart-app
+                port:
+                  name: http
+            path: /
+            pathType: ImplementationSpecific
+      - equal:
+          path: spec.tls
+          value:
+            - secretName: tls-portal.service.com
+              hosts:
+                - portal.service.com
+  - it: should be created with https configured and external secret
+    set:
+      ingress.enabled: true
+      ingress.hostname: portal.service.com
+      ingress.backendService.portName: "http"
+      ingress.tls: true
+      ingress.secret: "tls-external-secret-name"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isNotNull:
+          path: spec.tls
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            backend:
+              service:
+                name: RELEASE-NAME-kubernetes-stateful-chart-app
+                port:
+                  name: http
+            path: /
+            pathType: ImplementationSpecific
+      - equal:
+          path: spec.tls
+          value:
+            - secretName: tls-external-secret-name
+              hosts:
+                - portal.service.com
+  - it: should generate a valid manifest that includes all the settings
+    set:
+      ingress.enabled: true
+      ingress.selfSigned: true
+      ingress.alternateDnsNames:
+        - portal.app.local
+        - app.local
+        - www.app.local
+      ingress.certValidityDuration: "750"
+      ingress.pathType: Prefix
+      ingress.hostname: "portal.app.local"
+      ingress.backendService.portName: "http"
+      ingress.annotations:
+        com.corp.app.on-premises: true
+        com.corp.app.owner: infra-team
+      ingress.additionalAnnotations:
+        nginx.ingress.kubernetes.io/limit-rpm: 20
+        nginx.ingress.kubernetes.io/limit-rps: 2
+        nginx.ingress.kubernetes.io/limit-connections: 10
+        nginx.ingress.kubernetes..io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+        nginx.ingress.kubernetes.io/ssl-prefer-server-ciphers: "true"
+        nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+        nginx.ingress.kubernetes.io/enable-owasp-core-rules: "true"
+        nginx.ingress.kubernetes.io/modsecurity-transaction-id: "$request_id"
+        nginx.ingress.kubernetes.io/modsecurity-snippet: |
+          SecRuleEngine On
+          SecDebugLog /tmp/modsec_debug.log
+        nginx.ingress.kubernetes.io/stream-snippet: |
+          server {
+            listen 8000;
+            proxy_pass 127.0.0.1:80;
+          }
+      ingress.tls: true
+      ingress.additionalPaths:
+        - path: /*
+          backend:
+            service:
+              name: ssl-redirect
+              port:
+                number: use-annotation
+      ingress.additionalTLS:
+        - hosts:
+            - www.app.local
+          secretName: tls-www.app.local
+      ingress.ingressClassName: "internal-nginx-ingress"
+      ingress.additionalRules:
+        - host: example.local
+          http:
+            path: /
+            backend:
+              service:
+                port:
+                  number: 80
+      ingress.secret: "tls-corp.net"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              com.corp.app.on-premises: true
+              com.corp.app.owner: infra-team
+              nginx.ingress.kubernetes..io/ssl-passthrough: "true"
+              nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+              nginx.ingress.kubernetes.io/enable-owasp-core-rules: "true"
+              nginx.ingress.kubernetes.io/limit-connections: 10
+              nginx.ingress.kubernetes.io/limit-rpm: 20
+              nginx.ingress.kubernetes.io/limit-rps: 2
+              nginx.ingress.kubernetes.io/modsecurity-snippet: |
+                SecRuleEngine On
+                SecDebugLog /tmp/modsec_debug.log
+              nginx.ingress.kubernetes.io/modsecurity-transaction-id: $request_id
+              nginx.ingress.kubernetes.io/proxy-body-size: 8m
+              nginx.ingress.kubernetes.io/ssl-prefer-server-ciphers: "true"
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+              nginx.ingress.kubernetes.io/stream-snippet: |
+                server {
+                  listen 8000;
+                  proxy_pass 127.0.0.1:80;
+                }
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: app
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: kubernetes-stateful-chart
+      - equal:
+          path: spec["ingressClassName"]
+          value: internal-nginx-ingress
+      - isNotNull:
+          path: spec.tls
+      - equal:
+          path: spec.tls[0].secretName
+          value: "tls-corp.net"
+  - it: should allow to use templating in ingress hostname
+    set:
+      global.envs.DOMAIN_NAME: "portal.service.com"
+      ingress.enabled: true
+      ingress.hostname: "{{ .Values.global.envs.DOMAIN_NAME }}"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.rules[0].host
+          value: portal.service.com

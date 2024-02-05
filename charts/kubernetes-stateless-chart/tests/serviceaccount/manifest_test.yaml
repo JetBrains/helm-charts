@@ -1,0 +1,84 @@
+suite: app service account
+templates:
+  - serviceaccount/manifest.yaml
+tests:
+  - it: should not be created by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created if enabled
+    set:
+      serviceAccount.create: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ServiceAccount
+  - it: should not be created if the current application is not included
+    set:
+      serviceAccount.create: true
+      include: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should contain labels and additionalLabels
+    set:
+      serviceAccount.create: true
+      serviceAccount.labels:
+        l1: one
+        l2: two
+      serviceAccount.additionalLabels:
+        la1: additional0
+        la2: additional1
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: app
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: kubernetes-stateless-chart
+      - equal:
+          path: metadata.labels["l1"]
+          value: one
+      - equal:
+          path: metadata.labels["l2"]
+          value: two
+      - equal:
+          path: metadata.labels["la1"]
+          value: additional0
+      - equal:
+          path: metadata.labels["la2"]
+          value: additional1
+  - it: should contain annotations and additionalAnnotations
+    set:
+      serviceAccount.create: true
+      serviceAccount.annotations:
+        l1: one
+        l2: two
+      serviceAccount.additionalAnnotations:
+        la1: additional0
+        la2: additional1
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              l1: one
+              l2: two
+              la1: additional0
+              la2: additional1
+  - it: should be created in the desired namespace
+    set:
+      serviceAccount.create: true
+      namespaceOverride: kube-custom
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            namespace: kube-custom

@@ -1,0 +1,34 @@
+suite: app horizontal autoscaler
+templates:
+  - horizontalpodautoscaler/manifest.yaml
+tests:
+  - it: should not be created by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created if enabled
+    set:
+      autoscaling.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - isAPIVersion:
+          of: autoscaling/v2
+  - it: should not be created if the current application is not included
+    set:
+      autoscaling.enabled: true
+      include: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be created in the desired namespace
+    set:
+      autoscaling.enabled: true
+      namespaceOverride: kube-custom
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            namespace: kube-custom

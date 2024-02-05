@@ -1,0 +1,4 @@
+kubernetes-stateless-chart
+===========================
+Chart Version: {{ .Chart.Version }}
+Support contact: it is outlined in Chart.yaml file

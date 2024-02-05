@@ -1,0 +1,191 @@
+suite: app service
+templates:
+  - service/manifest.yaml
+tests:
+  - it: should be created by default
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Service
+  - it: should not be created if the current application is not included
+    set:
+      include: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should allow to set a custom name
+    set:
+      service.name: "custom-name"
+    asserts:
+      - matchRegex:
+          path: metadata.name
+          pattern: custom-name
+  - it: should allow to implement a ClusterIP type of service by default
+    set:
+      service.type: "ClusterIP"
+      service.ports:
+        - name: http
+          protocol: TCP
+          port: 80
+          targetPort: http
+        - name: https
+          protocol: TCP
+          port: 443
+          targetPort: https
+      service.additionalPorts:
+        - name: http-metrics
+          protocol: TCP
+          port: 9090
+          targetPort: http-metrics
+    asserts:
+      - isSubset:
+          path: spec
+          content:
+            ports:
+              - name: http
+                port: 80
+                protocol: TCP
+                targetPort: http
+              - name: https
+                port: 443
+                protocol: TCP
+                targetPort: https
+              - name: http-metrics
+                port: 9090
+                protocol: TCP
+                targetPort: http-metrics
+  - it: should allow to implement a ClusterIP type of service without additional service ports
+    set:
+      service.type: "ClusterIP"
+    asserts:
+      - matchRegex:
+          path: spec.type
+          pattern: ClusterIP
+  - it: should allow to implement a NodePort type of service
+    set:
+      service.type: "NodePort"
+    asserts:
+      - matchRegex:
+          path: spec.type
+          pattern: NodePort
+  - it: should allow to implement a public LoadBalancer type of service
+    set:
+      service.type: "LoadBalancer"
+    asserts:
+      - matchRegex:
+          path: spec.type
+          pattern: LoadBalancer
+  - it: should allow to implement a public LoadBalancer type of service with labels and annotations
+    set:
+      service.type: "LoadBalancer"
+      service.labels:
+        label_one: one
+        label_two: two
+      service.additionalLabels:
+        additional_label_one: one
+        additional_label_two: two
+      service.annotations:
+        annotation_one: a_one
+        annotation_two: a_two
+      service.additionalAnnotations:
+        additional_annotation_one: aa_one
+        additional_annotations_two: aa_two
+    asserts:
+      - matchRegex:
+          path: spec.type
+          pattern: LoadBalancer
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: app
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: kubernetes-stateless-chart
+      - equal:
+          path: metadata.labels["additional_label_one"]
+          value: one
+      - equal:
+          path: metadata.labels["additional_label_two"]
+          value: two
+      - equal:
+          path: metadata.labels["label_one"]
+          value: one
+      - equal:
+          path: metadata.labels["label_two"]
+          value: two
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              additional_annotation_one: aa_one
+              additional_annotations_two: aa_two
+              annotation_one: a_one
+              annotation_two: a_two
+  - it: should allow to implement a private LoadBalancer type of service for GCP
+    set:
+      service.type: "LoadBalancer"
+      service.additionalAnnotations:
+        cloud.google.com/load-balancer-type: "Internal"
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              cloud.google.com/load-balancer-type: Internal
+      - matchRegex:
+          path: spec.type
+          pattern: LoadBalancer
+  - it: should allow to implement a private LoadBalancer type of service for AWS
+    set:
+      service.type: "LoadBalancer"
+      service.additionalAnnotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      - matchRegex:
+          path: spec.type
+          pattern: LoadBalancer
+  - it: should allow to implement a private LoadBalancer type of service for AWS with SSL offloading
+    set:
+      service.type: "LoadBalancer"
+      service.additionalAnnotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443,8443"
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+              service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012
+              service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443,8443"
+      - matchRegex:
+          path: spec.type
+          pattern: LoadBalancer
+  - it: should allow to implement a private LoadBalancer type of service for Azure
+    set:
+      service.type: "LoadBalancer"
+      service.additionalAnnotations:
+        service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    asserts:
+      - isSubset:
+          path: metadata
+          content:
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      - matchRegex:
+          path: spec.type
+          pattern: LoadBalancer
