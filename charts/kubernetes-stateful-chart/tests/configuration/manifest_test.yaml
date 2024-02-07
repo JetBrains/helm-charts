@@ -2,15 +2,14 @@ suite: app configuration
 templates:
   - configuration/manifest.yaml
 tests:
-  - it: should be created by default
+  - it: should not be created by default
     asserts:
       - hasDocuments:
-          count: 1
-      - isKind:
-          of: ConfigMap
+          count: 0
   - it: should generate a valid configuration file
     set:
       defaultConfig.name: app.conf
+      defaultConfig.mountPath: /home/app/server/app.conf
       defaultConfig.config: |-
         ktor {
           environment = production
@@ -26,6 +25,7 @@ tests:
   - it: should overwrite the default configuration file
     set:
       defaultConfig.name: app.conf
+      defaultConfig.mountPath: /home/app/server/app.conf
       defaultConfig.config: |-
         ktor {
           environment = production

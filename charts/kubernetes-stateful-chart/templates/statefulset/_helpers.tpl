@@ -34,7 +34,9 @@ Return checksum of the secret with encoded environment variables
 */}}
 {{- define "app.envsChecksum" }}
 {{- if and (empty .Values.externalEnvSecret) (empty .Values.internalEnvSecret) }}
+{{- if or .Values.envs .Values.additionalEnvs }}
 checksum/envs: {{ include (print $.Template.BasePath "/configuration/secret.envs.yaml") . | sha256sum }}
+{{- end }}
 {{- end }}
 {{- end }}
 
