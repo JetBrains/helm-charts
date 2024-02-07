@@ -1,17 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
-Return a valid application configuration file.
-*/}}
-{{- define "app.configurationFile" -}}
-{{- if .Values.config }}
-{{- .Values.config }}
-{{- else }}
-{{- .Values.defaultConfig.config -}}
-{{- end }}
-{{- end }}
-
-{{/*
 Return a valid map of environment variables.
 
 Pre_condition:

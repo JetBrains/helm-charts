@@ -193,9 +193,11 @@ spec:
           command: {{ default .Values.entrypoint .Values.customEntrypoint | toYaml | nindent 12 }}
           args: {{ default .Values.args .Values.customArgs | toYaml | nindent 12 }}
           securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 12 }}
+          {{- if or .Values.envs .Values.additionalEnvs .Values.externalEnvSecret .Values.internalEnvSecret }}
           envFrom:
             - secretRef:
                 name: {{ include "app.secretRef" . }}
+          {{- end }}
           ports:
           {{- .Values.ports | toYaml | nindent 12 }}
           {{/*
@@ -246,11 +248,9 @@ spec:
           */}}
           volumeMounts:
             {{- if and .Values.defaultConfig.mountPath .Values.defaultConfig.name }}
-            {{- if and .Values.defaultConfig.mountPath .Values.defaultConfig.name }}
             - mountPath: {{ .Values.defaultConfig.mountPath | quote }}
               name: conf
               subPath: {{ .Values.defaultConfig.name | quote }}
-            {{- end }}
             {{- end }}
             {{- $volumeMounts := concat .Values.volumes .Values.additionalVolumes }}
             {{- if $volumeMounts }}

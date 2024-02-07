@@ -373,6 +373,8 @@ tests:
       include: true
       fullnameOverride: app
       name: packages
+      envs:
+        EXAMPLE: "example"
     asserts:
       - isNotNull:
           path: spec.template.spec.containers[0].envFrom[0].secretRef.name

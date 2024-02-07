@@ -6,6 +6,7 @@ It relies on the HOCON notation.
 Ref: https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation.
 */}}
 {{- if .Values.include }}
+{{- if and .Values.defaultConfig.name .Values.defaultConfig.mountPath }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,8 +17,7 @@ metadata:
     {{- include "lib.labels" . | nindent 4 }}
   annotations: {{- include "lib.annotations" . | nindent 4 }}
 data:
-  {{- if .Values.defaultConfig.name }}
   {{ .Values.defaultConfig.name }}: |-
-    {{- tpl (include "app.configurationFile" $) $ | nindent 4 }}
-  {{- end }}
+    {{- tpl (default .Values.defaultConfig.config .Values.config) $ | nindent 4 }}
+{{- end }}
 {{- end }}
