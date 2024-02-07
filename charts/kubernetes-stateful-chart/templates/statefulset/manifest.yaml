@@ -295,9 +295,11 @@ spec:
         - nfs: an NFS mount on the host that shares a pod's lifetime;
       */}}
       volumes:
+        {{- if and .Values.defaultConfig.mountPath .Values.defaultConfig.name }}
         - name: conf
           configMap:
             name: {{ include "lib.appName" . }}-conf
+        {{- end }}
         {{- $volumes := concat .Values.volumes .Values.additionalVolumes }}
         {{- if $volumes }}
         {{- range $volume := $volumes }}

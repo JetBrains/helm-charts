@@ -44,6 +44,9 @@ tests:
       - equal:
           path: spec.podManagementPolicy
           value: OrderedReady
+      - lengthEqual:
+          path: spec.template.spec.volumes
+          count: 1
     template: statefulset/manifest.yaml
   - it: should be created with the full configuration
     set:
@@ -406,12 +409,6 @@ tests:
     asserts:
       - isNotNull:
           path: spec.template.spec.volumes
-      - contains:
-          path: spec.template.spec.volumes
-          content:
-            configMap:
-              name: unittest-kubernetes-stateful-chart-app-conf
-            name: conf
       - contains:
           path: spec.template.spec.volumes
           content:
