@@ -49,8 +49,8 @@ name: ""
 ##
 image:
   registry: "docker.io"
-  repository: "bitnami/nginx"
-  tag: "1.24.0-debian-11-r159"
+  repository: "docker/whalesay"
+  tag: "latest"
   ## imagePullPolicy policy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
