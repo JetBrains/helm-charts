@@ -49,8 +49,8 @@ name: ""
 ##
 image:
   registry: "docker.io"
-  repository: "portainer/portainer-ce"
-  tag: "2.18.4-alpine"
+  repository: "hashicorp/demo-webapp"
+  tag: "v3"
   ## imagePullPolicy policy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -75,7 +75,7 @@ image:
 ## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 ##
 entrypoint: []
-## @param customEntrypoint Overwrite in full the parameter application.entrypoint.
+## @param customEntrypoint Overwrite in full the parameter entrypoint.
 ##
 customEntrypoint: []
 ## @param args Provide arguments to the entrypoint of the application.
@@ -90,9 +90,8 @@ customEntrypoint: []
 ##
 ## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 ##
-args:
-  - --admin-password='$$2y$$05$$aO9DEethtRMRpmyc4p0Dn.4MUvoJ274844ej9IdUS16kpiu43d6R6'
-## @param customArgs Overwrite in full the parameter application.args.
+args: []
+## @param customArgs Overwrite in full the parameter args.
 ##
 customArgs: []
 ## Service Account
@@ -228,10 +227,7 @@ resources:
 service:
   name: ""
   type: ""
-  ports:
-    - name: http
-      port: 8080
-      targetPort: http
+  ports: []
   additionalPorts: []
   annotations: {}
   additionalAnnotations: {}
@@ -256,19 +252,12 @@ containerSecurityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true
 
-## @param customContainerSecurityContext Overwrite partially the application.containerSecurityContext property
+## @param customContainerSecurityContext Overwrite partially the containerSecurityContext property
 ##
 customContainerSecurityContext: {}
 ## Liveness and Readiness Probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-## @extra application.livenessProbe Specify the default liveness probe
-## @param livenessProbe.httpGet.path Application side HTTP URI that outlines how it performs
-## @param livenessProbe.httpGet.port Application port that is open for probing type of requests
-## @param livenessProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
-## @param livenessProbe.periodSeconds Specify the time interval kubelet can launch the probe
-## @param livenessProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
-## @param livenessProbe.successThreshold Specify how many requests kubelet needs to probe to mark the livenessProbe as success
-## @param livenessProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the livenessProbe as failure
+## @param livenessProbe Specify the default liveness probe
 ##
 ## Example:
 ##  livenessProbe:
@@ -280,26 +269,11 @@ customContainerSecurityContext: {}
 ##    timeoutSeconds: 30
 ##    successThreshold: 1
 ##    failureThreshold: 5
-livenessProbe:
-  httpGet:
-    path: "/"
-    port: "http"
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
-## @param customLivenessProbe Overwrite partially the application.livenessProbe property
+livenessProbe: {}
+## @param customLivenessProbe Overwrite partially the livenessProbe property
 ##
 customLivenessProbe: {}
-## @extra application.readinessProbe Specify the default readiness probe
-## @param readinessProbe.httpGet.path Application side HTTP URI that outlines if it is ready
-## @param readinessProbe.httpGet.port Application port that is open for probing type of requests
-## @param readinessProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
-## @param readinessProbe.periodSeconds Specify the time interval kubelet can launch the probe
-## @param readinessProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
-## @param readinessProbe.successThreshold Specify how many requests kubelet needs to probe to mark the readinessProbe as success
-## @param readinessProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the readinessProbe as failure
+## @param readinessProbe Specify the default readiness probe
 ##
 ## Example:
 ##  readinessProbe:
@@ -311,28 +285,13 @@ customLivenessProbe: {}
 ##    timeoutSeconds: 30
 ##    successThreshold: 1
 ##    failureThreshold: 5
-readinessProbe:
-  httpGet:
-    path: "/"
-    port: "http"
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
-## @param customReadinessProbe Overwrite partially the application.readinessProbe property
+readinessProbe: {}
+## @param customReadinessProbe Overwrite partially the readinessProbe property
 ##
 customReadinessProbe: {}
 ## Startup Probe
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
-## @extra application.startupProbe Specify the default startup probe
-## @param startupProbe.httpGet.path Application side HTTP URI that outlines if it is started
-## @param startupProbe.httpGet.port Application port that is open for probing type of requests
-## @param startupProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
-## @param startupProbe.periodSeconds Specify the time interval kubelet can launch the probe
-## @param startupProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
-## @param startupProbe.successThreshold Specify how many requests kubelet needs to probe to mark the startupProbe as success
-## @param startupProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the startupProbe as failure
+## @param startupProbe Specify the default startup probe
 ##
 ## Example:
 ##  startupProbe:
@@ -344,16 +303,8 @@ customReadinessProbe: {}
 ##      timeoutSeconds: 30
 ##      successThreshold: 1
 ##      failureThreshold: 5
-startupProbe:
-  httpGet:
-    path: "/"
-    port: "http"
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
-## @param customStartupProbe Overwrite partially the application.startupProbe property
+startupProbe: {}
+## @param customStartupProbe Overwrite partially the startupProbe property
 ##
 customStartupProbe: {}
 ## @param customAffinity Overwrite in full the default affinity rules
@@ -388,12 +339,12 @@ nodeSelector: {}
 ## @param ingress.additionalRules Additional Ingress rules
 ##
 ingress:
-  enabled: true
+  enabled: false
   name: ""
   alternateDnsNames: []
   certValidityDuration: ""
   pathType: ImplementationSpecific
-  hostname: "containers.app"
+  hostname: ""
   ## You might need to set the '/*' value in order to use it
   ## with ALB Ingress controllers.
   ##
@@ -477,7 +428,6 @@ ingress:
 ports:
   - name: http
     containerPort: 9000
-## @skip volumes
 ## @param volumes Specify named volumes to be attached to the pod
 ##
 ## Example:
@@ -490,14 +440,10 @@ ports:
 ##      mountPath: "/app/conf/metrics.conf"
 ##      subPath: "metrics.conf"
 ##
-volumes:
-  - name: data
-    type: emptyDir
-    volumeMountProperties:
-      mountPath: /data
-## @param additionalVolumes Specify additional mutual exclusive with application.volumes value named volumes to be attached to the main container and pod
+volumes: []
+## @param additionalVolumes Specify additional mutual exclusive with volumes value named volumes to be attached to the main container and pod
 ##
-## application.additionalVolumes has the same structure as application.volumes. For an example, reference application.volumes.
+## additionalVolumes has the same structure as volumes. For an example, reference volumes.
 ##
 additionalVolumes: []
 ## @param volumeClaims Specify a list of volume claims to be attached to the pod
@@ -575,11 +521,11 @@ additionalInitContainers: []
 
 ## @section Application configuration file
 ##
-## @param config Overwrites the configuration in application.defaultConfig.config
+## @param config Overwrites the configuration in defaultConfig.config
 ## @param defaultConfig.name Specify the default application configuration file name
 ## @param defaultConfig.mountPath Specify the default application configuration file system path where the file is located
 ## @param defaultConfig.config Specify the default application configuration
-## @param defaultConfig.customValues Specify a map of custom values to be referenced by the application.defaultConfig.config parameter
+## @param defaultConfig.customValues Specify a map of custom values to be referenced by the defaultConfig.config parameter
 config: ""
 defaultConfig:
   name: ""
