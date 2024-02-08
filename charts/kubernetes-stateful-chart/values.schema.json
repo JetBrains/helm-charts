@@ -64,12 +64,12 @@
                 "repository": {
                     "type": "string",
                     "description": "URL of the container repository",
-                    "default": "hashicorp/demo-webapp"
+                    "default": "bitnami/nginx"
                 },
                 "tag": {
                     "type": "string",
                     "description": "Image version",
-                    "default": "v3"
+                    "default": "1.24.0-debian-11-r159"
                 },
                 "pullPolicy": {
                     "type": "string",
