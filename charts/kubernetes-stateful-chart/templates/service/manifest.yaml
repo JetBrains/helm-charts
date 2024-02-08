@@ -14,6 +14,7 @@ should they need to keep track of the set of backends themselves.
 Ref: https://kubernetes.io/docs/concepts/services-networking/service/
 */}}
 {{- if .Values.include -}}
+{{- if or .Values.service.ports .Values.service.additionalPorts }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -34,4 +35,5 @@ spec:
     {{- include "lib.matchLabels" . | nindent 4 }}
   type: {{ include "app.serviceType" . }}
   ports: {{- include "app.servicePorts" . | nindent 4 }}
+{{- end -}}
 {{- end -}}

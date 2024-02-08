@@ -44,9 +44,9 @@ tests:
       - equal:
           path: spec.podManagementPolicy
           value: OrderedReady
-      - lengthEqual:
+      - equal:
           path: spec.template.spec.volumes
-          count: 1
+          value: null
     template: statefulset/manifest.yaml
   - it: should be created with the full configuration
     set:

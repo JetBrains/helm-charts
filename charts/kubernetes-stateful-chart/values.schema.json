@@ -64,12 +64,12 @@
                 "repository": {
                     "type": "string",
                     "description": "URL of the container repository",
-                    "default": "portainer/portainer-ce"
+                    "default": "bitnami/nginx"
                 },
                 "tag": {
                     "type": "string",
                     "description": "Image version",
-                    "default": "2.18.4-alpine"
+                    "default": "1.24.0-debian-11-r159"
                 },
                 "pullPolicy": {
                     "type": "string",
@@ -92,23 +92,19 @@
         },
         "customEntrypoint": {
             "type": "array",
-            "description": "Overwrite in full the parameter application.entrypoint.",
+            "description": "Overwrite in full the parameter entrypoint.",
             "default": [],
             "items": {}
         },
         "args": {
             "type": "array",
             "description": "Provide arguments to the entrypoint of the application.",
-            "default": [
-                "--admin-password='$$2y$$05$$aO9DEethtRMRpmyc4p0Dn.4MUvoJ274844ej9IdUS16kpiu43d6R6'"
-            ],
-            "items": {
-                "type": "string"
-            }
+            "default": [],
+            "items": {}
         },
         "customArgs": {
             "type": "array",
-            "description": "Overwrite in full the parameter application.args.",
+            "description": "Overwrite in full the parameter args.",
             "default": [],
             "items": {}
         },
@@ -285,12 +281,12 @@
                         "cpu": {
                             "type": "string",
                             "description": "Max CPU available for a pod (resource request)",
-                            "default": "2000m"
+                            "default": "100m"
                         },
                         "memory": {
                             "type": "string",
                             "description": "Max memory available for a pod (resource request)",
-                            "default": "2048Mi"
+                            "default": "128Mi"
                         }
                     }
                 },
@@ -300,12 +296,12 @@
                         "cpu": {
                             "type": "string",
                             "description": "Min CPU available for a pod (resource limit)",
-                            "default": "2000m"
+                            "default": "100m"
                         },
                         "memory": {
                             "type": "string",
                             "description": "Min memory available for a pod (resource limit)",
-                            "default": "2048Mi"
+                            "default": "128Mi"
                         }
                     }
                 }
@@ -318,6 +314,12 @@
                     "type": "string",
                     "description": "Service name",
                     "default": ""
+                },
+                "ports": {
+                    "type": "array",
+                    "description": "Service ports",
+                    "default": [],
+                    "items": {}
                 },
                 "additionalPorts": {
                     "type": "array",
@@ -389,157 +391,37 @@
         },
         "customContainerSecurityContext": {
             "type": "object",
-            "description": "Overwrite partially the application.containerSecurityContext property",
+            "description": "Overwrite partially the containerSecurityContext property",
             "default": {}
         },
         "livenessProbe": {
             "type": "object",
-            "properties": {
-                "httpGet": {
-                    "type": "object",
-                    "properties": {
-                        "path": {
-                            "type": "string",
-                            "description": "Application side HTTP URI that outlines how it performs",
-                            "default": "/"
-                        },
-                        "port": {
-                            "type": "string",
-                            "description": "Application port that is open for probing type of requests",
-                            "default": "http"
-                        }
-                    }
-                },
-                "initialDelaySeconds": {
-                    "type": "number",
-                    "description": "Specify the waiting time for kubelet before it launches the first probe",
-                    "default": 30
-                },
-                "periodSeconds": {
-                    "type": "number",
-                    "description": "Specify the time interval kubelet can launch the probe",
-                    "default": 15
-                },
-                "timeoutSeconds": {
-                    "type": "number",
-                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
-                    "default": 10
-                },
-                "successThreshold": {
-                    "type": "number",
-                    "description": "Specify how many requests kubelet needs to probe to mark the livenessProbe as success",
-                    "default": 1
-                },
-                "failureThreshold": {
-                    "type": "number",
-                    "description": "Specify how many requests kubelet needs to probe to mark the livenessProbe as failure",
-                    "default": 3
-                }
-            }
+            "description": "Specify the default liveness probe",
+            "default": {}
         },
         "customLivenessProbe": {
             "type": "object",
-            "description": "Overwrite partially the application.livenessProbe property",
+            "description": "Overwrite partially the livenessProbe property",
             "default": {}
         },
         "readinessProbe": {
             "type": "object",
-            "properties": {
-                "httpGet": {
-                    "type": "object",
-                    "properties": {
-                        "path": {
-                            "type": "string",
-                            "description": "Application side HTTP URI that outlines if it is ready",
-                            "default": "/"
-                        },
-                        "port": {
-                            "type": "string",
-                            "description": "Application port that is open for probing type of requests",
-                            "default": "http"
-                        }
-                    }
-                },
-                "initialDelaySeconds": {
-                    "type": "number",
-                    "description": "Specify the waiting time for kubelet before it launches the first probe",
-                    "default": 30
-                },
-                "periodSeconds": {
-                    "type": "number",
-                    "description": "Specify the time interval kubelet can launch the probe",
-                    "default": 15
-                },
-                "timeoutSeconds": {
-                    "type": "number",
-                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
-                    "default": 10
-                },
-                "successThreshold": {
-                    "type": "number",
-                    "description": "Specify how many requests kubelet needs to probe to mark the readinessProbe as success",
-                    "default": 1
-                },
-                "failureThreshold": {
-                    "type": "number",
-                    "description": "Specify how many requests kubelet needs to probe to mark the readinessProbe as failure",
-                    "default": 3
-                }
-            }
+            "description": "Specify the default readiness probe",
+            "default": {}
         },
         "customReadinessProbe": {
             "type": "object",
-            "description": "Overwrite partially the application.readinessProbe property",
+            "description": "Overwrite partially the readinessProbe property",
             "default": {}
         },
         "startupProbe": {
             "type": "object",
-            "properties": {
-                "httpGet": {
-                    "type": "object",
-                    "properties": {
-                        "path": {
-                            "type": "string",
-                            "description": "Application side HTTP URI that outlines if it is started",
-                            "default": "/"
-                        },
-                        "port": {
-                            "type": "string",
-                            "description": "Application port that is open for probing type of requests",
-                            "default": "http"
-                        }
-                    }
-                },
-                "initialDelaySeconds": {
-                    "type": "number",
-                    "description": "Specify the waiting time for kubelet before it launches the first probe",
-                    "default": 30
-                },
-                "periodSeconds": {
-                    "type": "number",
-                    "description": "Specify the time interval kubelet can launch the probe",
-                    "default": 15
-                },
-                "timeoutSeconds": {
-                    "type": "number",
-                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
-                    "default": 10
-                },
-                "successThreshold": {
-                    "type": "number",
-                    "description": "Specify how many requests kubelet needs to probe to mark the startupProbe as success",
-                    "default": 1
-                },
-                "failureThreshold": {
-                    "type": "number",
-                    "description": "Specify how many requests kubelet needs to probe to mark the startupProbe as failure",
-                    "default": 3
-                }
-            }
+            "description": "Specify the default startup probe",
+            "default": {}
         },
         "customStartupProbe": {
             "type": "object",
-            "description": "Overwrite partially the application.startupProbe property",
+            "description": "Overwrite partially the startupProbe property",
             "default": {}
         },
         "customAffinity": {
@@ -563,7 +445,7 @@
                 "enabled": {
                     "type": "boolean",
                     "description": "Enables/disables Ingress for routing inbound traffic",
-                    "default": true
+                    "default": false
                 },
                 "name": {
                     "type": "string",
@@ -578,7 +460,7 @@
                 "hostname": {
                     "type": "string",
                     "description": "Ingress hostname",
-                    "default": "containers.app"
+                    "default": ""
                 },
                 "tls": {
                     "type": "boolean",
@@ -661,9 +543,15 @@
                 }
             }
         },
+        "volumes": {
+            "type": "array",
+            "description": "Specify named volumes to be attached to the pod",
+            "default": [],
+            "items": {}
+        },
         "additionalVolumes": {
             "type": "array",
-            "description": "Specify additional mutual exclusive with application.volumes value named volumes to be attached to the main container and pod",
+            "description": "Specify additional mutual exclusive with volumes value named volumes to be attached to the main container and pod",
             "default": [],
             "items": {}
         },
@@ -705,7 +593,7 @@
         },
         "config": {
             "type": "string",
-            "description": "Overwrites the configuration in application.defaultConfig.config",
+            "description": "Overwrites the configuration in defaultConfig.config",
             "default": ""
         },
         "defaultConfig": {
@@ -728,7 +616,7 @@
                 },
                 "customValues": {
                     "type": "object",
-                    "description": "Specify a map of custom values to be referenced by the application.defaultConfig.config parameter",
+                    "description": "Specify a map of custom values to be referenced by the defaultConfig.config parameter",
                     "default": {}
                 }
             }

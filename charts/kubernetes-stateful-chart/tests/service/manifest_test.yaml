@@ -5,9 +5,7 @@ tests:
   - it: should be created by default
     asserts:
       - hasDocuments:
-          count: 1
-      - isKind:
-          of: Service
+          count: 0
   - it: should not be created if the current application is not included
     set:
       include: false
@@ -17,6 +15,10 @@ tests:
   - it: should allow to set a custom name
     set:
       service.name: "custom-name"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
     asserts:
       - matchRegex:
           path: metadata.name
@@ -58,6 +60,10 @@ tests:
   - it: should allow to implement a ClusterIP type of service without additional service ports
     set:
       service.type: "ClusterIP"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
     asserts:
       - matchRegex:
           path: spec.type
@@ -65,6 +71,10 @@ tests:
   - it: should allow to implement a NodePort type of service
     set:
       service.type: "NodePort"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
     asserts:
       - matchRegex:
           path: spec.type
@@ -72,6 +82,10 @@ tests:
   - it: should allow to implement a public LoadBalancer type of service
     set:
       service.type: "LoadBalancer"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
     asserts:
       - matchRegex:
           path: spec.type
@@ -79,6 +93,10 @@ tests:
   - it: should allow to implement a public LoadBalancer type of service with labels and annotations
     set:
       service.type: "LoadBalancer"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
       service.labels:
         label_one: one
         label_two: two
@@ -130,6 +148,10 @@ tests:
   - it: should allow to implement a private LoadBalancer type of service for GCP
     set:
       service.type: "LoadBalancer"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
       service.additionalAnnotations:
         cloud.google.com/load-balancer-type: "Internal"
     asserts:
@@ -144,6 +166,10 @@ tests:
   - it: should allow to implement a private LoadBalancer type of service for AWS
     set:
       service.type: "LoadBalancer"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
       service.additionalAnnotations:
         service.beta.kubernetes.io/aws-load-balancer-internal: "true"
     asserts:
@@ -158,6 +184,10 @@ tests:
   - it: should allow to implement a private LoadBalancer type of service for AWS with SSL offloading
     set:
       service.type: "LoadBalancer"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
       service.additionalAnnotations:
         service.beta.kubernetes.io/aws-load-balancer-internal: "true"
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012
@@ -178,6 +208,10 @@ tests:
   - it: should allow to implement a private LoadBalancer type of service for Azure
     set:
       service.type: "LoadBalancer"
+      service.ports:
+        - name: api
+          port: 8080
+          targetPort: 8080
       service.additionalAnnotations:
         service.beta.kubernetes.io/azure-load-balancer-internal: "true"
     asserts:
