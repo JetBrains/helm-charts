@@ -569,6 +569,30 @@ defaultConfig:
   mountPath: ""
   config: ""
   customValues: {}
+## @param additionalConfigs Specify additional configuration files to be added to the application
+##
+## Example:
+## additionalConfigs:
+##  log.xml:
+##    mountPath: "/app/conf"
+##    content: |
+##      <log>
+##         <level>INFO</level>
+##      </log>
+## script.sh:
+##    mountPath: ""
+additionalConfigs:
+      log.xml:
+        mountPath: "/app/conf"
+        content: |
+            <log>
+            <level>INFO</level>
+            </log>
+      script.sh:
+        mountPath: "/app/conf"
+        content: |
+            #!/bin/bash
+            echo "Hello World"
 ## @section Application environment variables
 ##
 ## @param envs Environment variables

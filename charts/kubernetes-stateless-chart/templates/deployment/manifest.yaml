@@ -273,6 +273,10 @@ spec:
           - name
           */}}
           volumeMounts:
+            {{- if .Values.additionalConfigs }}
+            {{- $configMapName := include "app.additionalConfigsConfigMapName" .  -}}
+            {{- include "app.additionalConfigsVolumeMounts" ( dict "configs" .Values.additionalConfigs "configMapName" $configMapName ) | nindent 12 }}
+            {{- end }}
             {{- if and .Values.defaultConfig.mountPath .Values.defaultConfig.name }}
             - mountPath: {{ .Values.defaultConfig.mountPath | quote }}
               name: conf
