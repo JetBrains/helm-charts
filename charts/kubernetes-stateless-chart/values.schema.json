@@ -64,12 +64,12 @@
                 "repository": {
                     "type": "string",
                     "description": "URL of the container repository",
-                    "default": "docker/whalesay"
+                    "default": "portainer/portainer-ce"
                 },
                 "tag": {
                     "type": "string",
                     "description": "Image version",
-                    "default": "latest"
+                    "default": "2.18.4-alpine"
                 },
                 "pullPolicy": {
                     "type": "string",
@@ -92,19 +92,23 @@
         },
         "customEntrypoint": {
             "type": "array",
-            "description": "Overwrite in full the parameter entrypoint.",
+            "description": "Overwrite in full the parameter application.entrypoint.",
             "default": [],
             "items": {}
         },
         "args": {
             "type": "array",
             "description": "Provide arguments to the entrypoint of the application.",
-            "default": [],
-            "items": {}
+            "default": [
+                "--admin-password='$$2y$$05$$aO9DEethtRMRpmyc4p0Dn.4MUvoJ274844ej9IdUS16kpiu43d6R6'"
+            ],
+            "items": {
+                "type": "string"
+            }
         },
         "customArgs": {
             "type": "array",
-            "description": "Overwrite in full the parameter args.",
+            "description": "Overwrite in full the parameter application.args.",
             "default": [],
             "items": {}
         },
@@ -217,38 +221,33 @@
             "description": "Specify the minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available",
             "default": 0
         },
-        "podManagementPolicy": {
-            "type": "string",
-            "description": "Specify how pods are created during initial scale up, when replacing pods on nodes, or when scaling down. Possible values are OrderedReady or Parallel.",
-            "default": "OrderedReady"
+        "progressDeadlineSeconds": {
+            "type": "number",
+            "description": "Specify the maximum time in seconds for a deployment to make progress before it is considered to be failed. The deployment controller will continue to process failed deployments and a condition with a ProgressDeadlineExceeded reason will be surfaced in the deployment status. Note that progress will not be estimated during the time a deployment is paused",
+            "default": 600
         },
         "revisionHistoryLimit": {
             "type": "number",
             "description": "Specify the number of old ReplicaSets to retain to allow rollback. This is a pointer to distinguish between explicit zero and not specified",
             "default": 10
         },
-        "updateStrategy": {
+        "deploymentStrategyType": {
+            "type": "string",
+            "description": "Specify the strategy of how to replace existing pods with new ones. Supports: Recreate or RollingUpdate",
+            "default": "RollingUpdate"
+        },
+        "rollingUpdateStrategyConfig": {
             "type": "object",
             "properties": {
-                "type": {
+                "maxSurge": {
                     "type": "string",
-                    "description": "Specify the type of the update strategy",
-                    "default": "RollingUpdate"
+                    "description": "Specify the maximum number of pods that can be scheduled above the desired number of pods",
+                    "default": "25%"
                 },
-                "properties": {
-                    "type": "object",
-                    "properties": {
-                        "maxUnavailable": {
-                            "type": "number",
-                            "description": "Specify the maximum number of pods that can be unavailable during the update",
-                            "default": 1
-                        },
-                        "partition": {
-                            "type": "number",
-                            "description": "Specify the ordinal at which the StatefulSet should be partitioned for updates. During a rolling update, all pods from ordinal Replicas-1 to Partition are updated. All pods from ordinal Partition-1 to 0 remain untouched. This is helpful in being able to do a canary-based deployment",
-                            "default": 0
-                        }
-                    }
+                "maxUnavailable": {
+                    "type": "string",
+                    "description": "Specify the maximum number of pods that can be unavailable during the update",
+                    "default": "25%"
                 }
             }
         },
@@ -314,12 +313,6 @@
                     "type": "string",
                     "description": "Service name",
                     "default": ""
-                },
-                "ports": {
-                    "type": "array",
-                    "description": "Service ports",
-                    "default": [],
-                    "items": {}
                 },
                 "additionalPorts": {
                     "type": "array",
@@ -391,37 +384,157 @@
         },
         "customContainerSecurityContext": {
             "type": "object",
-            "description": "Overwrite partially the containerSecurityContext property",
+            "description": "Overwrite partially the application.containerSecurityContext property",
             "default": {}
         },
         "livenessProbe": {
             "type": "object",
-            "description": "Specify the default liveness probe",
-            "default": {}
+            "properties": {
+                "httpGet": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Application side HTTP URI that outlines how it performs",
+                            "default": "/"
+                        },
+                        "port": {
+                            "type": "string",
+                            "description": "Application port that is open for probing type of requests",
+                            "default": "http"
+                        }
+                    }
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Specify the waiting time for kubelet before it launches the first probe",
+                    "default": 30
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Specify the time interval kubelet can launch the probe",
+                    "default": 15
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
+                    "default": 10
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the livenessProbe as success",
+                    "default": 1
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the livenessProbe as failure",
+                    "default": 3
+                }
+            }
         },
         "customLivenessProbe": {
             "type": "object",
-            "description": "Overwrite partially the livenessProbe property",
+            "description": "Overwrite partially the application.livenessProbe property",
             "default": {}
         },
         "readinessProbe": {
             "type": "object",
-            "description": "Specify the default readiness probe",
-            "default": {}
+            "properties": {
+                "httpGet": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Application side HTTP URI that outlines if it is ready",
+                            "default": "/"
+                        },
+                        "port": {
+                            "type": "string",
+                            "description": "Application port that is open for probing type of requests",
+                            "default": "http"
+                        }
+                    }
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Specify the waiting time for kubelet before it launches the first probe",
+                    "default": 30
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Specify the time interval kubelet can launch the probe",
+                    "default": 15
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
+                    "default": 10
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the readinessProbe as success",
+                    "default": 1
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the readinessProbe as failure",
+                    "default": 3
+                }
+            }
         },
         "customReadinessProbe": {
             "type": "object",
-            "description": "Overwrite partially the readinessProbe property",
+            "description": "Overwrite partially the application.readinessProbe property",
             "default": {}
         },
         "startupProbe": {
             "type": "object",
-            "description": "Specify the default startup probe",
-            "default": {}
+            "properties": {
+                "httpGet": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Application side HTTP URI that outlines if it is started",
+                            "default": "/"
+                        },
+                        "port": {
+                            "type": "string",
+                            "description": "Application port that is open for probing type of requests",
+                            "default": "http"
+                        }
+                    }
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Specify the waiting time for kubelet before it launches the first probe",
+                    "default": 30
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Specify the time interval kubelet can launch the probe",
+                    "default": 15
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Specify the timeout kubelet can wait before signaling if a probe fails",
+                    "default": 10
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the startupProbe as success",
+                    "default": 1
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Specify how many requests kubelet needs to probe to mark the startupProbe as failure",
+                    "default": 3
+                }
+            }
         },
         "customStartupProbe": {
             "type": "object",
-            "description": "Overwrite partially the startupProbe property",
+            "description": "Overwrite partially the application.startupProbe property",
             "default": {}
         },
         "customAffinity": {
@@ -445,7 +558,7 @@
                 "enabled": {
                     "type": "boolean",
                     "description": "Enables/disables Ingress for routing inbound traffic",
-                    "default": false
+                    "default": true
                 },
                 "name": {
                     "type": "string",
@@ -460,7 +573,7 @@
                 "hostname": {
                     "type": "string",
                     "description": "Ingress hostname",
-                    "default": ""
+                    "default": "containers.app"
                 },
                 "tls": {
                     "type": "boolean",
@@ -543,27 +656,9 @@
                 }
             }
         },
-        "volumes": {
-            "type": "array",
-            "description": "Specify named volumes to be attached to the pod",
-            "default": [],
-            "items": {}
-        },
         "additionalVolumes": {
             "type": "array",
-            "description": "Specify additional mutual exclusive with volumes value named volumes to be attached to the main container and pod",
-            "default": [],
-            "items": {}
-        },
-        "volumeClaims": {
-            "type": "array",
-            "description": "Specify a list of volume claims to be attached to the pod",
-            "default": [],
-            "items": {}
-        },
-        "additionalVolumeClaims": {
-            "type": "array",
-            "description": "",
+            "description": "Specify additional mutual exclusive with application.volumes value named volumes to be attached to the main container and pod",
             "default": [],
             "items": {}
         },
@@ -593,7 +688,7 @@
         },
         "config": {
             "type": "string",
-            "description": "Overwrites the configuration in defaultConfig.config",
+            "description": "Overwrites the configuration in application.defaultConfig.config",
             "default": ""
         },
         "defaultConfig": {
@@ -616,7 +711,7 @@
                 },
                 "customValues": {
                     "type": "object",
-                    "description": "Specify a map of custom values to be referenced by the defaultConfig.config parameter",
+                    "description": "Specify a map of custom values to be referenced by the application.defaultConfig.config parameter",
                     "default": {}
                 }
             }

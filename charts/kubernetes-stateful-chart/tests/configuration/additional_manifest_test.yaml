@@ -1,0 +1,41 @@
+suite: app additional configuration
+templates:
+  - configuration/additional.manifest.yaml
+tests:
+  - it: should not be created if not specified
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should allow to add additional files to the main configuration file
+    set:
+      include: true
+      additionalConfigs:
+        log.xml:
+          mountPath: "/app/conf"
+          content: |
+            <log>
+            <level>INFO</level>
+            </log>
+        script.sh:
+          mountPath: "/app/conf"
+          content: |
+            #!/bin/bash
+            echo "Hello World"
+    asserts:
+        - hasDocuments:
+            count: 1
+        - isSubset:
+            path: data
+            content:
+              log.xml:  |
+                  <log>
+                  <level>INFO</level>
+                  </log>
+              script.sh: |
+                #!/bin/bash
+                echo "Hello World"
+        - matchRegex:
+            path: metadata.name
+            pattern: ^.*-files$
+
+

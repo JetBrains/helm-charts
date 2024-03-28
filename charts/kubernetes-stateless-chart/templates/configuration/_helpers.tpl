@@ -64,22 +64,13 @@ Return a list of volume mounts from the additional configuration files.
 {{- define "app.additionalConfigsVolumeMounts" -}}
 {{ $cmName := .configMapName }}
 {{- $volumeMounts := list }}
-
 {{- range $fileName, $value := .configs }}
 {{- $filePathWithoutPathSuffix := trimSuffix "/" $value.mountPath -}}
 {{- $item := dict "name" $cmName "mountPath" $filePathWithoutPathSuffix "subPath" $fileName }}
 {{- $volumeMounts = append $volumeMounts $item }}
 {{- end }}
-
 {{- $volumeMounts | toYaml }}
 {{- end }}
-
-{{/*
-- name: {{  | quote }}
-   mountPath: {{ $filePathWithoutPathSuffix | quote }}
-   subPath: {{ printf "%s/%s"  $filePathWithoutPathSuffix $fileName | quote }}
- {{- end }}
- {{- end }}
 
 {{/*
 Return the name of the ConfigMap that contains the additional configuration files.

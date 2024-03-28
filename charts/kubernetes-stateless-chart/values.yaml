@@ -581,18 +581,10 @@ defaultConfig:
 ##      </log>
 ## script.sh:
 ##    mountPath: ""
-additionalConfigs:
-      log.xml:
-        mountPath: "/app/conf"
-        content: |
-            <log>
-            <level>INFO</level>
-            </log>
-      script.sh:
-        mountPath: "/app/conf"
-        content: |
-            #!/bin/bash
-            echo "Hello World"
+##    content: |
+##      #!/bin/sh
+##      echo "Hello, World!"
+additionalConfigs: {}
 ## @section Application environment variables
 ##
 ## @param envs Environment variables

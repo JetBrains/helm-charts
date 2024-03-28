@@ -28,3 +28,44 @@ Usage:
 {{- end }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+ Return a map of configuration files.
+
+ This is used to render the configuration files in the `configMap` section of the Helm chart.
+
+ Usage:
+{{- include "app.additionalConfigFiles" ( dict "configs" .Values.additionalConfigs ) }}
+ */}}
+{{- define "app.additionalConfigFiles" -}}
+{{- range $key, $value := .configs }}
+{{ $key }}: |
+{{ $value.content | indent 4 }}
+{{- end }}
+{{- end }}
+
+{{/*
+Return a list of volume mounts from the additional configuration files.
+
+ Usage:
+{{- include "app.additionalConfigsVolumeMounts" ( dict "configs" .Values.additionalConfigs  "configMapName" $val ) }}
+*/}}
+{{- define "app.additionalConfigsVolumeMounts" -}}
+{{ $cmName := .configMapName }}
+{{- $volumeMounts := list }}
+{{- range $fileName, $value := .configs }}
+{{- $filePathWithoutPathSuffix := trimSuffix "/" $value.mountPath -}}
+{{- $item := dict "name" $cmName "mountPath" $filePathWithoutPathSuffix "subPath" $fileName }}
+{{- $volumeMounts = append $volumeMounts $item }}
+{{- end }}
+{{- $volumeMounts | toYaml }}
+{{- end }}
+
+{{/*
+Return the name of the ConfigMap that contains the additional configuration files.
+*/}}
+{{- define "app.additionalConfigsConfigMapName" -}}
+{{ include "lib.appName" $  }}-files
+{{- end }}
+

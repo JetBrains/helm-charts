@@ -799,6 +799,6 @@ tests:
             count: 1
         - isNotNull:
             path: spec.template.spec.containers[0].volumeMounts
-#        - contains:
-#            path: spec.template.spec.containers[0].volumeMounts
-#            content:
+        - lengthEqual:
+            path: spec.template.spec.containers[0].volumeMounts
+            count: 3
