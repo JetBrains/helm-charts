@@ -59,17 +59,17 @@
                 "registry": {
                     "type": "string",
                     "description": "URL of the container registry",
-                    "default": "docker.io"
+                    "default": "quay.io"
                 },
                 "repository": {
                     "type": "string",
                     "description": "URL of the container repository",
-                    "default": "docker/whalesay"
+                    "default": "jetbrains/run-forever"
                 },
                 "tag": {
                     "type": "string",
                     "description": "Image version",
-                    "default": "latest"
+                    "default": "v0.1.0"
                 },
                 "pullPolicy": {
                     "type": "string",
@@ -542,6 +542,12 @@
                     "default": {}
                 }
             }
+        },
+        "ports": {
+            "type": "array",
+            "description": "Specify a list of application ports",
+            "default": [],
+            "items": {}
         },
         "volumes": {
             "type": "array",

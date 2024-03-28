@@ -801,4 +801,4 @@ tests:
             path: spec.template.spec.containers[0].volumeMounts
         - lengthEqual:
             path: spec.template.spec.containers[0].volumeMounts
-            count: 3
+            count: 2

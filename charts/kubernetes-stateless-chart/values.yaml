@@ -48,9 +48,9 @@ name: ""
 ## @param image.pullSecrets Registry credentials. Specify not the credentials but the corresponding secrets
 ##
 image:
-  registry: "docker.io"
-  repository: "portainer/portainer-ce"
-  tag: "2.18.4-alpine"
+  registry: "quay.io"
+  repository: "jetbrains/run-forever"
+  tag: "v0.1.0"
   ## imagePullPolicy policy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -90,8 +90,7 @@ customEntrypoint: []
 ##
 ## Ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 ##
-args:
-  - --admin-password='$$2y$$05$$aO9DEethtRMRpmyc4p0Dn.4MUvoJ274844ej9IdUS16kpiu43d6R6'
+args: []
 ## @param customArgs Overwrite in full the parameter application.args.
 ##
 customArgs: []
@@ -117,7 +116,7 @@ serviceAccount:
   additionalLabels: {}
   annotations: {}
   additionalAnnotations: {}
-  ## The below 4 lines allows to specify what permissions to enable for this ServiceAccount
+  ## The below 4 lines allow specifying what permissions to enable for this ServiceAccount
   ## at namespace or cluster level. The settings below accept valid Kubernetes rules list objects.
   ##
   ## Example:
@@ -261,14 +260,8 @@ containerSecurityContext:
 customContainerSecurityContext: {}
 ## Liveness and Readiness Probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-## @extra application.livenessProbe Specify the default liveness probe
-## @param livenessProbe.httpGet.path Application side HTTP URI that outlines how it performs
-## @param livenessProbe.httpGet.port Application port that is open for probing type of requests
-## @param livenessProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
-## @param livenessProbe.periodSeconds Specify the time interval kubelet can launch the probe
-## @param livenessProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
-## @param livenessProbe.successThreshold Specify how many requests kubelet needs to probe to mark the livenessProbe as success
-## @param livenessProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the livenessProbe as failure
+## @extra livenessProbe Specify the default liveness probe
+## @skip  livenessProbe
 ##
 ## Example:
 ##  livenessProbe:
@@ -280,26 +273,12 @@ customContainerSecurityContext: {}
 ##    timeoutSeconds: 30
 ##    successThreshold: 1
 ##    failureThreshold: 5
-livenessProbe:
-  httpGet:
-    path: "/"
-    port: "http"
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
+livenessProbe: {}
 ## @param customLivenessProbe Overwrite partially the application.livenessProbe property
 ##
 customLivenessProbe: {}
-## @extra application.readinessProbe Specify the default readiness probe
-## @param readinessProbe.httpGet.path Application side HTTP URI that outlines if it is ready
-## @param readinessProbe.httpGet.port Application port that is open for probing type of requests
-## @param readinessProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
-## @param readinessProbe.periodSeconds Specify the time interval kubelet can launch the probe
-## @param readinessProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
-## @param readinessProbe.successThreshold Specify how many requests kubelet needs to probe to mark the readinessProbe as success
-## @param readinessProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the readinessProbe as failure
+## @extra readinessProbe Specify the default readiness probe
+## @skip  readinessProbe
 ##
 ## Example:
 ##  readinessProbe:
@@ -311,28 +290,14 @@ customLivenessProbe: {}
 ##    timeoutSeconds: 30
 ##    successThreshold: 1
 ##    failureThreshold: 5
-readinessProbe:
-  httpGet:
-    path: "/"
-    port: "http"
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
+readinessProbe: {}
 ## @param customReadinessProbe Overwrite partially the application.readinessProbe property
 ##
 customReadinessProbe: {}
 ## Startup Probe
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
-## @extra application.startupProbe Specify the default startup probe
-## @param startupProbe.httpGet.path Application side HTTP URI that outlines if it is started
-## @param startupProbe.httpGet.port Application port that is open for probing type of requests
-## @param startupProbe.initialDelaySeconds Specify the waiting time for kubelet before it launches the first probe
-## @param startupProbe.periodSeconds Specify the time interval kubelet can launch the probe
-## @param startupProbe.timeoutSeconds Specify the timeout kubelet can wait before signaling if a probe fails
-## @param startupProbe.successThreshold Specify how many requests kubelet needs to probe to mark the startupProbe as success
-## @param startupProbe.failureThreshold Specify how many requests kubelet needs to probe to mark the startupProbe as failure
+## @skip  startupProbe
+## @extra startupProbe Specify the default startup probe
 ##
 ## Example:
 ##  startupProbe:
@@ -344,15 +309,7 @@ customReadinessProbe: {}
 ##      timeoutSeconds: 30
 ##      successThreshold: 1
 ##      failureThreshold: 5
-startupProbe:
-  httpGet:
-    path: "/"
-    port: "http"
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  timeoutSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
+startupProbe: {}
 ## @param customStartupProbe Overwrite partially the application.startupProbe property
 ##
 customStartupProbe: {}
@@ -388,12 +345,12 @@ nodeSelector: {}
 ## @param ingress.additionalRules Additional Ingress rules
 ##
 ingress:
-  enabled: true
+  enabled: false
   name: ""
   alternateDnsNames: []
   certValidityDuration: ""
   pathType: ImplementationSpecific
-  hostname: "containers.app"
+  hostname: ""
   ## You might need to set the '/*' value in order to use it
   ## with ALB Ingress controllers.
   ##
@@ -425,7 +382,7 @@ ingress:
   ##
   tls: false
   ## Any additional arbitrary paths that may need to be added to Ingress under the main host.
-  ## For example: The ALB Ingress controller requires a special rule for handling SSL redirection.
+  ## For example, The ALB Ingress controller requires a special rule for handling SSL redirection.
   additionalPaths: []
   ## - path: /*
   ##   backend:
@@ -474,9 +431,7 @@ ingress:
 ##   containerPort: 8084
 ## - name: "http-int"
 ##   containerPort: 9084
-ports:
-  - name: http
-    containerPort: 9000
+ports: []
 ## @skip volumes
 ## @param volumes Specify named volumes to be attached to the pod
 ##
@@ -490,11 +445,7 @@ ports:
 ##      mountPath: "/app/conf/metrics.conf"
 ##      subPath: "metrics.conf"
 ##
-volumes:
-  - name: data
-    type: emptyDir
-    volumeMountProperties:
-      mountPath: /data
+volumes: []
 ## @param additionalVolumes Specify additional mutual exclusive with application.volumes value named volumes to be attached to the main container and pod
 ##
 ## application.additionalVolumes has the same structure as application.volumes. For an example, reference application.volumes.
