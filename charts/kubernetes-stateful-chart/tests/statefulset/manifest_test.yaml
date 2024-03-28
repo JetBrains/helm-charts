@@ -850,3 +850,27 @@ tests:
                   requests:
                     storage: 1Gi
     template: statefulset/manifest.yaml
+  - it: should template the additional volumeMounts for the additional application configs
+    template:  statefulset/manifest.yaml
+    set:
+      include: true
+      additionalConfigs:
+        log.xml:
+          mountPath: "/app/conf"
+          content: |
+            <log>
+            <level>INFO</level>
+            </log>
+        script.sh:
+          mountPath: "/app/conf"
+          content: |
+            #!/bin/bash
+            echo "Hello World"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isNotNull:
+          path: spec.template.spec.containers[0].volumeMounts
+      - lengthEqual:
+            path: spec.template.spec.containers[0].volumeMounts
+            count: 2

@@ -1,0 +1,15 @@
+{{- if .Values.include }}
+{{- if .Values.additionalConfigs }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.additionalConfigsConfigMapName" . }}
+  namespace: {{ include "lib.namespace" . }}
+  labels:
+    app.kubernetes.io/component: {{ include "lib.componentName" . }}
+    {{- include "lib.labels" . | nindent 4 }}
+  annotations: {{- include "lib.annotations" . | nindent 4 }}
+data:
+{{- include "app.additionalConfigFiles" ( dict "configs" .Values.additionalConfigs ) | indent 2 }}
+{{- end }}
+{{- end }}

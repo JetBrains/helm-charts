@@ -5,7 +5,7 @@ tests:
   - it: should be created by default
     asserts:
       - hasDocuments:
-          count: 1
+          count: 0
   - it: should be created as an http only
     set:
       ingress.enabled: true

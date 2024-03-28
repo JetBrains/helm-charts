@@ -48,9 +48,9 @@ name: ""
 ## @param image.pullSecrets Registry credentials. Specify not the credentials but the corresponding secrets
 ##
 image:
-  registry: "docker.io"
-  repository: "docker/whalesay"
-  tag: "latest"
+  registry: "quay.io"
+  repository: "jetbrains/run-forever"
+  tag: "v0.1.0"
   ## imagePullPolicy policy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -425,9 +425,7 @@ ingress:
 ##   containerPort: 8084
 ## - name: "http-int"
 ##   containerPort: 9084
-ports:
-  - name: http
-    containerPort: 9000
+ports: []
 ## @param volumes Specify named volumes to be attached to the pod
 ##
 ## Example:
@@ -532,6 +530,22 @@ defaultConfig:
   mountPath: ""
   config: ""
   customValues: {}
+## @param additionalConfigs Specify additional configuration files to be added to the application
+##
+## Example:
+## additionalConfigs:
+##  log.xml:
+##    mountPath: "/app/conf"
+##    content: |
+##      <log>
+##         <level>INFO</level>
+##      </log>
+## script.sh:
+##    mountPath: ""
+##    content: |
+##      #!/bin/sh
+##      echo "Hello, World!"
+additionalConfigs: {}
 ## @section Application environment variables
 ##
 ## @param envs Environment variables
