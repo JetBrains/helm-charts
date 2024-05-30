@@ -19,8 +19,6 @@ Internal variables for normalizing the external user input.
 - Use *mergeOverwrite* function to join together maps.
 - Use *concat* function to join together array lists.
 */}}
-{{- $sidecars := concat .Values.sidecars .Values.additionalSidecars  -}}
-{{- $initContainers := concat .Values.initContainers .Values.additionalInitContainers | uniq -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -157,6 +155,7 @@ spec:
       securityContext:
         {{- .Values.podSecurityContext | toYaml | nindent 8 }}
       {{- end -}}
+      {{- $initContainers := concat .Values.initContainers .Values.additionalInitContainers | uniq -}}
       {{- if $initContainers }}
       {{/*
           List of initialization containers belonging to the pod.
@@ -197,6 +196,12 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "app.secretRef" . }}
+            {{- with .Values.additionalExternalEnvSecrets }}
+            {{- range . }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+            {{- end }}
           {{- end }}
           ports:
           {{- .Values.ports | toYaml | nindent 12 }}
@@ -264,6 +269,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- include "app.volumeMountsFromVolumeClaims" . | nindent 12 }}
+        {{- $sidecars := concat .Values.sidecars .Values.additionalSidecars  -}}
         {{- if $sidecars }}
         {{/*
             List of containers belonging to the pod.
