@@ -802,3 +802,23 @@ tests:
         - lengthEqual:
             path: spec.template.spec.containers[0].volumeMounts
             count: 2
+  - it: should reference additionalExternalEnvSecrets
+    set:
+      additionalExternalEnvSecrets:
+        - "external-secret-1"
+        - "external-secret-2"
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].envFrom
+      - lengthEqual:
+          path: spec.template.spec.containers[0].envFrom
+          count: 3
+      - isSubset:
+          path: spec.template.spec.containers[0].envFrom[1].secretRef
+          content:
+              name: external-secret-1
+      - isSubset:
+          path: spec.template.spec.containers[0].envFrom[2].secretRef
+          content:
+            name: external-secret-2
+    template: deployment/manifest.yaml

@@ -153,12 +153,13 @@ Checkout the [release.json](./release.json) for details about where the chart is
 
 ### Application environment variables
 
-| Name                | Description                                                                 | Value |
-| ------------------- | --------------------------------------------------------------------------- | ----- |
-| `envs`              | Environment variables                                                       | `{}`  |
-| `additionalEnvs`    | Additional environment variables                                            | `{}`  |
-| `internalEnvSecret` | Specify the internal secret name that contains system environment variables | `""`  |
-| `externalEnvSecret` | Specify the external secret name that contains system environment variables | `""`  |
+| Name                           | Description                                                                                     | Value |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- | ----- |
+| `envs`                         | Environment variables                                                                           | `{}`  |
+| `additionalEnvs`               | Additional environment variables                                                                | `{}`  |
+| `internalEnvSecret`            | Specify the internal secret name that contains system environment variables                     | `""`  |
+| `externalEnvSecret`            | Specify the external secret name that contains system environment variables                     | `""`  |
+| `additionalExternalEnvSecrets` | Specify additional external secrets' names as strings that contain system environment variables | `[]`  |
 
 ### Application Kubernetes resources
 

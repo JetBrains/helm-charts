@@ -614,6 +614,12 @@
             "description": "Specify the external secret name that contains system environment variables",
             "default": ""
         },
+        "additionalExternalEnvSecrets": {
+            "type": "array",
+            "description": "Specify additional external secrets' names as strings that contain system environment variables",
+            "default": [],
+            "items": {}
+        },
         "kubernetesYamlResources": {
             "type": "array",
             "description": "Kubernetes objects to add to the application package",
