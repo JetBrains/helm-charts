@@ -350,6 +350,9 @@ tests:
       include: true
       fullnameOverride: app
       name: packages
+      envs:
+        INTERNAL_URL: "http://unittest-kubernetes-stateless-chart-packages:9084"
+        EXTERNAL_URL: "https://packages.app.local"
     asserts:
       - isNotNull:
           path: spec.template.spec.containers[0].envFrom[0].secretRef.name
@@ -804,6 +807,8 @@ tests:
             count: 2
   - it: should reference additionalExternalEnvSecrets
     set:
+      envs:
+        INTERNAL_URL: "http://unittest-kubernetes-chart:9084"
       additionalExternalEnvSecrets:
         - "external-secret-1"
         - "external-secret-2"
@@ -822,3 +827,8 @@ tests:
           content:
             name: external-secret-2
     template: deployment/manifest.yaml
+  - it: should not reference any secret object by default
+    template:  deployment/manifest.yaml
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].envFrom

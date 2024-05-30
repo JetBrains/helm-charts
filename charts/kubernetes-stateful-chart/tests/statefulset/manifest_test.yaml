@@ -8,6 +8,7 @@ templates:
   - configuration/secret.envs.yaml
 tests:
   - it: should be created by default with very minimal configuration
+    template: statefulset/manifest.yaml
     asserts:
       - hasDocuments:
           count: 1
@@ -47,7 +48,6 @@ tests:
       - equal:
           path: spec.template.spec.volumes
           value: null
-    template: statefulset/manifest.yaml
   - it: should be created with the full configuration
     set:
       namespaceOverride: kube-app
@@ -874,3 +874,30 @@ tests:
       - lengthEqual:
             path: spec.template.spec.containers[0].volumeMounts
             count: 2
+  - it: should reference additionalExternalEnvSecrets
+    template:  statefulset/manifest.yaml
+    set:
+      envs:
+        INTERNAL_URL: "http://unittest-kubernetes-stateful-chart-packages:9084"
+      additionalExternalEnvSecrets:
+        - "external-secret-1"
+        - "external-secret-2"
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].envFrom
+      - lengthEqual:
+          path: spec.template.spec.containers[0].envFrom
+          count: 3
+      - isSubset:
+          path: spec.template.spec.containers[0].envFrom[1].secretRef
+          content:
+            name: external-secret-1
+      - isSubset:
+          path: spec.template.spec.containers[0].envFrom[2].secretRef
+          content:
+            name: external-secret-2
+  - it: should not reference any secret object by default
+    template:  statefulset/manifest.yaml
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].envFrom
