@@ -35,10 +35,10 @@ References:
 {{/*
 Internal variables for normalizing the external user input.
 - Use *mergeOverwrite* function to join together maps.
-- Use *concat* function to join together array lists.
+- Use *concat* function to join together lists.
 */}}
-{{- $sidecars := concat .Values.sidecars .Values.additionalSidecars  -}}
-{{- $initContainers := concat list .Values.initContainers .Values.additionalInitContainers | uniq -}}
+{{- $sidecars := concat .Values.sidecars .Values.additionalSidecars | uniq  -}}
+{{- $initContainers := concat .Values.initContainers .Values.additionalInitContainers | uniq -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -224,6 +224,12 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "app.secretRef" . }}
+            {{- with .Values.additionalExternalEnvSecrets }}
+            {{- range . }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+            {{- end }}
           ports:
           {{- .Values.ports | toYaml | nindent 12 }}
           {{/*

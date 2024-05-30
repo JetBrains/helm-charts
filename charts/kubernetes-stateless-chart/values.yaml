@@ -566,6 +566,10 @@ internalEnvSecret: ""
 ## leaked in the deployment version of the values.yaml file.
 ## Note: envs, additionalEnvs will be ignored when externalEnvSecret is set
 externalEnvSecret: ""
+## @param additionalExternalEnvSecrets Specify additional external secrets' names as strings that contain system environment variables
+## This secret contains a valid set of environment variables that are compatible with the main application.
+## Note: this secret will be added as an additional secret reference to the main application.
+additionalExternalEnvSecrets: []
 ## @section Application Kubernetes resources
 ##
 ## @param kubernetesYamlResources Kubernetes objects to add to the application package
