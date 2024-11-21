@@ -110,6 +110,12 @@ spec:
   strategy: {{- include "app.deploymentStrategy" .  | nindent 4 }}
   replicas: {{ .Values.replicaCount }}
   {{/*
+    revisionHistoryLimit is the maximum number of revisions that will be maintained in the Deployment's revision history.
+    The revision history consists of all revisions not represented by a currently applied StatefulSetSpec version.
+    The default value is 10.
+  */}}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{/*
     PodTemplateSpec describes the data a pod should have when created from a template.
     In short this is a wrapper for the PodSpec object. The PodSpec represents the actual
     specification of the desired behaviour of the pod.
