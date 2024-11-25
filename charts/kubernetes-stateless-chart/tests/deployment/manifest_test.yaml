@@ -116,6 +116,12 @@ tests:
         name: "app.conf"
         mountPath: "/home/app/packages-server/app.conf"
     asserts:
+      - isSubset:
+          path: spec.selector.matchLabels
+          content:
+            app.kubernetes.io/component: packages
+            app.kubernetes.io/instance: unittest
+            app.kubernetes.io/name: kubernetes-stateless-chart
       - equal:
           path: spec.template.metadata.annotations["monitoring.prometheus.metrics"]
           value: true
