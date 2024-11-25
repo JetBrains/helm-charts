@@ -8,6 +8,14 @@ tests:
           count: 1
       - isKind:
           of: Service
+  - it: should be created by default with very minimal configuration
+    asserts:
+      - isSubset:
+          path: spec.selector
+          content:
+            app.kubernetes.io/component: app
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: kubernetes-stateless-chart
   - it: should not be created if the current application is not included
     set:
       include: false
