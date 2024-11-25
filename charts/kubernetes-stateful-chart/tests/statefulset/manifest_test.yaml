@@ -25,7 +25,6 @@ tests:
           content:
               app.kubernetes.io/component: app
               app.kubernetes.io/instance: unittest
-              app.kubernetes.io/managed-by: Helm
               app.kubernetes.io/name: kubernetes-stateful-chart
       - equal:
           path: spec.replicas

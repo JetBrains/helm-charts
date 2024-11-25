@@ -18,6 +18,12 @@ tests:
           path: spec.strategy
           content:
             type: RollingUpdate
+      - isSubset:
+          path: spec.selector.matchLabels
+          content:
+            app.kubernetes.io/component: app
+            app.kubernetes.io/instance: unittest
+            app.kubernetes.io/name: kubernetes-stateless-chart
     template: deployment/manifest.yaml
   - it: should be created with the full configuration
     set:

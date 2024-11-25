@@ -49,7 +49,7 @@ Return a valid set of labels prefix.
 Return a valid set of labels to use as spec.selector.matchLabels.
 */}}
 {{- define "lib.matchLabels" -}}
-{{ include "lib.labels" . }}
+{{ include "common.labels.matchLabels" . }}
 {{- end }}
 {{/*
 Return a valid component name.
