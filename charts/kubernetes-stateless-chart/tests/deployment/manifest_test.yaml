@@ -844,3 +844,32 @@ tests:
     asserts:
       - isNull:
           path: spec.template.spec.containers[0].envFrom
+  - it: should return default values for image spec
+    template: deployment/manifest.yaml
+    set:
+      include: true # This is default
+      name: sample # Overwrite the app name
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "quay.io/jetbrains/run-forever:v0.1.0"
+  - it: should allow helm templating for image spec
+    template: deployment/manifest.yaml
+    set:
+      include: true # This is default
+      name: sample # Overwrite the app name
+      image.registry: "{{ print \"unittest_registry\" }}"
+      image.repository: "{{ print \"unittest_repository\" }}"
+      image.tag: "{{ print \"v99.99.99\" }}"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "unittest_registry/unittest_repository:v99.99.99"
