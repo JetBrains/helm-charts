@@ -222,7 +222,7 @@ spec:
       {{- end }}
       containers:
         - name: app
-          image: {{ include "lib.image" (dict "registry" .Values.image.registry "repository" .Values.image.repository "tag" .Values.image.tag ) }}
+          image: {{ tpl (include "lib.image" (dict "registry" .Values.image.registry "repository" .Values.image.repository "tag" .Values.image.tag )) $ }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: {{ default .Values.entrypoint .Values.customEntrypoint | toYaml | nindent 12 }}
           args: {{ default .Values.args .Values.customArgs | toYaml | nindent 12 }}
