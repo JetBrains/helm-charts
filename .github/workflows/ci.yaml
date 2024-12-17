@@ -65,7 +65,7 @@ jobs:
           echo "cluster_name=${name#charts/}" >> $GITHUB_OUTPUT
 
       - name: "Create kind cluster for char ${{ matrix.chart }}"
-        uses: helm/kind-action@v1.10.0
+        uses: helm/kind-action@v1.11.0
         with:
           cluster_name: ${{ steps.kind-cluster-name.outputs.cluster_name }}
           config: lib/Kind/cluster.yaml
