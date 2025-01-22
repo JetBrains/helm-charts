@@ -394,6 +394,11 @@
             "description": "Overwrite partially the containerSecurityContext property",
             "default": {}
         },
+        "terminationGracePeriodSeconds": {
+            "type": "number",
+            "description": "Grace period to allow the write to shutdown before it is killed.",
+            "default": 30
+        },
         "livenessProbe": {
             "type": "object",
             "description": "Specify the default liveness probe",
@@ -651,6 +656,12 @@
             "type": "string",
             "description": "Specify the external secret name that contains system environment variables",
             "default": ""
+        },
+        "additionalExternalEnvSecrets": {
+            "type": "array",
+            "description": "Specify additional external secrets' names as strings that contain system environment variables",
+            "default": [],
+            "items": {}
         },
         "kubernetesYamlResources": {
             "type": "array",
