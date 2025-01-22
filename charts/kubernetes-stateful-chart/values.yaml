@@ -255,6 +255,9 @@ containerSecurityContext:
 ## @param customContainerSecurityContext Overwrite partially the containerSecurityContext property
 ##
 customContainerSecurityContext: {}
+## @param terminationGracePeriodSeconds Grace period to allow the write to shutdown before it is killed.
+##
+terminationGracePeriodSeconds: 30
 ## Liveness and Readiness Probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
 ## @param livenessProbe Specify the default liveness probe

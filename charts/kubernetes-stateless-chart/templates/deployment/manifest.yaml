@@ -191,6 +191,12 @@ spec:
       securityContext:
         {{- .Values.podSecurityContext | toYaml | nindent 8 }}
       {{- end -}}
+      {{/*
+          terminationGracePeriodSeconds - Grace period to allow the write to shutdown before it is killed. Especially for the ingester,
+          this must be increased. It must be long enough so writes can be gracefully shutdown flushing/transferring
+          all data and to successfully leave the member ring on shutdown.
+      */}}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- if $initContainers }}
       {{/*
           List of initialization containers belonging to the pod.

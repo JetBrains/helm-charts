@@ -383,6 +383,11 @@
             "description": "Overwrite partially the application.containerSecurityContext property",
             "default": {}
         },
+        "terminationGracePeriodSeconds": {
+            "type": "number",
+            "description": "Grace period to allow the write to shutdown before it is killed.",
+            "default": 30
+        },
         "customLivenessProbe": {
             "type": "object",
             "description": "Overwrite partially the application.livenessProbe property",

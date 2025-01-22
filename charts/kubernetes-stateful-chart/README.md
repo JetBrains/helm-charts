@@ -105,6 +105,7 @@ Checkout the [release.json](release.json) for details about where the chart is h
 | `containerSecurityContext.allowPrivilegeEscalation` | Specify if the process can get more permissions at run-time                                                                                                                                                                                                                                | `false`                  |
 | `containerSecurityContext.readOnlyRootFilesystem`   | Specify if the root filesystem of the process is read-only                                                                                                                                                                                                                                 | `true`                   |
 | `customContainerSecurityContext`                    | Overwrite partially the containerSecurityContext property                                                                                                                                                                                                                                  | `{}`                     |
+| `terminationGracePeriodSeconds`                     | Grace period to allow the write to shutdown before it is killed.                                                                                                                                                                                                                           | `30`                     |
 | `livenessProbe`                                     | Specify the default liveness probe                                                                                                                                                                                                                                                         | `{}`                     |
 | `customLivenessProbe`                               | Overwrite partially the livenessProbe property                                                                                                                                                                                                                                             | `{}`                     |
 | `readinessProbe`                                    | Specify the default readiness probe                                                                                                                                                                                                                                                        | `{}`                     |
@@ -155,12 +156,13 @@ Checkout the [release.json](release.json) for details about where the chart is h
 
 ### Application environment variables
 
-| Name                | Description                                                                 | Value |
-| ------------------- | --------------------------------------------------------------------------- | ----- |
-| `envs`              | Environment variables                                                       | `{}`  |
-| `additionalEnvs`    | Additional environment variables                                            | `{}`  |
-| `internalEnvSecret` | Specify the internal secret name that contains system environment variables | `""`  |
-| `externalEnvSecret` | Specify the external secret name that contains system environment variables | `""`  |
+| Name                           | Description                                                                                     | Value |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- | ----- |
+| `envs`                         | Environment variables                                                                           | `{}`  |
+| `additionalEnvs`               | Additional environment variables                                                                | `{}`  |
+| `internalEnvSecret`            | Specify the internal secret name that contains system environment variables                     | `""`  |
+| `externalEnvSecret`            | Specify the external secret name that contains system environment variables                     | `""`  |
+| `additionalExternalEnvSecrets` | Specify additional external secrets' names as strings that contain system environment variables | `[]`  |
 
 ### Application Kubernetes resources
 
