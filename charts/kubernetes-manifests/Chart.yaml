@@ -1,0 +1,16 @@
+apiVersion: v2
+name: kubernetes-manifests
+description: A Generic Helm chart for packaging Kubernetes manifests
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - template
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support

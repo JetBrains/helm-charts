@@ -1,0 +1,28 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "description": "Provide a map of global values to be used in the templates",
+            "default": {}
+        },
+        "include": {
+            "type": "boolean",
+            "description": "Includes/Excludes the manifests packaged by this Helm chart",
+            "default": true
+        },
+        "kubernetesYamlResources": {
+            "type": "array",
+            "description": "Kubernetes objects to add to the package",
+            "default": [],
+            "items": {}
+        },
+        "additionalKubernetesYamlResources": {
+            "type": "array",
+            "description": "Add additional Kubernetes objects to add to the package",
+            "default": [],
+            "items": {}
+        }
+    }
+}

@@ -1,0 +1,46 @@
+##
+## This is a YAML-formatted file.
+##
+
+## @section Global parameters
+##
+## @param global Provide a map of global values to be used in the templates
+global: {}
+
+
+## @param include Includes/Excludes the manifests packaged by this Helm chart
+##
+include: true
+## @section Manifests to package
+##
+## @param kubernetesYamlResources Kubernetes objects to add to the package
+##
+## Example:
+## - apiVersion: v1
+##   kind: ServiceAccount
+##   metadata:
+##     namespace: '{{ .Release.namespace }}'
+##     name: '{{ include "lib.appName" . }}'-newsa
+##     labels:
+##       app.kubernetes.io/component: '{{ include "lib.componentName" . }}'
+##       '{{- include "lib.labels" . | nindent 4 }}'
+##
+kubernetesYamlResources: []
+## @param additionalKubernetesYamlResources Add additional Kubernetes objects to add to the package
+##
+## Example:
+## - apiVersion: v1
+##   kind: ResourceQuota
+##   metadata:
+##     name: '{{ include "lib.appName" $ }}'
+##     namespace: '{{ include "lib.namespace" $ }}'
+##     labels:
+##       app.kubernetes.io/component: '{{ include "lib.componentName" $ }}'
+##   spec:
+##     hard:
+##       requests.cpu: "4"
+##       requests.memory: 4Gi
+##       limits.cpu: "4"
+##       limits.memory: 4Gi
+##
+additionalKubernetesYamlResources: []

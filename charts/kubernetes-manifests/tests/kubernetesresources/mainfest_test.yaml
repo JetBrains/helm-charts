@@ -1,0 +1,85 @@
+suite: app kubernetes resources
+templates:
+  - kubernetesresources/manifest.yaml
+tests:
+  - it: should not be created by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should not be generated when include is set to false
+    set:
+      include: false
+      kubernetesYamlResources:
+        - apiVersion: v1
+          kind: Nameapp
+          metadata:
+            name: kong
+            labels:
+              app: kong
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should allow to compose a set of custom YAML objects
+    set:
+        kubernetesYamlResources:
+          - apiVersion: v1
+            kind: Nameapp
+            metadata:
+              name: kong
+              labels:
+                app: kong
+          - apiVersion: v1
+            kind: ServiceAccount
+            metadata:
+              nameapp: kong
+              name: kong
+              labels:
+                app: kong
+        additionalKubernetesYamlResources:
+          - apiVersion: autoscaling/v1
+            kind: HorizontalPodAutoscaler
+            metadata:
+              name: kong-apigateway-weu-dev-ha
+              nameapp: kong
+              labels:
+                app: kong
+            spec:
+              scaleTargetRef:
+                apiVersion: apps/v1
+                kind: Deployment
+                name: kong-apigateway-weu-dev
+              minReplicas: 1
+              maxReplicas: 7
+              targetCPUUtilizationPercentage: 71
+    asserts:
+      - equal:
+          path: items
+          value:
+            - apiVersion: v1
+              kind: Nameapp
+              metadata:
+                labels:
+                  app: kong
+                name: kong
+            - apiVersion: v1
+              kind: ServiceAccount
+              metadata:
+                labels:
+                  app: kong
+                name: kong
+                nameapp: kong
+            - apiVersion: autoscaling/v1
+              kind: HorizontalPodAutoscaler
+              metadata:
+                labels:
+                  app: kong
+                name: kong-apigateway-weu-dev-ha
+                nameapp: kong
+              spec:
+                maxReplicas: 7
+                minReplicas: 1
+                scaleTargetRef:
+                  apiVersion: apps/v1
+                  kind: Deployment
+                  name: kong-apigateway-weu-dev
+                targetCPUUtilizationPercentage: 71
