@@ -1,0 +1,4 @@
+kubernetes-manifests
+====================
+Chart Version: {{ .Chart.Version }}
+Support contact: it is outlined in the Chart.yaml file

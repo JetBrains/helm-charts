@@ -1,0 +1,9 @@
+{{- if .Values.include -}}
+{{- $kubernetesResources := concat .Values.kubernetesYamlResources .Values.additionalKubernetesYamlResources -}}
+{{- if $kubernetesResources -}}
+apiVersion: v1
+kind: List
+items:
+{{- tpl ($kubernetesResources | toYaml) $ | nindent 4 }}
+{{- end -}}
+{{- end -}}
