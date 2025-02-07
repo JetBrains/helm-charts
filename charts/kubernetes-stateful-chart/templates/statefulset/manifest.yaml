@@ -198,6 +198,7 @@ spec:
           command: {{ default .Values.entrypoint .Values.customEntrypoint | toYaml | nindent 12 }}
           args: {{ default .Values.args .Values.customArgs | toYaml | nindent 12 }}
           securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 12 }}
+          lifecycle: {{ .Values.lifecycle | toYaml | nindent 12 }}
           {{- if or .Values.envs .Values.additionalEnvs .Values.externalEnvSecret .Values.internalEnvSecret }}
           envFrom:
             - secretRef:

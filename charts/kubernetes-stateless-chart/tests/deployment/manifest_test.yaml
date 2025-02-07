@@ -115,6 +115,10 @@ tests:
       defaultConfig:
         name: "app.conf"
         mountPath: "/home/app/packages-server/app.conf"
+      lifecycle:
+        preStop:
+          exec:
+            command: [ "/bin/sh", "-c", "sleep 5" ]
     asserts:
       - isSubset:
           path: spec.selector.matchLabels
@@ -159,6 +163,12 @@ tests:
       - equal:
           path: spec.strategy["type"]
           value: Recreate
+      - isSubset:
+          path: spec.template.spec.containers[0].lifecycle
+          content:
+            preStop:
+              exec:
+                command: [ "/bin/sh", "-c", "sleep 5" ]
     template: deployment/manifest.yaml
   - it: should accept init containers expressed with golang templates
     set:

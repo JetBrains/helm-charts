@@ -383,6 +383,11 @@
             "description": "Overwrite partially the application.containerSecurityContext property",
             "default": {}
         },
+        "lifecycle": {
+            "type": "object",
+            "description": "Actions that the management system should take in response to container lifecycle events.",
+            "default": {}
+        },
         "terminationGracePeriodSeconds": {
             "type": "number",
             "description": "Grace period to allow the write to shutdown before it is killed.",
