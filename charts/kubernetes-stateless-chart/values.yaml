@@ -258,6 +258,11 @@ containerSecurityContext:
 ## @param customContainerSecurityContext Overwrite partially the application.containerSecurityContext property
 ##
 customContainerSecurityContext: {}
+## Pod Lifecycle
+## ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+## @param lifecycle Actions that the management system should take in response to container lifecycle events.
+##
+lifecycle: {}
 ## @param terminationGracePeriodSeconds Grace period to allow the write to shutdown before it is killed.
 ##
 terminationGracePeriodSeconds: 30

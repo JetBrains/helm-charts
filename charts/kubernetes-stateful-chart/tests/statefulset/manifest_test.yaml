@@ -137,6 +137,10 @@ tests:
       defaultConfig:
         name: "app.conf"
         mountPath: "/home/app/packages-server/app.conf"
+      lifecycle:
+        preStop:
+          exec:
+            command: [ "/bin/sh", "-c", "sleep 5" ]
     asserts:
       - equal:
           path: spec.template.metadata.annotations["monitoring.prometheus.metrics"]
@@ -172,6 +176,12 @@ tests:
           value: 2
       - isNotNull:
           path: spec.template.spec.containers
+      - isSubset:
+          path: spec.template.spec.containers[0].lifecycle
+          content:
+            preStop:
+              exec:
+                command: [ "/bin/sh", "-c", "sleep 5" ]
     template: statefulset/manifest.yaml
   - it: should accept init containers expressed with golang templates
     set:
