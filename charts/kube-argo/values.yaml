@@ -819,7 +819,7 @@ argo:
         # -- Prometheus ServiceMonitor tlsConfig
         tlsConfig: {}
         # -- Prometheus ServiceMonitor namespace
-        namespace: "" # "monitoring"
+        namespace: ""
         # -- Prometheus ServiceMonitor labels
         additionalLabels: {}
         # -- Prometheus ServiceMonitor annotations
@@ -828,7 +828,7 @@ argo:
         # -- Deploy a PrometheusRule for the application controller
         enabled: false
         # -- PrometheusRule namespace
-        namespace: "" # "monitoring"
+        namespace: ""
         # -- PrometheusRule selector
         selector: {}
         # prometheus: kube-prometheus
@@ -911,7 +911,7 @@ argo:
         # -- Prometheus ServiceMonitor tlsConfig
         tlsConfig: {}
         # -- Prometheus ServiceMonitor namespace
-        namespace: "" # "monitoring"
+        namespace: ""
         # -- Prometheus ServiceMonitor labels
         additionalLabels: {}
         # -- Prometheus ServiceMonitor annotations
@@ -1453,7 +1453,7 @@ argo:
         # -- Prometheus ServiceMonitor tlsConfig
         tlsConfig: {}
         # -- Prometheus ServiceMonitor namespace
-        namespace: "" # "monitoring"
+        namespace: ""
         # -- Prometheus ServiceMonitor labels
         additionalLabels: {}
         # -- Prometheus ServiceMonitor annotations
@@ -1620,10 +1620,10 @@ argo:
       repository: "" # defaults to global.image.repository
       # -- Tag to use for the Argo CD server
       # @default -- `""` (defaults to global.image.tag)
-      tag: "" # defaults to global.image.tag
+      tag: ""
       # -- Image pull policy for the Argo CD server
       # @default -- `""` (defaults to global.image.imagePullPolicy)
-      imagePullPolicy: "" # IfNotPresent
+      imagePullPolicy: ""
 
     # -- Secrets with credentials to pull images from a private registry
     # @default -- `[]` (defaults to global.imagePullSecrets)
@@ -2536,7 +2536,7 @@ argo:
         # -- Prometheus ServiceMonitor tlsConfig
         tlsConfig: {}
         # -- Prometheus ServiceMonitor namespace
-        namespace: "" # "monitoring"
+        namespace: ""
         # -- Prometheus ServiceMonitor labels
         additionalLabels: {}
         # -- Prometheus ServiceMonitor annotations
@@ -2557,7 +2557,7 @@ argo:
       # -- Create repo server service account
       create: true
       # -- Repo server service account name
-      name: "" # "argocd-repo-server"
+      name: ""
       # -- Annotations applied to created service account
       annotations: {}
       # -- Labels applied to created service account
@@ -3761,7 +3761,7 @@ events:
         selector: {}
         # prometheus: kube-prometheus
         # -- Prometheus ServiceMonitor namespace
-        namespace: "" # "monitoring"
+        namespace: ""
         # -- Prometheus ServiceMonitor labels
         additionalLabels: {}
 
@@ -3922,7 +3922,7 @@ rollouts:
   ## you can set api versions here
   apiVersionOverrides:
     # -- String to override apiVersion of ingresses rendered by this helm chart
-    ingress: "" # networking.k8s.io/v1beta1
+    ingress: ""
 
   # -- Override the Kubernetes version, which is used to evaluate certain manifests
   kubeVersionOverride: ""
@@ -4089,9 +4089,9 @@ rollouts:
       # -- Deploy a [Pod Disruption Budget] for the controller
       enabled: false
       # -- Minimum number / percentage of pods that should remain scheduled
-      minAvailable: # 1
+      minAvailable:
       # -- Maximum number / percentage of pods that may be made unavailable
-      maxUnavailable: # 0
+      maxUnavailable:
 
     # -- Additional volumes to add to the controller pod
     volumes: []
@@ -4286,9 +4286,9 @@ rollouts:
       # -- Deploy a [Pod Disruption Budget] for the dashboard
       enabled: false
       # -- Minimum number / percentage of pods that should remain scheduled
-      minAvailable: # 1
+      minAvailable:
       # -- Maximum number / percentage of pods that may be made unavailable
-      maxUnavailable: # 0
+      maxUnavailable:
 
     ## Ingress configuration.
     ## ref: https://kubernetes.io/docs/user-guide/ingress/
@@ -4417,11 +4417,11 @@ workflows:
   # Override APIVersions
   apiVersionOverrides:
     # -- String to override apiVersion of autoscaling rendered by this helm chart
-    autoscaling: "" # autoscaling/v2
+    autoscaling: ""
     # -- String to override apiVersion of GKE resources rendered by this helm chart
-    cloudgoogle: "" # cloud.google.com/v1
+    cloudgoogle: ""
     # -- String to override apiVersion of monitoring CRDs (ServiceMonitor) rendered by this helm chart
-    monitoring: "" # monitoring.coreos.com/v1
+    monitoring: ""
 
   # -- Restrict Argo to operate only in a single namespace (the namespace of the
   # Helm release) by apply Roles and RoleBindings instead of the Cluster
@@ -4581,14 +4581,14 @@ workflows:
     #       key: v2-s3-artifact-repository # default can be set by the `workflows.argoproj.io/default-artifact-repository` annotation in config map.
 
     # -- Number of workflow workers
-    workflowWorkers: # 32
+    workflowWorkers:
     # -- Number of workflow TTL workers
-    workflowTTLWorkers: # 4
+    workflowTTLWorkers:
     # -- Number of pod cleanup workers
-    podCleanupWorkers: # 4
+    podCleanupWorkers:
     # -- Number of cron workflow workers
     # Only valid for 3.5+
-    cronWorkflowWorkers: # 8
+    cronWorkflowWorkers:
     # -- Restricts the Workflows that the controller will process.
     # Only valid for 2.9+
     workflowRestrictions: {}
@@ -4619,7 +4619,7 @@ workflows:
       # -- Prometheus ServiceMonitor labels
       additionalLabels: {}
       # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
+      namespace: ""
     serviceAccount:
       # -- Create a service account for the controller
       create: true
@@ -4850,9 +4850,9 @@ workflows:
     # -- Service port for server
     servicePort: 2746
     # -- Service node port
-    serviceNodePort: # 32746
+    serviceNodePort:
     # -- Service port name
-    servicePortName: "" # http
+    servicePortName: ""
 
     # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
     hostAliases: []
