@@ -1,0 +1,21 @@
+apiVersion: v2
+name: kube-oauth2-proxy
+description: A Helm chart for OAuth2 Proxy in Kubernetes
+type: application
+version: 7.7.4
+appVersion: 7.7.4
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - oatuh2-proxy
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: oauth2-proxy
+    alias: spec
+    repository: https://oauth2-proxy.github.io/manifests
+    version: 7.7.4

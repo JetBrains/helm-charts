@@ -1,0 +1,41 @@
+apiVersion: v2
+name: kube-argo-charts
+description: A Helm chart for deploying Argo projects in Kubernetes
+type: application
+version: 0.1.0
+appVersion: 1.0.0
+kubeVersion: ">=1.19.0-0"
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - github
+  - continuous-integration
+  - runners
+  - ark
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: argo-cd
+    alias: argo
+    repository: https://argoproj.github.io/argo-helm
+    version: 6.7.3
+    condition: argo.install
+  - name: argo-events
+    alias: events
+    repository: https://argoproj.github.io/argo-helm
+    version: 2.4.4
+    condition: events.install
+  - name: argo-rollouts
+    alias: rollouts
+    repository: https://argoproj.github.io/argo-helm
+    version: 2.35.1
+    condition: rollouts.install
+  - name: argo-workflows
+    alias: workflows
+    repository: https://argoproj.github.io/argo-helm
+    version: 0.41.0
+    condition: workflows.install

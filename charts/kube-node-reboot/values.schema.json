@@ -1,0 +1,84 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "revisionHistoryLimit": {
+            "type": "number",
+            "description": "The number of old history to retain to allow rollback",
+            "default": 10
+        },
+        "updateStrategy": {
+            "type": "string",
+            "description": "The strategy to use for updates",
+            "default": "RollingUpdate"
+        },
+        "maxUnavailable": {
+            "type": "number",
+            "description": "The maximum number of pods that can be unavailable during the update",
+            "default": 1
+        },
+        "podAnnotations": {
+            "type": "object",
+            "description": "- Annotations to add to the Kured pod",
+            "default": {}
+        },
+        "dsAnnotations": {
+            "type": "object",
+            "description": "- Annotations to add to the Kured DaemonSet",
+            "default": {}
+        },
+        "extraArgs": {
+            "type": "object",
+            "description": "Additional arguments to pass to the Kured container",
+            "default": {}
+        },
+        "extraEnvVars": {
+            "type": "object",
+            "description": "Additional environment variables to pass to the Kured container",
+            "default": {}
+        },
+        "hostNetwork": {
+            "type": "boolean",
+            "description": "Use the host's network namespace",
+            "default": false
+        },
+        "podLabels": {
+            "type": "object",
+            "description": "Labels to add to the Kured pod",
+            "default": {}
+        },
+        "priorityClassName": {
+            "type": "string",
+            "description": "The name of the priority class to use",
+            "default": ""
+        },
+        "tolerations": {
+            "type": "array",
+            "description": "Tolerations for the Kured pod",
+            "default": [],
+            "items": {}
+        },
+        "affinity": {
+            "type": "object",
+            "description": "Affinity for the Kured pod",
+            "default": {}
+        },
+        "volumeMounts": {
+            "type": "array",
+            "description": "Additional volume mounts for the Kured container",
+            "default": [],
+            "items": {}
+        },
+        "volumes": {
+            "type": "array",
+            "description": "Additional volumes for the Kured pod",
+            "default": [],
+            "items": {}
+        },
+        "initContainers": {
+            "type": "object",
+            "description": "Additional init containers for the Kured pod",
+            "default": {}
+        }
+    }
+}

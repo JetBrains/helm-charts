@@ -1,0 +1,24 @@
+apiVersion: v2
+name: kube-karpenter
+description: A Helm chart for Karpenter, an open-source node provisioning project built for Kubernetes.
+type: application
+version: 0.35.1
+appVersion: 0.35.1
+kubeVersion: '>=1.20.0-0'
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - aws
+  - karpenter
+  - autoscaling
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: karpenter
+    alias: spec
+    repository: oci://public.ecr.aws/karpenter
+    version: 0.35.1

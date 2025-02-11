@@ -1,0 +1,23 @@
+apiVersion: v2
+name: kube-argocd-image-updater
+description: A Helm chart for updating Docker images in ArgoCD applications running in Kubernetes
+type: application
+version: 0.10.2
+appVersion: v0.13.1
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - argoproj
+  - argocd
+  - gitops
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: argocd-image-updater
+    alias: spec
+    repository: https://argoproj.github.io/argo-helm
+    version: 0.10.2

@@ -1,0 +1,51 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "spec": {
+            "type": "object",
+            "properties": {
+                "nameOverride": {
+                    "type": "string",
+                    "description": "Provide a name in place of kube-prometheus-stack for `app:` labels",
+                    "default": ""
+                },
+                "namespaceOverride": {
+                    "type": "string",
+                    "description": "Override the deployment namespace",
+                    "default": ""
+                },
+                "kubeTargetVersionOverride": {
+                    "type": "string",
+                    "description": "Provide a k8s version to auto dashboard import script example: kubeTargetVersionOverride: 1.26.6",
+                    "default": ""
+                },
+                "kubeVersionOverride": {
+                    "type": "string",
+                    "description": "Allow kubeVersion to be overridden while creating the ingress",
+                    "default": ""
+                },
+                "fullnameOverride": {
+                    "type": "string",
+                    "description": "Provide a name to substitute for the full names of resources",
+                    "default": ""
+                },
+                "crds": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Install Prometheus Operator CRDs",
+                            "default": true
+                        }
+                    }
+                },
+                "customRules": {
+                    "type": "object",
+                    "description": "custom Rules to override \"for\" and \"severity\" in defaultRules",
+                    "default": {}
+                }
+            }
+        }
+    }
+}
