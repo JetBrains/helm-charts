@@ -1,0 +1,136 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "imagePullSecrets": {
+            "type": "array",
+            "description": "Image pull secrets",
+            "default": [],
+            "items": {}
+        },
+        "nameOverride": {
+            "type": "string",
+            "description": "The name to use for the metrics-server",
+            "default": ""
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "The full name to use for the metrics-server",
+            "default": ""
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Labels to add to all resources",
+            "default": {}
+        },
+        "podLabels": {
+            "type": "object",
+            "description": "Labels to add to the metrics-server pod",
+            "default": {}
+        },
+        "podAnnotations": {
+            "type": "object",
+            "description": "Annotations to add to the metrics-server pod",
+            "default": {}
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "description": "Security context for the metrics-server pod",
+            "default": {}
+        },
+        "priorityClassName": {
+            "type": "string",
+            "description": "The name of the priority class to use",
+            "default": "system-cluster-critical"
+        },
+        "containerPort": {
+            "type": "number",
+            "description": "The port to use for the metrics-server",
+            "default": 10250
+        },
+        "replicas": {
+            "type": "number",
+            "description": "The number of replicas to use for the metrics-server",
+            "default": 1
+        },
+        "revisionHistoryLimit": {
+            "type": "number",
+            "description": "The number of revisions to keep for the metrics-server",
+            "default": 10
+        },
+        "updateStrategy": {
+            "type": "object",
+            "description": "The update strategy to use for the metrics-server",
+            "default": {}
+        },
+        "defaultArgs": {
+            "type": "array",
+            "description": "The default arguments to use for the metrics-server",
+            "default": [
+                "--cert-dir=/tmp",
+                "--kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname",
+                "--kubelet-use-node-status-port",
+                "--metric-resolution=15s",
+                "--kubelet-insecure-tls"
+            ],
+            "items": {
+                "type": "string"
+            }
+        },
+        "args": {
+            "type": "array",
+            "description": "The arguments to use for the metrics-server",
+            "default": [],
+            "items": {}
+        },
+        "extraVolumeMounts": {
+            "type": "array",
+            "description": "Additional volume mounts",
+            "default": [],
+            "items": {}
+        },
+        "extraVolumes": {
+            "type": "array",
+            "description": "Additional volumes",
+            "default": [],
+            "items": {}
+        },
+        "nodeSelector": {
+            "type": "object",
+            "description": "Node labels for pod assignment",
+            "default": {}
+        },
+        "tolerations": {
+            "type": "array",
+            "description": "Tolerations for pod assignment",
+            "default": [],
+            "items": {}
+        },
+        "affinity": {
+            "type": "object",
+            "description": "Affinity for pod assignment",
+            "default": {}
+        },
+        "topologySpreadConstraints": {
+            "type": "array",
+            "description": "Topology spread constraints",
+            "default": [],
+            "items": {}
+        },
+        "dnsConfig": {
+            "type": "object",
+            "description": "DNS configuration for the pod",
+            "default": {}
+        },
+        "deploymentAnnotations": {
+            "type": "object",
+            "description": "Annotations to add to the deployment",
+            "default": {}
+        },
+        "schedulerName": {
+            "type": "string",
+            "description": "The name of the scheduler to use",
+            "default": ""
+        }
+    }
+}

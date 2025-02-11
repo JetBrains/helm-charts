@@ -1,0 +1,33 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "nameOverride": {
+            "type": "string",
+            "description": "Specify the name to override the chart's name",
+            "default": ""
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "Specify the fullname to override the chart's fullname",
+            "default": ""
+        },
+        "clusterLabelOverride": {
+            "type": "string",
+            "description": "Specify the cluster label to override the chart's cluster label",
+            "default": ""
+        },
+        "imagePullSecrets": {
+            "type": "array",
+            "description": "Specify the image pull secrets for Docker images",
+            "default": [],
+            "items": {}
+        },
+        "extraObjects": {
+            "type": "array",
+            "description": "Specify extraObjects configuration",
+            "default": [],
+            "items": {}
+        }
+    }
+}

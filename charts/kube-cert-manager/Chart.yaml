@@ -1,0 +1,25 @@
+apiVersion: v2
+name: kube-cert-manager
+description: A Helm chart for the Certificates Manager in Kubernetes
+type: application
+version: 1.14.5
+appVersion: 1.14.5
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - kubernetes
+  - cert-manager
+  - kube-lego
+  - letsencrypt
+  - tls
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: cert-manager
+    alias: spec
+    repository: https://charts.jetstack.io
+    version: 1.14.5

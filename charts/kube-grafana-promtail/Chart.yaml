@@ -1,0 +1,23 @@
+apiVersion: v2
+name: kube-grafana-promtail
+description: A Helm chart for the Grafana Promtail in Kubernetes
+type: application
+version: 6.15.5
+appVersion: 2.9.3
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - promtail
+  - grafana
+  - loki
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: promtail
+    alias: spec
+    repository: https://grafana.github.io/helm-charts
+    version: 6.15.5

@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "name": "kube-external-dns",
+    "description": "Find more details about this chart in its Chart.yaml file."
+  },
+  "spec": {
+    "repositories": [
+      {
+        "name": "library",
+        "description": "Repository for Kubernetes charts",
+        "url": "registry.jetbrains.team/p/helm/library",
+        "type": "oci",
+        "env": {
+          "nameSelector": "HELM_CHARTS_REGISTRY_2"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{{- if not (empty .Values.customKubernetesResources) }}
+apiVersion: v1
+kind: List
+items:
+{{ tpl ( .Values.customKubernetesResources | toYaml ) $  | indent 2 }}
+{{- end }}

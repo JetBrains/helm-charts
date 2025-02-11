@@ -1,0 +1,26 @@
+apiVersion: v2
+name: kube-external-dns
+description: A Helm chart for the External DNS in Kubernetes
+type: application
+version: 1.14.4
+appVersion: 0.14.1
+icon: https://avatars.githubusercontent.com/u/878437?s=200&v=4
+home: https://jetbrains.com/
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - kubernetes
+  - externaldns
+  - external-dns
+  - dns
+  - service
+  - ingress
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: external-dns
+    alias: spec
+    repository: https://kubernetes-sigs.github.io/external-dns/
+    version: 1.14.4

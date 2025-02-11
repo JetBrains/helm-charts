@@ -1,0 +1,47 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "namespaceOverride": {
+            "type": "string",
+            "description": "Override the deployment namespace; defaults to .Release.Namespace",
+            "default": ""
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Labels to apply to all resources",
+            "default": {}
+        },
+        "revisionHistoryLimit": {
+            "type": "number",
+            "description": "Number of old history to retain to allow rollback",
+            "default": 10
+        },
+        "imagePullSecrets": {
+            "type": "array",
+            "description": "Image pull secrets",
+            "default": [],
+            "items": {}
+        },
+        "tcp": {
+            "type": "object",
+            "description": "Expose services over TCP",
+            "default": {}
+        },
+        "udp": {
+            "type": "object",
+            "description": "Expose services over UDP",
+            "default": {}
+        },
+        "portNamePrefix": {
+            "type": "string",
+            "description": "Prefix for TCP and UDP ports names in ingress controller service",
+            "default": ""
+        },
+        "dhParam": {
+            "type": "string",
+            "description": "A base64-encoded Diffie-Hellman parameter",
+            "default": ""
+        }
+    }
+}
