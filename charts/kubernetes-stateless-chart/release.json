@@ -13,6 +13,15 @@
         "env": {
           "nameSelector": "HELM_CHARTS_REGISTRY"
         }
+      },
+      {
+        "name": "library",
+        "description": "Repository for Kubernetes charts",
+        "url": "registry.jetbrains.team/p/helm/library",
+        "type": "oci",
+        "env": {
+          "nameSelector": "HELM_CHARTS_REGISTRY_2"
+        }
       }
     ]
   }
