@@ -133,9 +133,13 @@ spec:
             # -- SHA256 digest of the controller image.
             digest: sha256:0c215133a37e0d8bc2515b75120d2fefa14be3f939aebc14020813cdc3c001a3
         # -- Additional environment variables for the controller pod.
-        env: []
-        # - name: AWS_REGION
-        #   value: eu-west-1
+        # Default entries avoid IMDS from the pod (panic: unable to determine region from IMDS / ec2imds getToken 400).
+        # Override AWS_REGION to the same region as your EKS control plane.
+        env:
+            - name: AWS_EC2_METADATA_DISABLED
+              value: "true"
+            - name: AWS_REGION
+              value: "eu-west-1"
         envFrom: []
         securityContext:
             # -- AppArmor profile for the controller container.
