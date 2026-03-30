@@ -55,7 +55,7 @@ spec:
     # -- Strategy for updating the pod.
     strategy:
         rollingUpdate:
-          maxUnavailable: 1
+            maxUnavailable: 1
     # -- Additional labels for the pod.
     podLabels: {}
     # -- Additional annotations for the pod.
@@ -67,7 +67,7 @@ spec:
     podSecurityContext:
         fsGroup: 65532
         seccompProfile:
-          type: RuntimeDefault
+            type: RuntimeDefault
     # -- PriorityClass name for the pod.
     priorityClassName: system-cluster-critical
     # -- Override the default termination grace period for the pod.
@@ -95,14 +95,14 @@ spec:
     # -- Affinity rules for scheduling the pod. If an explicit label selector is not provided for pod affinity or pod anti-affinity one will be created from the pod selector labels.
     affinity:
         nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: karpenter.sh/nodepool
-                    operator: DoesNotExist
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: karpenter.sh/nodepool
+                      operator: DoesNotExist
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - topologyKey: "kubernetes.io/hostname"
     # -- Topology spread constraints to increase the controller resilience by distributing pods across the cluster zones. If an explicit label selector is not provided one will be created from the pod selector labels.
     topologySpreadConstraints:
         - maxSkew: 1
@@ -126,24 +126,24 @@ spec:
         # -- Distinguishing container name (containerName: karpenter-controller).
         containerName: controller
         image:
-          # -- Repository path to the controller image.
-          repository: public.ecr.aws/karpenter/controller
-          # -- Tag of the controller image.
-          tag: 1.10.0
-          # -- SHA256 digest of the controller image.
-          digest: sha256:0c215133a37e0d8bc2515b75120d2fefa14be3f939aebc14020813cdc3c001a3
+            # -- Repository path to the controller image.
+            repository: public.ecr.aws/karpenter/controller
+            # -- Tag of the controller image.
+            tag: 1.10.0
+            # -- SHA256 digest of the controller image.
+            digest: sha256:0c215133a37e0d8bc2515b75120d2fefa14be3f939aebc14020813cdc3c001a3
         # -- Additional environment variables for the controller pod.
         env: []
         # - name: AWS_REGION
         #   value: eu-west-1
         envFrom: []
         securityContext:
-          # -- AppArmor profile for the controller container.
-          appArmorProfile: {}
-          # -- SELinux options for the controller container.
-          seLinuxOptions: {}
-          # -- Seccomp profile for the controller container.
-          seccompProfile: {}
+            # -- AppArmor profile for the controller container.
+            appArmorProfile: {}
+            # -- SELinux options for the controller container.
+            seLinuxOptions: {}
+            # -- Seccomp profile for the controller container.
+            seccompProfile: {}
         # -- Resources for the controller container.
         resources: {}
         # We usually recommend not to specify default resources and to leave this as a conscious
@@ -166,11 +166,11 @@ spec:
         # -- Additional volumeMounts for the sidecar - this will be added to the volume mounts on top of extraVolumeMounts
         sidecarVolumeMounts: []
         metrics:
-          # -- The container port to use for metrics.
-          port: 8080
+            # -- The container port to use for metrics.
+            port: 8080
         healthProbe:
-          # -- The container port to use for http health probe.
-          port: 8081
+            # -- The container port to use for http health probe.
+            port: 8081
     # -- Global log level, defaults to 'info'
     logLevel: info
     # -- Log outputPaths - defaults to stdout only
@@ -222,18 +222,18 @@ spec:
         # -- Feature Gate configuration values. Feature Gates will follow the same graduation process and requirements as feature gates
         # in Kubernetes. More information here https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features.
         featureGates:
-          # -- nodeRepair is ALPHA and is disabled by default.
-          # Setting this to true will enable node repair.
-          nodeRepair: false
-          # -- nodeOverlay is ALPHA and is disabled by default.
-          # Setting this will allow the use of node overlay to impact scheduling decisions
-          nodeOverlay: false
-          # -- reservedCapacity is BETA and is enabled by default.
-          # Setting this will enable native on-demand capacity reservation support.
-          reservedCapacity: true
-          # -- spotToSpotConsolidation is ALPHA and is disabled by default.
-          # Setting this to true will enable spot replacement consolidation for both single and multi-node consolidation.
-          spotToSpotConsolidation: false
-          # -- staticCapacity is ALPHA and is disabled by default.
-          # Setting this to true will enable static capacity provisioning.
-          staticCapacity: false
+            # -- nodeRepair is ALPHA and is disabled by default.
+            # Setting this to true will enable node repair.
+            nodeRepair: false
+            # -- nodeOverlay is ALPHA and is disabled by default.
+            # Setting this will allow the use of node overlay to impact scheduling decisions
+            nodeOverlay: false
+            # -- reservedCapacity is BETA and is enabled by default.
+            # Setting this will enable native on-demand capacity reservation support.
+            reservedCapacity: true
+            # -- spotToSpotConsolidation is ALPHA and is disabled by default.
+            # Setting this to true will enable spot replacement consolidation for both single and multi-node consolidation.
+            spotToSpotConsolidation: false
+            # -- staticCapacity is ALPHA and is disabled by default.
+            # Setting this to true will enable static capacity provisioning.
+            staticCapacity: false
