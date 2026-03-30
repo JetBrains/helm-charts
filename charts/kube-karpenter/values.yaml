@@ -98,8 +98,8 @@ spec:
             requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                     - matchExpressions:
-                        - key: karpenter.sh/nodepool
-                          operator: DoesNotExist
+                          - key: karpenter.sh/nodepool
+                            operator: DoesNotExist
         podAntiAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
                 - topologyKey: "kubernetes.io/hostname"
