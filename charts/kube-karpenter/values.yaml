@@ -96,13 +96,13 @@ spec:
     affinity:
         nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: karpenter.sh/nodepool
-                      operator: DoesNotExist
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: karpenter.sh/nodepool
+                        operator: DoesNotExist
         podAntiAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
-              - topologyKey: "kubernetes.io/hostname"
+                - topologyKey: "kubernetes.io/hostname"
     # -- Topology spread constraints to increase the controller resilience by distributing pods across the cluster zones. If an explicit label selector is not provided one will be created from the pod selector labels.
     topologySpreadConstraints:
         - maxSkew: 1
