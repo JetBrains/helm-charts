@@ -1,0 +1,16 @@
+# Dependencies (run helm dependency update to fetch)
+charts/
+*.tgz
+Chart.lock
+# Ignore files
+.git/
+.gitignore
+.helmignore
+.DS_Store
+*.swp
+*.bak
+*.tmp
+*~
+.idea/
+.vscode/
+*.md
