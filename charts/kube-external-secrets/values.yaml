@@ -46,10 +46,13 @@ spec:
     createClusterExternalSecret: true
     # -- If true, create CRDs for Cluster Secret Store.
     createClusterSecretStore: true
+    # -- If true, create CRDs for Cluster Generator.
+    createClusterGenerator: true
     # -- If true, create CRDs for Push Secret.
     createPushSecret: true
     annotations: {}
     conversion:
+      # -- If webhook is set to false this also needs to be set to false otherwise the kubeapi will be hammered because the conversion is looking for a webhook endpoint.
       enabled: true
 
   imagePullSecrets: []
@@ -170,8 +173,8 @@ spec:
 
   resources: {}
     # requests:
-  #   cpu: 10m
-  #   memory: 32Mi
+    #   cpu: 10m
+    #   memory: 32Mi
 
   serviceMonitor:
     # -- Specifies whether to create a ServiceMonitor resource for collecting Prometheus metrics
@@ -278,7 +281,7 @@ spec:
     # -- The port the webhook will listen to
     port: 10250
     rbac:
-      # -- Specifies whether role and rolebinding resources should be created.
+    # -- Specifies whether role and rolebinding resources should be created.
       create: true
     serviceAccount:
       # -- Specifies whether a service account should be created.
@@ -335,7 +338,7 @@ spec:
 
     affinity: {}
 
-    # -- Pod priority class name.
+      # -- Pod priority class name.
     priorityClassName: ""
 
     # -- Pod disruption budget - for more details see https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
@@ -370,29 +373,29 @@ spec:
       ## -- Extra environment variables to add to container.
     extraEnv: []
 
-    ## -- Map of extra arguments to pass to container.
+      ## -- Map of extra arguments to pass to container.
     extraArgs: {}
 
-    ## -- Extra volumes to pass to pod.
+      ## -- Extra volumes to pass to pod.
     extraVolumes: []
 
-    ## -- Extra volumes to mount to the container.
+      ## -- Extra volumes to mount to the container.
     extraVolumeMounts: []
 
-    # -- Annotations to add to Secret
+      # -- Annotations to add to Secret
     secretAnnotations: {}
 
-    # -- Annotations to add to Deployment
+      # -- Annotations to add to Deployment
     deploymentAnnotations: {}
 
-    # -- Annotations to add to Pod
+      # -- Annotations to add to Pod
     podAnnotations: {}
 
     podLabels: {}
 
     podSecurityContext:
       enabled: true
-      # fsGroup: 2000
+        # fsGroup: 2000
 
     securityContext:
       allowPrivilegeEscalation: false
@@ -407,9 +410,9 @@ spec:
         type: RuntimeDefault
 
     resources: {}
-      # requests:
-    #   cpu: 10m
-    #   memory: 32Mi
+        # requests:
+        #   cpu: 10m
+        #   memory: 32Mi
 
   certController:
     # -- Specifies whether a certificate controller deployment be created.
@@ -432,7 +435,7 @@ spec:
     nameOverride: ""
     fullnameOverride: ""
     rbac:
-      # -- Specifies whether role and rolebinding resources should be created.
+    # -- Specifies whether role and rolebinding resources should be created.
       create: true
     serviceAccount:
       # -- Specifies whether a service account should be created.
@@ -457,7 +460,7 @@ spec:
     # -- Run the certController on the host network
     hostNetwork: false
 
-    # -- Pod priority class name.
+      # -- Pod priority class name.
     priorityClassName: ""
 
     # -- Pod disruption budget - for more details see https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
@@ -490,27 +493,27 @@ spec:
       ## -- Extra environment variables to add to container.
     extraEnv: []
 
-    ## -- Map of extra arguments to pass to container.
+      ## -- Map of extra arguments to pass to container.
     extraArgs: {}
 
 
-    ## -- Extra volumes to pass to pod.
+      ## -- Extra volumes to pass to pod.
     extraVolumes: []
 
-    ## -- Extra volumes to mount to the container.
+      ## -- Extra volumes to mount to the container.
     extraVolumeMounts: []
 
-    # -- Annotations to add to Deployment
+      # -- Annotations to add to Deployment
     deploymentAnnotations: {}
 
-    # -- Annotations to add to Pod
+      # -- Annotations to add to Pod
     podAnnotations: {}
 
     podLabels: {}
 
     podSecurityContext:
       enabled: true
-      # fsGroup: 2000
+        # fsGroup: 2000
 
     securityContext:
       allowPrivilegeEscalation: false
@@ -525,9 +528,9 @@ spec:
         type: RuntimeDefault
 
     resources: {}
-      # requests:
-    #   cpu: 10m
-    #   memory: 32Mi
+        # requests:
+        #   cpu: 10m
+        #   memory: 32Mi
 
   # -- Specifies `dnsPolicy` to deployment
   dnsPolicy: ClusterFirst
