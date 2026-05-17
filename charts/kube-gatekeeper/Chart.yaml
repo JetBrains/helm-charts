@@ -1,0 +1,24 @@
+apiVersion: v2
+name: kube-gatekeeper
+description: A Helm chart for OPA Gatekeeper policy enforcement in Kubernetes
+type: application
+version: 3.22.0-beta.0
+appVersion: v3.22.0-beta.0
+icon: https://open-policy-agent.github.io/gatekeeper/website/img/logo.svg
+home: https://github.com/open-policy-agent/gatekeeper
+annotations:
+  category: Infrastructure
+keywords:
+  - jetbrains
+  - gatekeeper
+  - open-policy-agent
+  - opa
+  - policy
+maintainers:
+  - name: JetBrains
+    url: https://www.jetbrains.com/support
+dependencies:
+  - name: gatekeeper
+    alias: spec
+    repository: https://open-policy-agent.github.io/gatekeeper/charts
+    version: 3.22.0-beta.0
